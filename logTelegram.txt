@@ -1,3 +1,0 @@
-/btc: BTCUSDT
-/eth: ETHUSDT
-/db: Xem lịch sử coin nè ><

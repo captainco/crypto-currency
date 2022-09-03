@@ -1,13 +1,12 @@
 require('dotenv').config({ path: 'env/live.env' });
-const envFunction = process.env.envFunction;
-const telegram = require('./telegram');
 
-function main() {
-    switch (envFunction.toLocaleUpperCase()) {
-        case "TW_COPY":
-            
-            break;
-    }
+const binanceAutoTakeProfitByPercent = require('./binance/binanceAutoTakeProfitByPercent');
+const telegram                       = require('./telegram/telegram');
+
+const envFunction = process.env.envFunction;
+
+async function main() {
+    //binanceAutoTakeProfitByPercent.Main();
 }
 
 main();

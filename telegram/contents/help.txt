@@ -1,0 +1,14 @@
+Thông tin lệnh:
+--------------------
+/p {O|-m}: Xem vị thế
+--> -m: Vị thế của bạn
+Trường hợp không điền gì mặc định hiểu là vị thế của lead
+--------------------
+/r {-st/-sp} {time}: Báo cáo vị thế
+--> -st: Bật báo cáo
+--> -sp: Tắt báo cáo
+--> time: Thời gian báo cáo. Tính theo giây
+--------------------
+/s {O|-m} {coin}: Xem giá của coin
+--> -m: Xem giá của bạn
+--> coin: Đồng coin cần xem

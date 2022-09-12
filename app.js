@@ -7,7 +7,7 @@ const telegram                       = require('./telegram/telegram');
 const indexRouter                    = require('./index');
 const express                        = require("express");
 const app                            = express();
-const port                           = 8080;
+const port                           = 3000;
 app.use('/', indexRouter);
 app.set('port', port);
 const server                         = http.createServer(app);

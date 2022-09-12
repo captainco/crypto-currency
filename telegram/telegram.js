@@ -4,6 +4,7 @@ const binance    = require('../binance/binance');
 const common     = require('../common');
 const moment     = require('moment');
 
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const bot        = new Telegraf(process.env.envTelegramBotToken);
 const groupId    = process.env.envTelegramGroupId;
 

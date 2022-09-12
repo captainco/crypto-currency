@@ -1,6 +1,7 @@
 const moment                = require('moment');
 const _                     = require('lodash');
 const fs                    = require('fs');
+const {sendMessage, log}    = require("./telegram/telegram");
 
 const envTelegramMyTelegram = process.env.envTelegramMyTelegram;
 
@@ -10,7 +11,12 @@ function WriteConsoleLog(content) {
 }
 
 function GetMoment() {
-    return moment(Date.now()).format("DD/MM/YYYY HH:mm:ss");
+    const dateTime = moment(Date.now()).format("DD/MM/YYYY HH:mm:ss");
+    return dateTime;
+}
+
+function GetMomentSecond() {
+    return Number(moment(Date.now()).format("ss"));
 }
 
 function GetTelegramMessage(ctxTelegramMessage, command) {
@@ -40,11 +46,17 @@ function IsMyTelegramAccount(telegramId) {
     return _.get(telegramId, 'update.message.from.id') == envTelegramMyTelegram;
 }
 
+function ConvertToPositiveNumber(number) {
+    return number < 0 ? number * -1 : number;
+}
+
 module.exports = {
     WriteConsoleLog,
     GetMoment,
+    GetMomentSecond,
     GetTelegramMessage,
     CheckTelegramMessage,
     IsMyTelegramAccount,
-    ReplaceTextByTemplate
+    ReplaceTextByTemplate,
+    ConvertToPositiveNumber
 }

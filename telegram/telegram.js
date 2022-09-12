@@ -2,6 +2,7 @@ const {Telegraf} = require("telegraf");
 const fs         = require('fs');
 const binance    = require('../binance/binance');
 const common     = require('../common');
+const moment     = require('moment');
 
 const bot        = new Telegraf(process.env.envTelegramBotToken);
 const groupId    = process.env.envTelegramGroupId;
@@ -17,6 +18,16 @@ bot.command('h', async (ctx) => {
     if (!common.IsMyTelegramAccount(ctx)) return;
     const logTelegram = fs.readFileSync('./telegram/contents/help.txt', 'utf8');
     ctx.reply(logTelegram);
+});
+
+bot.command('f', async (ctx) => {
+    if (!common.IsMyTelegramAccount(ctx)) return;
+    ctx.reply("Chức năng chưa phát triển!");
+});
+
+bot.command('fs', async (ctx) => {
+    if (!common.IsMyTelegramAccount(ctx)) return;
+    ctx.reply("Chức năng chưa phát triển!");
 });
 
 bot.command('p', async (ctx) => {
@@ -49,6 +60,11 @@ bot.command('p', async (ctx) => {
     } catch (error) {
         ctx.reply(error);
     }
+});
+
+bot.command('r', async (ctx) => {
+    if (!common.IsMyTelegramAccount(ctx)) return;
+    ctx.reply("Chức năng chưa phát triển!");
 });
 
 bot.command('s', async (ctx) => {
@@ -90,9 +106,14 @@ bot.launch().then(r => {});
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
+async function log(message) {
+    const dateTime = moment(Date.now()).format("DD/MM/YYYY HH:mm:ss");
+    await sendMessage(`${dateTime} => ${message}`);
+}
+
 async function sendMessage(message) {
     try {
-        await bot.telegram.sendMessage(group_id, message);
+        await bot.telegram.sendMessage(groupId, message);
     } catch (error) {
         console.log('send message error');
         console.log(error);
@@ -103,4 +124,4 @@ async function sendTeleMessage(message) {
     await bot.telegram.sendMessage(groupId, message);
 }
 
-module.exports = {sendTeleMessage, bot}
+module.exports = {sendTeleMessage, log}

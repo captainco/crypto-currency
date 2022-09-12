@@ -1,8 +1,8 @@
 require('dotenv').config({ path: '../env/live.env' });
 
 const binance = require('./binance');
-const sleep = require('thread-sleep');
-const common = require('../common');
+const sleep   = require('thread-sleep');
+const common  = require('../common');
 
 const percent = process.env.envBinanceFunctionAutoTakeProfitByPercent;
 

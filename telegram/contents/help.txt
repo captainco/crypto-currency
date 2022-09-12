@@ -1,5 +1,9 @@
 Thông tin lệnh:
 --------------------
+/f {functionName}: Thay đổi lệnh
+--------------------
+/fs: Xem function
+--------------------
 /p {O|-m}: Xem vị thế
 --> -m: Vị thế của bạn
 Trường hợp không điền gì mặc định hiểu là vị thế của lead

@@ -1,5 +1,6 @@
 require('dotenv').config({ path: '../env/live.env' });
 
+var indicators             = require('technicalindicators');
 const Binance              = require('node-binance-api');
 const _                    = require("lodash");
 
@@ -51,12 +52,29 @@ async function FuturesPositionRisk(symbol) {
     return await binance.futuresPositionRisk({ symbol: symbol });
 }
 
-async function FuturesMarketBuySell(symbolMain, quantityMain, buySell) {
+async function FuturesLeverage(symbol, leverage) {
+    return await binance.futuresLeverage(symbol, leverage);
+}
+
+async function FuturesMarketBuySell(symbol, quantity, buySell) {
     if (buySell.toUpperCase() == "BUY") {
-        return await binance.futuresMarketBuy(symbolMain, quantityMain);
+        return await binance.futuresMarketBuy(symbol, quantity);
     }
 
-    return await binance.futuresMarketSell(symbolMain, quantityMain);
+    return await binance.futuresMarketSell(symbol, quantity);
+}
+
+async function RSI(symbol, interval) {
+    const latestCandles = await binance.futuresCandles(symbol, interval, { limit: 1500 });
+    let values = _.reduce(latestCandles, (result, value) => {
+        result.push(_.toNumber(_.nth(value, 4))); return result;
+    }, [])
+    let rsiInput = {
+        values: values,
+        period: 14,
+    }
+    const rs = indicators.RSI.calculate(rsiInput)
+    return _.nth(rs, rs.length - 1);
 }
 
 module.exports = {
@@ -65,5 +83,7 @@ module.exports = {
     FuturesAccount,
     FuturesBalance,
     FuturesPositionRisk,
-    FuturesMarketBuySell
+    FuturesLeverage,
+    FuturesMarketBuySell,
+    RSI
 }

@@ -13,6 +13,8 @@ var rsi                  = 0;
 var rsiTemp              = 0;
 
 async function Main() {
+    await log("Khởi tạo bot");
+    
     while (true) {
         /*Trade theo khung 1 phút*/
         /*Kiểm tra xem đã đến giờ trade chưa?*/

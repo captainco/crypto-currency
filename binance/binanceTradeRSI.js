@@ -5,10 +5,10 @@ const binance            = require('./binance');
 const sleep              = require('thread-sleep');
 const common             = require('../common');
 
-var symbol               = "BTCUSDT";
-var interval             = "1m";
-var leverage             = 10;
-var price                = 0.001;
+var symbol               = process.env.envBinanceFunctionRSISymbol;
+var interval             = process.env.envBinanceFunctionRSIInterval;
+var leverage             = Number(process.env.envBinanceFunctionRSILeverage);
+var price                = Number(process.env.envBinanceFunctionRSIPrice);
 var rsi                  = 0;
 var rsiTemp              = 0;
 

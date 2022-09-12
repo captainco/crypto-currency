@@ -43,9 +43,9 @@ function ReplaceTextByTemplate(oldChar, newChar, templatePath) {
     return output;
 }
 
-function IsMyTelegramAccount(telegramId) {
-    return _.get(telegramId, 'update.message.from.id') == envTelegramMyTelegram;
-}
+// function IsMyTelegramAccount(telegramId) {
+//     return _.get(telegramId, 'update.message.from.id') == envTelegramMyTelegram;
+// }
 
 function ConvertToPositiveNumber(number) {
     return number < 0 ? number * -1 : number;
@@ -57,7 +57,7 @@ module.exports = {
     GetMomentSecond,
     GetTelegramMessage,
     CheckTelegramMessage,
-    IsMyTelegramAccount,
+    //IsMyTelegramAccount,
     ReplaceTextByTemplate,
     ConvertToPositiveNumber
 }

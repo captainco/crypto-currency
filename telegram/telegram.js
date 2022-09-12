@@ -3,10 +3,16 @@ const fs         = require('fs');
 const binance    = require('../binance/binance');
 const common     = require('../common');
 const moment     = require('moment-timezone');
+const _          = require('lodash');
 
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const bot        = new Telegraf(process.env.envTelegramBotToken);
 const groupId    = process.env.envTelegramGroupId;
+const envTelegramMyTelegram = process.env.envTelegramMyTelegram;
+
+function IsMyTelegramAccount(telegramId) {
+    return _.get(telegramId, 'update.message.from.id') == envTelegramMyTelegram;
+}
 
 bot.start((ctx) => ctx.reply('Welcome'));
 
@@ -16,23 +22,23 @@ bot.help((ctx) => {
 });
 
 bot.command('h', async (ctx) => {
-    if (!common.IsMyTelegramAccount(ctx)) return;
+    if (!IsMyTelegramAccount(ctx)) return;
     const logTelegram = fs.readFileSync('./telegram/contents/help.txt', 'utf8');
     ctx.reply(logTelegram);
 });
 
 bot.command('f', async (ctx) => {
-    if (!common.IsMyTelegramAccount(ctx)) return;
+    if (!IsMyTelegramAccount(ctx)) return;
     ctx.reply("Chức năng chưa phát triển!");
 });
 
 bot.command('fs', async (ctx) => {
-    if (!common.IsMyTelegramAccount(ctx)) return;
+    if (!IsMyTelegramAccount(ctx)) return;
     ctx.reply("Chức năng chưa phát triển!");
 });
 
 bot.command('p', async (ctx) => {
-    if (!common.IsMyTelegramAccount(ctx)) return;
+    if (!IsMyTelegramAccount(ctx)) return;
     const content = common.GetTelegramMessage(ctx, 'p');
     const checkContent = common.CheckTelegramMessage(content);
     if (checkContent != "") {
@@ -64,12 +70,12 @@ bot.command('p', async (ctx) => {
 });
 
 bot.command('r', async (ctx) => {
-    if (!common.IsMyTelegramAccount(ctx)) return;
+    if (!IsMyTelegramAccount(ctx)) return;
     ctx.reply("Chức năng chưa phát triển!");
 });
 
 bot.command('s', async (ctx) => {
-    if (!common.IsMyTelegramAccount(ctx)) return;
+    if (!IsMyTelegramAccount(ctx)) return;
     const content = common.GetTelegramMessage(ctx, 's');
     const checkContent = common.CheckTelegramMessage(content);
     if (checkContent != "") {

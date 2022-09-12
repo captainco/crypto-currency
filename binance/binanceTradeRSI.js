@@ -1,5 +1,5 @@
 require('dotenv').config({ path: '../env/live.env' });
-const {sendMessage, log} = require("../telegram/telegram");
+const {log}              = require("../telegram/telegram");
 
 const binance            = require('./binance');
 const sleep              = require('thread-sleep');

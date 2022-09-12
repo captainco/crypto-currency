@@ -4,6 +4,15 @@ const binanceAutoTakeProfitByPercent = require('./binance/binanceAutoTakeProfitB
 const binanceTradeRSI                = require('./binance/binanceTradeRSI');
 const telegram                       = require('./telegram/telegram');
 
+const indexRouter                    = require('./index');
+const express                        = require("express");
+const app                            = express();
+const port                           = 8080;
+app.use('/', indexRouter);
+app.set('port', port);
+const server                         = http.createServer(app);
+server.listen(port);
+
 const envFunction = process.env.envFunction;
 
 async function main() {

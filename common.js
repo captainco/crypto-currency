@@ -1,4 +1,4 @@
-const moment                = require('moment');
+const moment                = require('moment-timezone');
 const _                     = require('lodash');
 const fs                    = require('fs');
 const {sendMessage, log}    = require("./telegram/telegram");

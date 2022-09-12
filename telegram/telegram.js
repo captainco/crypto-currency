@@ -2,7 +2,7 @@ const {Telegraf} = require("telegraf");
 const fs         = require('fs');
 const binance    = require('../binance/binance');
 const common     = require('../common');
-const moment     = require('moment');
+const moment     = require('moment-timezone');
 
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const bot        = new Telegraf(process.env.envTelegramBotToken);

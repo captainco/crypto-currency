@@ -12,23 +12,11 @@ function WriteConsoleLog(content) {
 }
 
 function GetMoment() {
-    const dateTime = moment(Date.now()).format("DD/MM/YYYY HH:mm:ss");
-    return dateTime;
+    return moment(Date.now()).format("DD/MM/YYYY HH:mm:ss");
 }
 
 function GetMomentSecond() {
     return Number(moment(Date.now()).format("ss"));
-}
-
-function GetTelegramMessage(ctxTelegramMessage, command) {
-    return _.replace(_.get(ctxTelegramMessage, 'update.message.text'), `/${command}`, '').trim();
-}
-
-function CheckTelegramMessage(message) {
-    if (message == "") {
-        return "Cú pháp chưa đúng";
-    }
-    return "";
 }
 
 function ReplaceTextByTemplate(oldChar, newChar, templatePath) {
@@ -43,10 +31,6 @@ function ReplaceTextByTemplate(oldChar, newChar, templatePath) {
     return output;
 }
 
-// function IsMyTelegramAccount(telegramId) {
-//     return _.get(telegramId, 'update.message.from.id') == envTelegramMyTelegram;
-// }
-
 function ConvertToPositiveNumber(number) {
     return number < 0 ? number * -1 : number;
 }
@@ -55,9 +39,6 @@ module.exports = {
     WriteConsoleLog,
     GetMoment,
     GetMomentSecond,
-    GetTelegramMessage,
-    CheckTelegramMessage,
-    //IsMyTelegramAccount,
     ReplaceTextByTemplate,
     ConvertToPositiveNumber
 }

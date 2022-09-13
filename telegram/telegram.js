@@ -14,6 +14,17 @@ function IsMyTelegramAccount(telegramId) {
     return _.get(telegramId, 'update.message.from.id') == envTelegramMyTelegram;
 }
 
+function GetTelegramMessage(ctxTelegramMessage, command) {
+    return _.replace(_.get(ctxTelegramMessage, 'update.message.text'), `/${command}`, '').trim();
+}
+
+function CheckTelegramMessage(message) {
+    if (message == "") {
+        return "Cú pháp chưa đúng";
+    }
+    return "";
+}
+
 bot.start((ctx) => ctx.reply('Welcome'));
 
 bot.help((ctx) => {
@@ -39,8 +50,8 @@ bot.command('fs', async (ctx) => {
 
 bot.command('p', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
-    const content = common.GetTelegramMessage(ctx, 'p');
-    const checkContent = common.CheckTelegramMessage(content);
+    const content = GetTelegramMessage(ctx, 'p');
+    const checkContent = CheckTelegramMessage(content);
     if (checkContent != "") {
         ctx.reply(checkContent);
         return;
@@ -76,7 +87,7 @@ bot.command('r', async (ctx) => {
 
 bot.command('rsi', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
-    const content = common.GetTelegramMessage(ctx, 'rsi').split(' ');
+    const content = GetTelegramMessage(ctx, 'rsi').split(' ');
     const symbol = content[0].toUpperCase();
     const interval = content[1].toLowerCase();
     const rsi = await binance.RSI(symbol, interval);
@@ -85,29 +96,18 @@ bot.command('rsi', async (ctx) => {
 
 bot.command('s', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
-    const content = common.GetTelegramMessage(ctx, 's');
-    const checkContent = common.CheckTelegramMessage(content);
+    const content = GetTelegramMessage(ctx, 's');
+    const checkContent = CheckTelegramMessage(content);
     if (checkContent != "") {
         ctx.reply(checkContent);
         return;
     }
     try {
-        if (content.includes("-m")) {
-            var symbol = content.replace("-m", "").trim().toUpperCase();
-            var r_ = await binance.FuturesPositionRisk(symbol);
-            var result = r_[0];
-            var oc = ["symbol_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "maxNotionalValue_in", "marginType_in", "isolatedMargin_in", "isAutoAddMargin_in", "positionSide_in", "notional_in", "isolatedWallet_in", "time_in"];
-            var nc = [symbol, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, result.maxNotionalValue, result.marginType, result.isolatedMargin, result.isAutoAddMargin, result.positionSide, result.notional, result.isolatedWallet, common.GetMoment()];
-            var temp = common.ReplaceTextByTemplate(oc, nc, "./telegram/contents/sm_template.txt");
-            ctx.reply(temp);
-            return;
-        }
-
-        var symbol = content.trim().toUpperCase();
+        var symbol = content.toUpperCase();
         var r_ = await binance.FuturesPositionRisk(symbol);
         var result = r_[0];
-        var oc = ["symbol_in", "markPrice_in", "time_in"];
-        var nc = [result.symbol, result.markPrice, common.GetMoment()];
+        var oc = ["symbol_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "maxNotionalValue_in", "marginType_in", "isolatedMargin_in", "isAutoAddMargin_in", "positionSide_in", "notional_in", "isolatedWallet_in", "time_in"];
+        var nc = [symbol, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, result.maxNotionalValue, result.marginType, result.isolatedMargin, result.isAutoAddMargin, result.positionSide, result.notional, result.isolatedWallet, common.GetMoment()];
         var temp = common.ReplaceTextByTemplate(oc, nc, "./telegram/contents/s_template.txt");
         ctx.reply(temp);
     } catch (error) {

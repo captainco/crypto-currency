@@ -74,6 +74,15 @@ bot.command('r', async (ctx) => {
     ctx.reply("Chức năng chưa phát triển!");
 });
 
+bot.command('rsi', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    const content = common.GetTelegramMessage(ctx, 'rsi').split(' ');
+    const symbol = content[0].toUpperCase();
+    const interval = content[1].toLowerCase();
+    const rsi = await binance.RSI(symbol, interval);
+    ctx.reply(`RSI ${symbol}|${interval}: ${rsi}`);
+});
+
 bot.command('s', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = common.GetTelegramMessage(ctx, 's');

@@ -13,6 +13,10 @@ Trường hợp không điền gì mặc định hiểu là vị thế của lea
 --> -sp: Tắt báo cáo
 --> time: Thời gian báo cáo. Tính theo giây
 --------------------
+/rsi {coin} {interval}: RSI hiện tại
+--> coin: Hợp đồng
+--> interval: Chart (1m/1h/1d/...)
+--------------------
 /s {O|-m} {coin}: Xem giá của coin
 --> -m: Xem giá của bạn
 --> coin: Đồng coin cần xem

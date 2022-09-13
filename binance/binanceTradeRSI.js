@@ -11,8 +11,8 @@ var leverage             = Number(process.env.envBinanceFunctionRSILeverage);
 var price                = Number(process.env.envBinanceFunctionRSIPrice);
 var rsi                  = 0;
 var rsiTemp              = 0;
-var rsiMin               = 30;
-var rsiMax               = 70;
+var rsiMin               = 31;
+var rsiMax               = 69;
 
 async function Main() {
     await log(`Đã khởi tạo BOT ${symbol} ${leverage}x`);
@@ -25,8 +25,8 @@ async function Main() {
                 /*Kiểm tra RSI*/
                 rsi = await binance.RSI(symbol, interval);
 
-                /*Trade nếu nằm trong vùng 30 và 70*/
-                if (rsi > 30 && rsi < 70) {
+                /*Trade nếu nằm trong vùng min và max*/
+                if (rsi > rsiMin && rsi < rsiMax) {
                     rsiTemp = 0;
                     sleep(1000);
                     resolve(false);
@@ -50,7 +50,7 @@ async function Main() {
                         if (checkPs.positionAmt > 0) {
 
                             /*Cắt lãi nếu quá mua*/
-                            if (rsi > 70) {
+                            if (rsi > rsiMax) {
                                 const tpsl = (((checkPs.markPrice * 100 / checkPs.entryPrice) - 100) * leverage).toFixed(2);
 
                                 /*Nếu chắc chắn đã lãi thì sẽ chốt*/
@@ -68,7 +68,7 @@ async function Main() {
                         else {
 
                             /*Cắt lãi nếu quá bán*/
-                            if (rsi < 30) {
+                            if (rsi < rsiMin) {
                                 const tpsl = ((100 - (checkPs.markPrice * 100 / checkPs.entryPrice)) * leverage).toFixed(2);
 
                                 /*Nếu chắc chắn đã lãi thì sẽ chốt*/
@@ -85,43 +85,46 @@ async function Main() {
                     }
                 }
                 else {
-                    const checkPs = (await binance.FuturesPositionRisk(symbol))[0];
-                    const priceTP = common.ConvertToPositiveNumber(checkPs.positionAmt);
-                    /*Nếu RSI < 30 => Đang nằm trong vùng quá bán*/
-                    if (rsi < 30) {
+                    
+                    /*Nếu RSI < rsiMin => Đang nằm trong vùng quá bán*/
+                    if (rsi < rsiMin) {
 
                         /*Kiểm tra xem đã có lệnh chưa?*/
                         /*Nếu chưa có lệnh thì vào 1 lệnh mới*/
+                        const checkPs = (await binance.FuturesPositionRisk(symbol))[0];
                         if (checkPs.positionAmt == 0) {
                             await binance.FuturesMarketBuySell(symbol, price, "BUY");
-                            await log(`Đã mở vị thế LONG ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
+                            const checkPsOpen = (await binance.FuturesPositionRisk(symbol))[0];
+                            await log(`Đã mở vị thế LONG ${symbol} ${leverage}x|${price}: R: ${rsi}; E: ${checkPsOpen.entryPrice}; M: ${checkPsOpen.markPrice}`);
                         }
                         else {
 
                             /*Trường hợp rsi down thảm nữa thì DCA*/
                             if (rsi < rsiTemp) {
-                                await log(`Đang DCA vị thế LONG ${symbol} ${leverage}x|${priceTP}: +${price}`);
                                 await binance.FuturesMarketBuySell(symbol, price, "BUY");
-                                await log(`Đã DCA vị thế LONG ${symbol} ${leverage}x|${priceTP + price}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
+                                const checkPsDCA = (await binance.FuturesPositionRisk(symbol))[0];
+                                await log(`Đã DCA vị thế LONG ${symbol} ${leverage}x|${checkPsDCA.positionAmt}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
                             }
                         }
                     }
-                    /*Nếu RSI > 70 => Đang nằm trong vùng quá mua*/
+                    /*Nếu RSI > rsiMax => Đang nằm trong vùng quá mua*/
                     else {
 
                         /*Kiểm tra xem đã có lệnh chưa?*/
                         /*Nếu chưa có lệnh thì vào 1 lệnh mới*/
+                        const checkPs = (await binance.FuturesPositionRisk(symbol))[0];
                         if (checkPs.positionAmt == 0) {
                             await binance.FuturesMarketBuySell(symbol, price, "SELL");
-                            await log(`Đã mở vị thế SHORT ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
+                            const checkPsOpen = (await binance.FuturesPositionRisk(symbol))[0];
+                            await log(`Đã mở vị thế SHORT ${symbol} ${leverage}x|${price}: R: ${rsi}; E: ${checkPsOpen.entryPrice}; M: ${checkPsOpen.markPrice}`);
                         }
                         else {
 
                             /*Trường hợp rsi down thảm nữa thì DCA*/
                             if (rsi > rsiTemp) {
-                                await log(`Đang DCA vị thế SHORT ${symbol} ${leverage}x|${priceTP}: +${price}`);
                                 await binance.FuturesMarketBuySell(symbol, price, "SELL");
-                                await log(`Đã DCA vị thế SHORT ${symbol} ${leverage}x|${priceTP + price}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
+                                const checkPsDCA = (await binance.FuturesPositionRisk(symbol))[0];
+                                await log(`Đã DCA vị thế SHORT ${symbol} ${leverage}x|${checkPsDCA.positionAmt}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
                             }
                         }
                     }
@@ -130,8 +133,7 @@ async function Main() {
                 rsiTemp = rsi;
                 sleep(1000);
             }
-
-            console.log(common.GetMoment());
+            
             sleep(200);
         });
     }

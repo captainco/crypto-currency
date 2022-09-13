@@ -57,22 +57,11 @@ bot.command('p', async (ctx) => {
         return;
     }
     try {
-        if (content.includes("-m")) {
-            var symbol = content.replace("-m", "").trim().toUpperCase();
-            var r_ = await binance.FuturesPositionRisk(symbol);
-            var result = r_[0];
-            var oc = ["symbol_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "maxNotionalValue_in", "marginType_in", "isolatedMargin_in", "isAutoAddMargin_in", "positionSide_in", "notional_in", "isolatedWallet_in", "time_in"];
-            var nc = [symbol, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, result.maxNotionalValue, result.marginType, result.isolatedMargin, result.isAutoAddMargin, result.positionSide, result.notional, result.isolatedWallet, common.GetMoment()];
-            var temp = common.ReplaceTextByTemplate(oc, nc, "./telegram/contents/sm_template.txt");
-            ctx.reply(temp);
-            return;
-        }
-
-        var symbol = content.trim().toUpperCase();
+        var symbol = content.toUpperCase();
         var r_ = await binance.FuturesPositionRisk(symbol);
         var result = r_[0];
-        var oc = ["symbol_in", "markPrice_in", "time_in"];
-        var nc = [result.symbol, result.markPrice, common.GetMoment()];
+        var oc = ["symbol_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "maxNotionalValue_in", "marginType_in", "isolatedMargin_in", "isAutoAddMargin_in", "positionSide_in", "notional_in", "isolatedWallet_in", "time_in"];
+        var nc = [symbol, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, result.maxNotionalValue, result.marginType, result.isolatedMargin, result.isAutoAddMargin, result.positionSide, result.notional, result.isolatedWallet, common.GetMoment()];
         var temp = common.ReplaceTextByTemplate(oc, nc, "./telegram/contents/s_template.txt");
         ctx.reply(temp);
     } catch (error) {

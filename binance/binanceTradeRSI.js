@@ -13,7 +13,7 @@ var rsi                  = 0;
 var rsiTemp              = 0;
 
 async function Main() {
-    await log("Khởi tạo bot");
+    await log(`Đã khởi tạo BOT ${symbol} ${leverage}x`);
     
     while (true) {
         /*Trade theo khung 1 phút*/
@@ -129,6 +129,7 @@ async function Main() {
             sleep(1000);
         }
 
+        console.log(common.GetMoment());
         sleep(100);
     }
 }

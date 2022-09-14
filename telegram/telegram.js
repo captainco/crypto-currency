@@ -83,7 +83,17 @@ bot.command('rsi', async (ctx) => {
     }
 });
 
-bot.on('sticker', (ctx) => ctx.reply('👍'));
+bot.on('sticker', (ctx) => {
+    
+    const stickers = [
+        '👍', 'Adou~! 😉', 'Cmn 👇', 'Thả gì mà lắm sticker thế! 🙃', 'Tuổi x3 =)))', 'Hảo ✔️',
+        'Thả tim nè ❤️', 'Thức tỉnh đi ông cháu eiiii 😁', 'Nếu bạn có sai thì chúng ta cùng sửa sai 🤪',
+        'Lạnh cả sống lưng rồi nè 😬', 'Buồn x3 😔'
+    ];
+    const random = Math.floor(Math.random() * stickers.length);
+    console.log(random, );
+    ctx.reply(stickers[random]);
+});
 bot.launch().then(r => {});
 
 //Enable graceful stop

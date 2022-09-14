@@ -1,21 +1,13 @@
 Thông tin lệnh:
 --------------------
-/f {functionName}: Thay đổi lệnh
---------------------
-/fs: Xem function
+/b {O|0/1}: Kiểm tra/set trạng thái bot
+--> 0: Ngừng bot
+--> 1: Chạy bot
 --------------------
 /p {O|-m}: Xem vị thế
 --> -m: Vị thế của bạn
 Trường hợp không điền gì mặc định hiểu là vị thế của lead
 --------------------
-/r {-st/-sp} {time}: Báo cáo vị thế
---> -st: Bật báo cáo
---> -sp: Tắt báo cáo
---> time: Thời gian báo cáo. Tính theo giây
---------------------
 /rsi {coin} {interval}: RSI hiện tại
 --> coin: Hợp đồng
 --> interval: Chart (1m/1h/1d/...)
---------------------
-/s {coin}: Xem giá của coin
---> coin: Đồng coin cần xem

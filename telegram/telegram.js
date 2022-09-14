@@ -18,13 +18,6 @@ function GetTelegramMessage(ctxTelegramMessage, command) {
     return _.replace(_.get(ctxTelegramMessage, 'update.message.text'), `/${command}`, '').trim();
 }
 
-function CheckTelegramMessage(message) {
-    if (message == "") {
-        return "Cú pháp chưa đúng";
-    }
-    return "";
-}
-
 bot.start((ctx) => ctx.reply('Welcome'));
 
 bot.help((ctx) => {
@@ -38,24 +31,32 @@ bot.command('h', async (ctx) => {
     ctx.reply(logTelegram);
 });
 
-bot.command('f', async (ctx) => {
+bot.command('b', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
-    ctx.reply("Chức năng chưa phát triển!");
-});
-
-bot.command('fs', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
-    ctx.reply("Chức năng chưa phát triển!");
+    const content = GetTelegramMessage(ctx, 'b');
+    
+    try {
+        if (content == "") {
+            ctx.reply(`Trạng thái bot: ${process.env.envBinanceFunctionRSIBOT == "0" ? "Đã dừng" : "Hoạt động"}`);
+        }
+        else {
+            if (content == "0") {
+                process.env.envBinanceFunctionRSIBOT = "0";
+                ctx.reply(`Thiết lập trạng thái bot: Đã dừng`);
+            } else {
+                process.env.envBinanceFunctionRSIBOT = "1";
+                ctx.reply(`Thiết lập trạng thái bot: Hoạt động`);
+            }
+        }
+    } catch (error) {
+        ctx.reply(error);
+    }
 });
 
 bot.command('p', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'p');
-    const checkContent = CheckTelegramMessage(content);
-    if (checkContent != "") {
-        ctx.reply(checkContent);
-        return;
-    }
+    
     try {
         var symbol = content.toUpperCase();
         var r_ = await binance.FuturesPositionRisk(symbol);
@@ -69,36 +70,14 @@ bot.command('p', async (ctx) => {
     }
 });
 
-bot.command('r', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
-    ctx.reply("Chức năng chưa phát triển!");
-});
-
 bot.command('rsi', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
-    const content = GetTelegramMessage(ctx, 'rsi').split(' ');
-    const symbol = content[0].toUpperCase();
-    const interval = content[1].toLowerCase();
-    const rsi = await binance.RSI(symbol, interval);
-    ctx.reply(`RSI ${symbol}|${interval}: ${rsi}`);
-});
-
-bot.command('s', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
-    const content = GetTelegramMessage(ctx, 's');
-    const checkContent = CheckTelegramMessage(content);
-    if (checkContent != "") {
-        ctx.reply(checkContent);
-        return;
-    }
     try {
-        var symbol = content.toUpperCase();
-        var r_ = await binance.FuturesPositionRisk(symbol);
-        var result = r_[0];
-        var oc = ["symbol_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "maxNotionalValue_in", "marginType_in", "isolatedMargin_in", "isAutoAddMargin_in", "positionSide_in", "notional_in", "isolatedWallet_in", "time_in"];
-        var nc = [symbol, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, result.maxNotionalValue, result.marginType, result.isolatedMargin, result.isAutoAddMargin, result.positionSide, result.notional, result.isolatedWallet, common.GetMoment()];
-        var temp = common.ReplaceTextByTemplate(oc, nc, "./telegram/contents/s_template.txt");
-        ctx.reply(temp);
+        const content = GetTelegramMessage(ctx, 'rsi').split(' ');
+        const symbol = content[0].toUpperCase();
+        const interval = content[1].toLowerCase();
+        const rsi = await binance.RSI(symbol, interval);
+        ctx.reply(`RSI ${symbol}|${interval}: ${rsi}`);
     } catch (error) {
         ctx.reply(error);
     }

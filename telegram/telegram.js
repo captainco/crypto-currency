@@ -72,7 +72,7 @@ bot.command('p', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'p');
     try {
-        var symbol = content.toUpperCase();
+        var symbol = `${content.toUpperCase()}USDT`;
         var r_ = await binance.FuturesPositionRisk(symbol);
         var result = r_[0];
         var oc = ["symbol_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "maxNotionalValue_in", "marginType_in", "isolatedMargin_in", "isAutoAddMargin_in", "positionSide_in", "notional_in", "isolatedWallet_in", "time_in"];
@@ -88,7 +88,7 @@ bot.command('r', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     try {
         const content = GetTelegramMessage(ctx, 'r').split(' ');
-        const symbol = content[0].toUpperCase();
+        const symbol = `${content[0].toUpperCase()}USDT`;
         const interval = content[1].toLowerCase();
         const rsi = await binance.RSI(symbol, interval);
         ctx.reply(`RSI ${symbol}|${interval}: ${rsi}`);

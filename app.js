@@ -17,7 +17,7 @@ const envFunction = process.env.envFunction;
 
 async function main() {
     //binanceAutoTakeProfitByPercent.Main();
-    binanceTradeRSI.Main().then();
+    //binanceTradeRSI.Main();
 }
 
 main();

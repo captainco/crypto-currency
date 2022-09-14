@@ -4,10 +4,8 @@ Thông tin lệnh:
 --> 0: Ngừng bot
 --> 1: Chạy bot
 --------------------
-/p {O|-m}: Xem vị thế
---> -m: Vị thế của bạn
-Trường hợp không điền gì mặc định hiểu là vị thế của lead
+/p {coin}: Xem vị thế coin của bạn
 --------------------
-/rsi {coin} {interval}: RSI hiện tại
+/r {coin} {interval}: RSI hiện tại
 --> coin: Hợp đồng
 --> interval: Chart (1m/1h/1d/...)

@@ -98,11 +98,10 @@ bot.command('r', async (ctx) => {
 });
 
 bot.on('sticker', (ctx) => {
-    
     const stickers = [
         '👍', 'Adou~! 😉', 'Cmn 👇', 'Thả gì mà lắm sticker thế! 🙃', 'Tuổi x3 =)))', 'Hảo ✔️',
-        'Thả tim nè ❤️', 'Thức tỉnh đi ông cháu eiiii 😁', 'Nếu bạn có sai thì chúng ta cùng sửa sai 🤪',
-        'Lạnh cả sống lưng rồi nè 😬', 'Buồn x3 😔'
+        'Thả tim nè ❤️', 'Con cò lông này... 😁', 'Nasica đó hả!!! 🤪',
+        'Ái chà, khét đấy 😬', 'Buồn x3 😔'
     ];
     const random = Math.floor(Math.random() * stickers.length);
     ctx.reply(stickers[random]);

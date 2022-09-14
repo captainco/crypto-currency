@@ -13,18 +13,12 @@ var rsi                               = 0;
 var rsiTemp                           = 0;
 var rsiMin                            = 31;
 var rsiMax                            = 69;
-process.env.envBinanceFunctionRSIBOT_ = process.env.envBinanceFunctionRSIBOT;
 
 async function Main() {
     while (true) {
         return new Promise(async (resolve) => {
             if (process.env.envBinanceFunctionRSIBOT == "1") {
-
-                /*Alert thông báo*/
-                if (process.env.envBinanceFunctionRSIBOT_ == "1") {
-                    await log(`Khởi tạo bot thành công`);
-                    process.env.envBinanceFunctionRSIBOT_ = "0";
-                }
+                await log(`Khởi tạo bot thành công`);
 
                 /*Kiểm tra xem đã đến giờ trade chưa?*/
                 if (common.GetMomentSecond() == 59) {

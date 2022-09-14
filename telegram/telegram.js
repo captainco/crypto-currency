@@ -45,7 +45,6 @@ bot.command('b', async (ctx) => {
                 ctx.reply(`Thiết lập trạng thái bot: Đã dừng`);
             } else {
                 process.env.envBinanceFunctionRSIBOT = "1";
-                process.env.envBinanceFunctionRSIBOT_ = "1";
                 ctx.reply(`Thiết lập trạng thái bot: Hoạt động`);
             }
         }

@@ -91,7 +91,6 @@ bot.on('sticker', (ctx) => {
         'Lạnh cả sống lưng rồi nè 😬', 'Buồn x3 😔'
     ];
     const random = Math.floor(Math.random() * stickers.length);
-    console.log(random, );
     ctx.reply(stickers[random]);
 });
 bot.launch().then(r => {});

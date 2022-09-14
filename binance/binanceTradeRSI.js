@@ -133,6 +133,8 @@ async function Main() {
                     rsiTemp = rsi;
                     sleep(1000);
                 }
+
+                console.log(common.GetMoment());
             }
 
             sleep(200);

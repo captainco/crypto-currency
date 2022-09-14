@@ -1,23 +1,30 @@
 require('dotenv').config({ path: '../env/live.env' });
-const {log}              = require("../telegram/telegram");
-
-const binance            = require('./binance');
-const sleep              = require('thread-sleep');
-const common             = require('../common');
-
-var symbol               = process.env.envBinanceFunctionRSISymbol;
-var interval             = process.env.envBinanceFunctionRSIInterval;
-var leverage             = Number(process.env.envBinanceFunctionRSILeverage);
-var price                = Number(process.env.envBinanceFunctionRSIPrice);
-var rsi                  = 0;
-var rsiTemp              = 0;
-var rsiMin               = 31;
-var rsiMax               = 69;
+const {log}                           = require("../telegram/telegram");
+						              
+const binance                         = require('./binance');
+const sleep                           = require('thread-sleep');
+const common                          = require('../common');
+						              
+var symbol                            = process.env.envBinanceFunctionRSISymbol;
+var interval                          = process.env.envBinanceFunctionRSIInterval;
+var leverage                          = Number(process.env.envBinanceFunctionRSILeverage);
+var price                             = Number(process.env.envBinanceFunctionRSIPrice);
+var rsi                               = 0;
+var rsiTemp                           = 0;
+var rsiMin                            = 31;
+var rsiMax                            = 69;
+process.env.envBinanceFunctionRSIBOT_ = process.env.envBinanceFunctionRSIBOT;
 
 async function Main() {
     while (true) {
         return new Promise(async (resolve) => {
             if (process.env.envBinanceFunctionRSIBOT == "1") {
+
+                /*Alert thông báo*/
+                if (process.env.envBinanceFunctionRSIBOT_ == "1") {
+                    await log(`Khởi tạo bot thành công`);
+                    process.env.envBinanceFunctionRSIBOT_ = "0";
+                }
 
                 /*Kiểm tra xem đã đến giờ trade chưa?*/
                 if (common.GetMomentSecond() == 59) {

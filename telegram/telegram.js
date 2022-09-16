@@ -129,7 +129,7 @@ bot.command('rsi', async (ctx) => {
             ctx.reply(temp);
         } else {
             const rsiKey = contents[0].toLowerCase();
-            const rsiValue = content[1].toLowerCase();
+            const rsiValue = contents[1].toLowerCase();
             if (rsiKey == "min") {
                 process.env.envBinanceFunctionRSIMin = rsiValue;
                 var oc = ["rsi_min_in", "time_in"];

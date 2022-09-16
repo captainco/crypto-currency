@@ -1,0 +1,3 @@
+Đã thiết lập RSI quá mua 🟢: rsi_max_in
+--------------------
+time: time_in

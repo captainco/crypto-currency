@@ -1,0 +1,3 @@
+Đòn bẩy hiện tại của coin_in: leverage_inx
+--------------------
+time: time_in

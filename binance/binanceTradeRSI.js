@@ -8,18 +8,17 @@ const common                          = require('../common');
 						              
 var symbol                            = process.env.envBinanceFunctionRSISymbol;
 var interval                          = process.env.envBinanceFunctionRSIInterval;
-var leverage                          = Number(process.env.envBinanceFunctionRSILeverage);
 var price                             = Number(process.env.envBinanceFunctionRSIPrice);
 var rsi                               = 0;
 var rsiTemp                           = 0;
-var rsiMin                            = 31;
-var rsiMax                            = 69;
 process.env.envBinanceFunctionRSIBOT_ = process.env.envBinanceFunctionRSIBOT;
 
 async function Main() {
     const ws = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     ws.on('message', async (event) => {
         if (process.env.envBinanceFunctionRSIBOT == "1") {
+
+            var leverage = Number(process.env.envBinanceFunctionRSILeverage);
 
             /*Kiểm tra xem đã đến giờ trade chưa?*/
             if (common.GetMomentSecond() == 59) {
@@ -28,7 +27,7 @@ async function Main() {
                 rsi = await binance.RSI(symbol, interval);
 
                 /*Trade nếu nằm trong vùng min và max*/
-                if (rsi > rsiMin && rsi < rsiMax) {
+                if (rsi > Number(process.env.envBinanceFunctionRSIMin) && rsi < Number(process.env.envBinanceFunctionRSIMax)) {
                     rsiTemp = 0;
                     return;
                 }
@@ -51,17 +50,17 @@ async function Main() {
                         if (checkPs.positionAmt > 0) {
 
                             /*Cắt lãi nếu quá mua*/
-                            if (rsi > rsiMax) {
+                            if (rsi > Number(process.env.envBinanceFunctionRSIMax)) {
                                 const tpsl = (((checkPs.markPrice * 100 / checkPs.entryPrice) - 100) * leverage).toFixed(2);
 
                                 /*Nếu chắc chắn đã lãi thì sẽ chốt*/
                                 if (checkPs.unRealizedProfit > 0) {
                                     await binance.FuturesMarketBuySell(symbol, priceTP, "SELL");
-                                    await telegram.log(`Đã đóng vị thế LONG ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}; TP: ${tpsl}%`);
+                                    await telegram.log(`Đã đóng vị thế 🟢 ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}; TP: ${tpsl}%`);
                                 }
                                 /*Nếu không lãi thì sẽ thông báo tiếp tục DCA*/
                                 else {
-                                    await telegram.log(`Chưa đủ điều kiện đóng vị thế LONG ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}; TP: ${tpsl}%`);
+                                    await telegram.log(`Chưa đủ điều kiện đóng vị thế 🟢 ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}; TP: ${tpsl}%`);
                                 }
                             }
                         }
@@ -69,17 +68,17 @@ async function Main() {
                         else {
 
                             /*Cắt lãi nếu quá bán*/
-                            if (rsi < rsiMin) {
+                            if (rsi < Number(process.env.envBinanceFunctionRSIMin)) {
                                 const tpsl = ((100 - (checkPs.markPrice * 100 / checkPs.entryPrice)) * leverage).toFixed(2);
 
                                 /*Nếu chắc chắn đã lãi thì sẽ chốt*/
                                 if (checkPs.unRealizedProfit > 0) {
                                     await binance.FuturesMarketBuySell(symbol, priceTP, "BUY");
-                                    await telegram.log(`Đã đóng vị thế SHORT ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}; TP: ${tpsl}%`);
+                                    await telegram.log(`Đã đóng vị thế 🔴 ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}; TP: ${tpsl}%`);
                                 }
                                 /*Nếu không lãi thì sẽ thông báo tiếp tục DCA*/
                                 else {
-                                    await telegram.log(`Chưa đủ điều kiện đóng vị thế SHORT ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}; TP: ${tpsl}%`);
+                                    await telegram.log(`Chưa đủ điều kiện đóng vị thế 🔴 ${symbol} ${leverage}x|${priceTP}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}; TP: ${tpsl}%`);
                                 }
                             }
                         }
@@ -87,8 +86,8 @@ async function Main() {
                 }
                 else {
 
-                    /*Nếu RSI < rsiMin => Đang nằm trong vùng quá bán*/
-                    if (rsi < rsiMin) {
+                    /*Nếu RSI < Number(process.env.envBinanceFunctionRSIMin) => Đang nằm trong vùng quá bán*/
+                    if (rsi < Number(process.env.envBinanceFunctionRSIMin)) {
 
                         /*Kiểm tra xem đã có lệnh chưa?*/
                         /*Nếu chưa có lệnh thì vào 1 lệnh mới*/
@@ -96,7 +95,7 @@ async function Main() {
                         if (checkPs.positionAmt == 0) {
                             await binance.FuturesMarketBuySell(symbol, price, "BUY");
                             const checkPsOpen = (await binance.FuturesPositionRisk(symbol))[0];
-                            await telegram.log(`Đã mở vị thế LONG ${symbol} ${leverage}x|${price}: R: ${rsi}; E: ${checkPsOpen.entryPrice}; M: ${checkPsOpen.markPrice}`);
+                            await telegram.log(`Đã mở vị thế 🟢 ${symbol} ${leverage}x|${price}: R: ${rsi}; E: ${checkPsOpen.entryPrice}; M: ${checkPsOpen.markPrice}`);
                         }
                         else {
 
@@ -104,11 +103,11 @@ async function Main() {
                             if (rsi < rsiTemp) {
                                 await binance.FuturesMarketBuySell(symbol, price, "BUY");
                                 const checkPsDCA = (await binance.FuturesPositionRisk(symbol))[0];
-                                await telegram.log(`Đã DCA vị thế LONG ${symbol} ${leverage}x|${checkPsDCA.positionAmt}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
+                                await telegram.log(`Đã DCA vị thế 🟢 ${symbol} ${leverage}x|${checkPsDCA.positionAmt}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
                             }
                         }
                     }
-                    /*Nếu RSI > rsiMax => Đang nằm trong vùng quá mua*/
+                    /*Nếu RSI > Number(process.env.envBinanceFunctionRSIMax) => Đang nằm trong vùng quá mua*/
                     else {
 
                         /*Kiểm tra xem đã có lệnh chưa?*/
@@ -117,7 +116,7 @@ async function Main() {
                         if (checkPs.positionAmt == 0) {
                             await binance.FuturesMarketBuySell(symbol, price, "SELL");
                             const checkPsOpen = (await binance.FuturesPositionRisk(symbol))[0];
-                            await telegram.log(`Đã mở vị thế SHORT ${symbol} ${leverage}x|${price}: R: ${rsi}; E: ${checkPsOpen.entryPrice}; M: ${checkPsOpen.markPrice}`);
+                            await telegram.log(`Đã mở vị thế 🔴 ${symbol} ${leverage}x|${price}: R: ${rsi}; E: ${checkPsOpen.entryPrice}; M: ${checkPsOpen.markPrice}`);
                         }
                         else {
 
@@ -125,7 +124,7 @@ async function Main() {
                             if (rsi > rsiTemp) {
                                 await binance.FuturesMarketBuySell(symbol, price, "SELL");
                                 const checkPsDCA = (await binance.FuturesPositionRisk(symbol))[0];
-                                await telegram.log(`Đã DCA vị thế SHORT ${symbol} ${leverage}x|${checkPsDCA.positionAmt}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
+                                await telegram.log(`Đã DCA vị thế 🔴 ${symbol} ${leverage}x|${checkPsDCA.positionAmt}: R: ${rsi}; E: ${checkPs.entryPrice}; M: ${checkPs.markPrice}`);
                             }
                         }
                     }

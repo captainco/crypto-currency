@@ -64,6 +64,10 @@ async function FuturesMarketBuySell(symbol, quantity, buySell) {
     return await binance.futuresMarketSell(symbol, quantity);
 }
 
+async function FuturesCandles(symbol, interval, limit) {
+    return await binance.futuresCandles(symbol, interval, { limit: limit });
+}
+
 async function RSI(symbol, interval) {
     const latestCandles = await binance.futuresCandles(symbol, interval, { limit: 1500 });
     let values = _.reduce(latestCandles, (result, value) => {
@@ -85,5 +89,6 @@ module.exports = {
     FuturesPositionRisk,
     FuturesLeverage,
     FuturesMarketBuySell,
+    FuturesCandles,
     RSI
 }

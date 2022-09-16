@@ -4,8 +4,16 @@ Thông tin lệnh:
 --> 0: Ngừng bot
 --> 1: Chạy bot
 --------------------
+/l {O|value}: Kiểm tra/set đòn bẩy cho bot
+--> value: Giá trị đòn bẩy
+--------------------
 /p {coin}: Xem vị thế coin của bạn
 --------------------
 /r {coin} {interval}: RSI hiện tại
 --> coin: Hợp đồng
 --> interval: Chart (1m/1h/1d/...)
+--------------------
+/rsi {O|min/max} {O|value}: Kiểm tra/set RSI
+--> min: Vị thế quá bán
+--> max: Vị thế quá mua
+--> value: Thiết lập giá trị

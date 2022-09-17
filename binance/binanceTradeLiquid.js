@@ -20,7 +20,7 @@ async function Main() {
             if (process.env.envBinanceFunctionLiquidAlert == "1") {
                 if (symbol == process.env.envBinanceFunctionSymbol) {
                     const iconLongShort = (result.o.S == "BUY") ? "🟢" : "🔴";
-                    await telegram.log(`🤖 ${symbol} thanh lý ${iconLongShort}: ${totalValue}`);
+                    await telegram.log(`🤖 ${symbol} thanh lý ${iconLongShort}: ${common.FormatNumberToString(totalValue)}`);
                 }
             }
         } catch (e) {

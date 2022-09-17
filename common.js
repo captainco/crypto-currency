@@ -35,9 +35,23 @@ function ConvertToPositiveNumber(number) {
     return number < 0 ? number * -1 : number;
 }
 
-function NumDigitsAfterDecimal() {
+function NumDigitsAfterDecimal(x) {
     var afterDecimalStr = x.toString().split('.')[1] || '';
     return afterDecimalStr.length;
+}
+
+function FormatNumberToString(num) {
+    var output = "";
+    if (Math.abs(num) > 999 && Math.abs(num) < 999999) {
+        output = Math.sign(num) * ((Math.abs(num) / 1000).toFixed(1)) + 'K';
+    }
+    else if(Math.abs(num) > 999999 && Math.abs(num) < 1000000000) {
+        output = Math.sign(num) * ((Math.abs(num) / 1000000).toFixed(1)) + 'M';
+    }
+    else {
+        output = Math.sign(num) * ((Math.abs(num) / 1000000000).toFixed(1)) + 'B';
+    }
+    return output;
 }
 
 module.exports = {
@@ -46,5 +60,6 @@ module.exports = {
     GetMomentSecond,
     ReplaceTextByTemplate,
     ConvertToPositiveNumber,
-    NumDigitsAfterDecimal
+    NumDigitsAfterDecimal,
+    FormatNumberToString
 }

@@ -1,17 +1,11 @@
 🤖 Bot cho biết:
-symbol: symbol_in
-positionAmt: positionAmt_in
-entryPrice: entryPrice_in
-markPrice: markPrice_in
-unRealizedProfit: unRealizedProfit_in
-liquidationPrice: liquidationPrice_in
-leverage: leverage_in
-maxNotionalValue: maxNotionalValue_in
-marginType: marginType_in
-isolatedMargin: isolatedMargin_in
-isAutoAddMargin: isAutoAddMargin_in
-positionSide: positionSide_in
-notional: notional_in
-isolatedWallet: isolatedWallet_in
+Hợp đồng: symbol_in
+Vị thế: longshort_in
+Số lượng: positionAmt_in
+Giá vào lệnh: entryPrice_in
+Giá hiện tại: markPrice_in
+USDT chưa ghi nhận: unRealizedProfit_in
+USDT thanh lý: liquidationPrice_in
+Đòn bẩy: leverage_inx
 --------------------
 time: time_in

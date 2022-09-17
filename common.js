@@ -42,10 +42,12 @@ function NumDigitsAfterDecimal(x) {
 
 function FormatNumberToString(num) {
     var output = "";
-    if (Math.abs(num) > 999 && Math.abs(num) < 999999) {
+    if (Math.abs(num) < 1000) {
+        output = num;
+    }else if (Math.abs(num) >= 1000 && Math.abs(num) < 1000000) {
         output = Math.sign(num) * ((Math.abs(num) / 1000).toFixed(1)) + 'K';
     }
-    else if(Math.abs(num) > 999999 && Math.abs(num) < 1000000000) {
+    else if(Math.abs(num) >= 1000000 && Math.abs(num) < 1000000000) {
         output = Math.sign(num) * ((Math.abs(num) / 1000000).toFixed(1)) + 'M';
     }
     else {

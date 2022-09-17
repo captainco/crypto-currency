@@ -1,0 +1,17 @@
+🤖 Bot cho biết:
+symbol: symbol_in
+positionAmt: positionAmt_in
+entryPrice: entryPrice_in
+markPrice: markPrice_in
+unRealizedProfit: unRealizedProfit_in
+liquidationPrice: liquidationPrice_in
+leverage: leverage_in
+maxNotionalValue: maxNotionalValue_in
+marginType: marginType_in
+isolatedMargin: isolatedMargin_in
+isAutoAddMargin: isAutoAddMargin_in
+positionSide: positionSide_in
+notional: notional_in
+isolatedWallet: isolatedWallet_in
+--------------------
+time: time_in

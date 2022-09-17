@@ -48,8 +48,8 @@ async function Main() {
                     if (checkPs.positionAmt == 0) {
 
                         const fraction = common.NumDigitsAfterDecimal(process.env.envBinanceFunctionPrice);
-                        const price = (totalValue * Number(process.env.envBinanceFunctionPrice) / Number(process.env.envBinanceFunctionLiquidAmount)).toFixed(fraction);
-                        await binance.FuturesMarketBuySell(symbol, price, sideMy);
+                        const quantity = (totalValue * Number(process.env.envBinanceFunctionPrice) / Number(process.env.envBinanceFunctionLiquidAmount)).toFixed(fraction);
+                        await binance.FuturesMarketBuySell(symbol, quantity, sideMy);
                         process.env.envBinanceFunctionLiquidTPSLVol = (totalValue / 10000).toFixed(0);
 
                         /*Gửi thông báo*/

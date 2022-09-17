@@ -7,7 +7,7 @@ process.env.envBinanceFunctionLiquidOpenTrade  = 'wss://fstream.binance.com/ws/b
 process.env.envBinanceFunctionLiquidCloseTrade = 'wss://fstream.binance.com/ws/btcusdt@markPrice@1s';
 
 async function Main() {
-
+    /*wss://fstream.binance.com/ws/!forceOrder@arr*/
     const CreateLinkTrade = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     CreateLinkTrade.on('message', async (event) => {
         process.env.envBinanceFunctionLiquidOpenTrade  = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@forceOrder`;

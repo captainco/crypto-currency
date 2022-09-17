@@ -212,8 +212,10 @@ process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
 async function log(message) {
-    const dateTime = moment(Date.now()).format("DD/MM/YYYY HH:mm:ss");
-    await sendMessage(`${dateTime} => ${message}`);
+    var oc = ["content_in", "time_in"];
+    var nc = [message, GetMoment()];
+    var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/template.txt");
+    await sendMessage(`${temp}`);
 }
 
 async function sendMessage(message) {

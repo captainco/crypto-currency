@@ -1,11 +1,19 @@
-Thông tin lệnh:
+Thông tin lệnh chung:
 --------------------
 /b {O|0/1}: Kiểm tra/set trạng thái bot
 --> 0: Ngừng bot
 --> 1: Chạy bot
 --------------------
-/l {O|value}: Kiểm tra/set đòn bẩy cho bot
---> value: Giá trị đòn bẩy
+/c {O|coin} {O|value} {O|valueLeverage}: Kiểm tra/set lệnh coin và min value đang trade
+--> coin: Đồng coin đang trade
+--> value: Giá trị min coin
+--> valueLeverage: Đòn bẩy
+
+
+
+--------------------
+/lq {O|value}: Kiểm tra/set giá thanh lý cho bot
+--> value: Giá trị thanh lý
 --------------------
 /p {coin}: Xem vị thế coin của bạn
 --------------------

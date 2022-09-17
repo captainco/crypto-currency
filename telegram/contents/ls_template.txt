@@ -1,3 +1,0 @@
-Đã điều chỉnh đòn bẩy của coin_in: leverage_inx
---------------------
-time: time_in

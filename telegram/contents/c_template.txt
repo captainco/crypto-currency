@@ -1,0 +1,6 @@
+💸 Thông số hiện tại
+Coin: coin_in
+Giá min: value_in
+Đòn bẩy: leverage_inx
+--------------------
+time: time_in

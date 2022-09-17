@@ -1,0 +1,3 @@
+✔️ Đã thiết lập giá thanh lý: lq_in
+--------------------
+time: time_in

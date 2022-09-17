@@ -1,24 +1,22 @@
 require('dotenv').config({ path: '../env/live.env' });
 const telegram                        = require("../telegram/telegram");
 const WebSocket                       = require("ws");
-						              
 const binance                         = require('./binance');
 const sleep                           = require('thread-sleep');
 const common                          = require('../common');
-						              
-var symbol                            = process.env.envBinanceFunctionRSISymbol;
 var interval                          = process.env.envBinanceFunctionRSIInterval;
-var price                             = Number(process.env.envBinanceFunctionRSIPrice);
+var price                             = Number(process.env.envBinanceFunctionPrice);
 var rsi                               = 0;
 var rsiTemp                           = 0;
-process.env.envBinanceFunctionRSIBOT_ = process.env.envBinanceFunctionRSIBOT;
+process.env.envBinanceFunctionRSIBOT  = process.env.envTelegramBotStatus;
 
 async function Main() {
     const ws = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     ws.on('message', async (event) => {
-        if (process.env.envBinanceFunctionRSIBOT == "1") {
+        if (process.env.envTelegramBotStatus == "1") {
 
-            var leverage = Number(process.env.envBinanceFunctionRSILeverage);
+            var symbol   = process.env.envBinanceFunctionSymbol;
+            var leverage = Number(process.env.envBinanceFunctionLeverage);
 
             /*Kiểm tra xem đã đến giờ trade chưa?*/
             if (common.GetMomentSecond() == 59) {
@@ -133,9 +131,9 @@ async function Main() {
                 rsiTemp = rsi;
             }
 
-            if (process.env.envBinanceFunctionRSIBOT_ == "1") {
+            if (process.env.envBinanceFunctionRSIBOT == "1") {
                 await telegram.log(`Khởi tạo bot thành công`);
-                process.env.envBinanceFunctionRSIBOT_ = "0";
+                process.env.envBinanceFunctionRSIBOT = "0";
             }
         }
     });

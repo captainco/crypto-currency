@@ -52,14 +52,14 @@ bot.command('b', async (ctx) => {
     const content = GetTelegramMessage(ctx, 'b');
     try {
         if (content == "") {
-            ctx.reply(`Trạng thái bot: ${process.env.envBinanceFunctionRSIBOT == "0" ? "Đã dừng" : "Hoạt động"}`);
+            ctx.reply(`Trạng thái bot: ${process.env.envTelegramBotStatus == "0" ? "Đã dừng" : "Hoạt động"}`);
         }
         else {
             if (content == "0") {
-                process.env.envBinanceFunctionRSIBOT = "0";
+                process.env.envTelegramBotStatus = "0";
                 ctx.reply(`Thiết lập trạng thái bot: Đã dừng`);
             } else {
-                process.env.envBinanceFunctionRSIBOT = "1";
+                process.env.envTelegramBotStatus = "1";
                 ctx.reply(`Thiết lập trạng thái bot: Hoạt động`);
             }
         }
@@ -68,19 +68,44 @@ bot.command('b', async (ctx) => {
     }
 });
 
-bot.command('l', async (ctx) => {
+bot.command('c', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
-    const content = GetTelegramMessage(ctx, 'l');
+    const content = GetTelegramMessage(ctx, 'c');
+    const contents = content.split(' ');
     try {
+        var oc = ["coin_in", "value_in", "leverage_in", "time_in"];
         if (content == "") {
-            var oc = ["coin_in", "leverage_in", "time_in"];
-            var nc = [process.env.envBinanceFunctionRSISymbol, process.env.envBinanceFunctionRSILeverage, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/l_template.txt");
+            var nc = [process.env.envBinanceFunctionSymbol, process.env.envBinanceFunctionPrice, process.env.envBinanceFunctionLeverage, GetMoment()];
+            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/c_template.txt");
         } else {
-            process.env.envBinanceFunctionRSILeverage = content;
-            var oc = ["coin_in", "leverage_in", "time_in"];
-            var nc = [process.env.envBinanceFunctionRSISymbol, process.env.envBinanceFunctionRSILeverage, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/ls_template.txt");
+            const coinName = `${contents[0].toUpperCase()}USDT`;
+            const value = Number(contents[1]);
+            const valueLeverage = Number(contents[2]);
+            process.env.envBinanceFunctionSymbol = coinName;
+            process.env.envBinanceFunctionPrice = value;
+            process.env.envBinanceFunctionLeverage = valueLeverage;
+            await binance.FuturesLeverage(process.env.envBinanceFunctionSymbol, Number(process.env.envBinanceFunctionLeverage));
+            var nc = [process.env.envBinanceFunctionSymbol, process.env.envBinanceFunctionPrice, process.env.envBinanceFunctionLeverage, GetMoment()];
+            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/cs_template.txt");
+        }
+        ctx.reply(temp);
+    } catch (error) {
+        ctx.reply(error);
+    }
+});
+
+bot.command('lq', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    const content = GetTelegramMessage(ctx, 'lq');
+    try {
+        var oc = ["lq_in", "time_in"];
+        if (content == "") {
+            var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
+            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lq_template.txt");
+        } else {
+            process.env.envBinanceFunctionLiquidAmount = Number(content);
+            var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
+            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqs_template.txt");
         }
         ctx.reply(temp);
     } catch (error) {

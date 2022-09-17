@@ -1,3 +1,3 @@
-Đã thiết lập RSI quá bán 🔴: rsi_min_in
+✔️ Đã thiết lập RSI quá bán 🔴: rsi_min_in
 --------------------
 time: time_in

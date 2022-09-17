@@ -84,11 +84,10 @@ async function Main() {
                 if (checkPs.entryPrice + Number(process.env.envBinanceFunctionLiquidTPSLVol) < checkPs.markPrice) {
                     
                     /*Đóng lệnh*/
-                    const ClosePs = (await binance.FuturesPositionRisk(symbol))[0];
-                    await binance.FuturesMarketBuySell(symbol, ClosePs.positionAmt, "SELL");
+                    await binance.FuturesMarketBuySell(symbol, checkPs.positionAmt, "SELL");
 
                     /*Gửi thông báo*/
-                    await telegram.log(`✅🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${ClosePs.positionAmt}: ${ClosePs.unRealizedProfit}USDT`);
+                    await telegram.log(`✅🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${checkPs.positionAmt}: ${checkPs.unRealizedProfit}USDT`);
                     return;
                 }
 
@@ -96,11 +95,10 @@ async function Main() {
                 if (checkPs.entryPrice - (Number(process.env.envBinanceFunctionLiquidTPSLVol)*2) > checkPs.markPrice) {
                     
                     /*Đóng lệnh*/
-                    const ClosePs = (await binance.FuturesPositionRisk(symbol))[0];
-                    await binance.FuturesMarketBuySell(symbol, ClosePs.positionAmt, "SELL");
+                    await binance.FuturesMarketBuySell(symbol, checkPs.positionAmt, "SELL");
 
                     /*Gửi thông báo*/
-                    await telegram.log(`❌🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${ClosePs.positionAmt}: ${ClosePs.unRealizedProfit}USDT`);
+                    await telegram.log(`❌🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${checkPs.positionAmt}: ${checkPs.unRealizedProfit}USDT`);
                     return;
                 }
 
@@ -114,11 +112,10 @@ async function Main() {
                 if (checkPs.entryPrice - Number(process.env.envBinanceFunctionLiquidTPSLVol) > checkPs.markPrice) {
                     
                     /*Đóng lệnh*/
-                    const ClosePs = (await binance.FuturesPositionRisk(symbol))[0];
-                    await binance.FuturesMarketBuySell(symbol, ClosePs.positionAmt, "BUY");
+                    await binance.FuturesMarketBuySell(symbol, checkPs.positionAmt, "BUY");
 
                     /*Gửi thông báo*/
-                    await telegram.log(`✅🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${ClosePs.positionAmt}: ${ClosePs.unRealizedProfit}USDT`);
+                    await telegram.log(`✅🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${checkPs.positionAmt}: ${checkPs.unRealizedProfit}USDT`);
                     return;
                 }
 
@@ -126,11 +123,10 @@ async function Main() {
                 if (checkPs.entryPrice + (Number(process.env.envBinanceFunctionLiquidTPSLVol)*2) < checkPs.markPrice) {
                     
                     /*Đóng lệnh*/
-                    const ClosePs = (await binance.FuturesPositionRisk(symbol))[0];
-                    await binance.FuturesMarketBuySell(symbol, ClosePs.positionAmt, "BUY");
+                    await binance.FuturesMarketBuySell(symbol, checkPs.positionAmt, "BUY");
 
                     /*Gửi thông báo*/
-                    await telegram.log(`❌🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${ClosePs.positionAmt}: ${ClosePs.unRealizedProfit}USDT`);
+                    await telegram.log(`❌🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${checkPs.positionAmt}: ${checkPs.unRealizedProfit}USDT`);
                     return;
                 }
 

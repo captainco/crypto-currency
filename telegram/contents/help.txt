@@ -1,3 +1,4 @@
+🤖 Bot cho biết:
 Thông tin lệnh chung:
 --------------------
 /b {O|0/1}: Kiểm tra/set trạng thái bot

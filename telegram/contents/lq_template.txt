@@ -1,3 +1,4 @@
-🤖 Giá thanh lý hiện tại: lq_in
+🤖 Bot cho biết:
+Giá thanh lý hiện tại: lq_in
 --------------------
 time: time_in

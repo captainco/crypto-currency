@@ -52,15 +52,15 @@ bot.command('b', async (ctx) => {
     const content = GetTelegramMessage(ctx, 'b');
     try {
         if (content == "") {
-            ctx.reply(`Trạng thái bot: ${process.env.envTelegramBotStatus == "0" ? "Đã dừng" : "Hoạt động"}`);
+            ctx.reply(`🤖 Trạng thái bot: ${process.env.envTelegramBotStatus == "0" ? "Đã dừng" : "Hoạt động"}`);
         }
         else {
             if (content == "0") {
                 process.env.envTelegramBotStatus = "0";
-                ctx.reply(`Thiết lập trạng thái bot: Đã dừng`);
+                ctx.reply(`✅ Thiết lập trạng thái bot: Đã dừng`);
             } else {
                 process.env.envTelegramBotStatus = "1";
-                ctx.reply(`Thiết lập trạng thái bot: Hoạt động`);
+                ctx.reply(`✅ Thiết lập trạng thái bot: Hoạt động`);
             }
         }
     } catch (error) {
@@ -123,10 +123,10 @@ bot.command('lqa', async (ctx) => {
         else {
             if (content == "0") {
                 process.env.envBinanceFunctionLiquidAlert = "0";
-                ctx.reply(`✔️ Thiết lập thông báo thanh lý: Đã dừng`);
+                ctx.reply(`✅ Thiết lập thông báo thanh lý: Đã dừng`);
             } else {
                 process.env.envBinanceFunctionLiquidAlert = "1";
-                ctx.reply(`✔️ Thiết lập thông báo thanh lý: Hoạt động`);
+                ctx.reply(`✅ Thiết lập thông báo thanh lý: Hoạt động`);
             }
         }
     } catch (error) {
@@ -157,7 +157,7 @@ bot.command('r', async (ctx) => {
         const symbol = `${content[0].toUpperCase()}USDT`;
         const interval = content[1].toLowerCase();
         const rsi = await binance.RSI(symbol, interval);
-        ctx.reply(`RSI ${symbol}|${interval}: ${rsi}`);
+        ctx.reply(`🤖 RSI ${symbol}|${interval}: ${rsi}`);
     } catch (error) {
         ctx.reply(error);
     }
@@ -198,7 +198,7 @@ bot.command('rsi', async (ctx) => {
 
 bot.on('sticker', (ctx) => {
     const stickers = [
-        '👍', 'Adou~! 😉', 'Cmn 👇', 'Thả gì mà lắm sticker thế! 🙃', 'Tuổi x3 =)))', 'Hảo ✔️',
+        '👍', 'Adou~! 😉', 'Cmn 👇', 'Thả gì mà lắm sticker thế! 🙃', 'Tuổi x3 =)))', 'Hảo ✅',
         'Thả tim nè ❤️', 'Con cò lông này... 😁', 'Nasica đó hả!!! 🤪',
         'Ái chà, khét đấy 😬', 'Buồn x3 😔'
     ];

@@ -1,4 +1,4 @@
-💸 Thông số hiện tại
+🤖 Bot cho biết:
 Coin: coin_in
 Giá min: value_in
 Đòn bẩy: leverage_inx

@@ -1,4 +1,4 @@
-✔️ Đã thiết lập
+✅ Bot đã thiết lập
 Coin: coin_inUSDT
 Giá min: value_in
 Đòn bẩy: leverage_inx

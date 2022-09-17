@@ -3,17 +3,11 @@ const telegram                                 = require("../telegram/telegram")
 const WebSocket                                = require("ws");
 const binance                                  = require('./binance');
 const common                                   = require('../common');
-process.env.envBinanceFunctionLiquidOpenTrade  = 'wss://fstream.binance.com/ws/btcusdt@forceOrder';
-process.env.envBinanceFunctionLiquidCloseTrade = 'wss://fstream.binance.com/ws/btcusdt@markPrice@1s';
+process.env.envBinanceFunctionLiquidOpenTrade  = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@forceOrder`;
+process.env.envBinanceFunctionLiquidCloseTrade = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@markPrice@1s`;
 
 async function Main() {
     /*wss://fstream.binance.com/ws/!forceOrder@arr*/
-    const CreateLinkTrade = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
-    CreateLinkTrade.on('message', async (event) => {
-        process.env.envBinanceFunctionLiquidOpenTrade  = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@forceOrder`;
-        process.env.envBinanceFunctionLiquidCloseTrade = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@markPrice@1s`;
-    });
-
     const AlertTrading = new WebSocket(process.env.envBinanceFunctionLiquidOpenTrade);
     AlertTrading.on('message', async (event) => {
         try {

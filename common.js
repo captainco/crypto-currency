@@ -1,7 +1,7 @@
-const moment                = require('moment-timezone');
-const _                     = require('lodash');
-const fs                    = require('fs');
-const {sendMessage, log}    = require("./telegram/telegram");
+const moment = require('moment-timezone');
+const _ = require('lodash');
+const fs = require('fs');
+const { sendMessage, log } = require("./telegram/telegram");
 
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const envTelegramMyTelegram = process.env.envTelegramMyTelegram;
@@ -35,10 +35,16 @@ function ConvertToPositiveNumber(number) {
     return number < 0 ? number * -1 : number;
 }
 
+function NumDigitsAfterDecimal() {
+    var afterDecimalStr = x.toString().split('.')[1] || '';
+    return afterDecimalStr.length;
+}
+
 module.exports = {
     WriteConsoleLog,
     GetMoment,
     GetMomentSecond,
     ReplaceTextByTemplate,
-    ConvertToPositiveNumber
+    ConvertToPositiveNumber,
+    NumDigitsAfterDecimal
 }

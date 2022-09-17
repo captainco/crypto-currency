@@ -113,6 +113,27 @@ bot.command('lq', async (ctx) => {
     }
 });
 
+bot.command('lqa', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    const content = GetTelegramMessage(ctx, 'lqa');
+    try {
+        if (content == "") {
+            ctx.reply(`🤖 Thông báo thanh lý: ${process.env.envBinanceFunctionLiquidAlert == "0" ? "Đã dừng" : "Hoạt động"}`);
+        }
+        else {
+            if (content == "0") {
+                process.env.envBinanceFunctionLiquidAlert = "0";
+                ctx.reply(`✔️ Thiết lập thông báo thanh lý: Đã dừng`);
+            } else {
+                process.env.envBinanceFunctionLiquidAlert = "1";
+                ctx.reply(`✔️ Thiết lập thông báo thanh lý: Hoạt động`);
+            }
+        }
+    } catch (error) {
+        ctx.reply(error);
+    }
+});
+
 bot.command('p', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'p');

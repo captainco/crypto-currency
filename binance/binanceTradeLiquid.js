@@ -2,12 +2,9 @@ require('dotenv').config({ path: '../env/live.env' });
 const telegram                                 = require("../telegram/telegram");
 const WebSocket                                = require("ws");
 const binance                                  = require('./binance');
-const sleep                                    = require('thread-sleep');
 const common                                   = require('../common');
-process.env.envBinanceFunctionLiquidBOT        = process.env.envTelegramBotStatus;
 process.env.envBinanceFunctionLiquidOpenTrade  = 'wss://fstream.binance.com/ws/btcusdt@forceOrder';
 process.env.envBinanceFunctionLiquidCloseTrade = 'wss://fstream.binance.com/ws/btcusdt@markPrice@1s';
-process.env.envBinanceFunctionLiquidAmount     = 50000;
 
 async function Main() {
 
@@ -15,6 +12,26 @@ async function Main() {
     CreateLinkTrade.on('message', async (event) => {
         process.env.envBinanceFunctionLiquidOpenTrade  = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@forceOrder`;
         process.env.envBinanceFunctionLiquidCloseTrade = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@markPrice@1s`;
+    });
+
+    const AlertTrading = new WebSocket(process.env.envBinanceFunctionLiquidOpenTrade);
+    AlertTrading.on('message', async (event) => {
+        try {
+            /*Socket*/
+            let result = JSON.parse(event);
+            let totalValue = result.o.q * result.o.ap;
+            let symbol = result.o.s;
+
+            /*Thông báo thanh lý*/
+            if (process.env.envBinanceFunctionLiquidAlert == "1") {
+                if (symbol == process.env.envBinanceFunctionSymbol) {
+                    const iconLongShort = (result.o.S == "BUY") ? "🟢" : "🔴";
+                    await telegram.log(`🤖 ${symbol} thanh lý ${iconLongShort}: ${totalValue}`);
+                }
+            }
+        } catch (e) {
+            console.log(e);
+        }
     });
 
     const OpenTrading = new WebSocket(process.env.envBinanceFunctionLiquidOpenTrade);
@@ -35,28 +52,18 @@ async function Main() {
                     /*Kiểm tra xem có vị thế ko? Nếu ko có thì vào*/
                     const checkPs = (await binance.FuturesPositionRisk(symbol))[0];
                     if (checkPs.positionAmt == 0) {
-                        
+
+                        const fraction = common.NumDigitsAfterDecimal(myAmt);
+                        const price = (totalValue * Number(process.env.envBinanceFunctionPrice) / Number(process.env.envBinanceFunctionLiquidAmount)).toFixed(fraction);
+                        await binance.FuturesMarketBuySell(symbol, price, sideMy);
+                        process.env.envBinanceFunctionLiquidTPSLVol = (totalValue / 10000).toFixed(0);
+
+                        /*Gửi thông báo*/
+                        const alertPs = (await binance.FuturesPositionRisk(symbol))[0];
+                        const iconLongShort = (sideMy == "BUY") ? "🟢" : "🔴";
+                        await telegram.log(`${iconLongShort} ${symbol} ${process.env.envBinanceFunctionLeverage}x|${alertPs.positionAmt}: ${alertPs.entryPrice}`);
                     }
                 }
-
-                // if (ctx.liquidTrade) {
-                //     const myPosition = await lib.fetchPositionBySymbol('ETHUSDT');
-                //     if (_.isEmpty(myPosition)) {
-                //         let obj = { symbol, entryPrice: 'Liquid Price', amount: `Liquid: ${lib.kFormatter(totalValue)}` };
-                //         let quantity = 0.5;
-                //         if (totalValue > 100000 && totalValue < 200000) {
-                //             quantity = 0.8;
-                //         } else if (totalValue > 200000 && totalValue < 600000) {
-                //             quantity = 1;
-                //         } else if (totalValue > 700000) {
-                //             quantity = 1.3;
-                //         }
-                //         await lib.openPositionByType(side, obj, quantity, 100);
-                //     }
-                // } else {
-                //     let liquidTradeMsg = `${side} #${symbol} at ${averagePrice}`;
-                //     await lib.sendMessage(liquidTradeMsg)
-                // }
             }
         } catch (e) {
             console.log(e);
@@ -66,33 +73,68 @@ async function Main() {
     const CloseTrading = new WebSocket(process.env.envBinanceFunctionLiquidCloseTrade);
     CloseTrading.on('message', async (event) => {
         try {
-            if (ctx.autoTP) {
-                let positions = await lib.fetchPositions();
-                ctx.myPositions = positions;
-                if (!_.isEmpty(positions)) {
-                    const position = _.find(positions, { symbol: 'ETHUSDT' });
-                    if (_.isEmpty(position)) {
-                        return // tìm k có vị thế BTC thì bỏ
-                    }
-                    const amt = Math.abs(position.positionAmt);
-                    if (position.positionAmt > 0) {
-                        // đang long
-                        if ((position.markPrice - position.entryPrice) >= ctx.minTP) {
-                            await lib.closePositionByType('LONG', {
-                                symbol: position.symbol,
-                                unRealizedProfit: position.unRealizedProfit
-                            }, amt, true)
-                        }
-                    } else {
-                        // đang short
-                        if ((position.entryPrice - position.markPrice) >= ctx.minTP) {
-                            await lib.closePositionByType('SHORT', {
-                                symbol: position.symbol,
-                                unRealizedProfit: position.unRealizedProfit
-                            }, amt, true)
-                        }
-                    }
+            /*Kiểm tra xem có lệnh không? Nếu có thì sẽ cắt lãi hoặc lỗ*/
+            const symbol = process.env.envBinanceFunctionSymbol;
+            const checkPs = (await binance.FuturesPositionRisk(symbol))[0];
+
+            /*Nếu là kèo long*/
+            if (checkPs.positionAmt > 0) {
+                
+                /*Nếu lãi*/
+                if (checkPs.entryPrice + Number(process.env.envBinanceFunctionLiquidTPSLVol) < checkPs.markPrice) {
+                    
+                    /*Đóng lệnh*/
+                    const ClosePs = (await binance.FuturesPositionRisk(symbol))[0];
+                    await binance.FuturesMarketBuySell(symbol, ClosePs.positionAmt, "SELL");
+
+                    /*Gửi thông báo*/
+                    await telegram.log(`✔️🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${ClosePs.positionAmt}: ${ClosePs.unRealizedProfit}USDT`);
+                    return;
                 }
+
+                /*Nếu lỗ*/
+                if (checkPs.entryPrice - (Number(process.env.envBinanceFunctionLiquidTPSLVol)*2) > checkPs.markPrice) {
+                    
+                    /*Đóng lệnh*/
+                    const ClosePs = (await binance.FuturesPositionRisk(symbol))[0];
+                    await binance.FuturesMarketBuySell(symbol, ClosePs.positionAmt, "SELL");
+
+                    /*Gửi thông báo*/
+                    await telegram.log(`❌🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${ClosePs.positionAmt}: ${ClosePs.unRealizedProfit}USDT`);
+                    return;
+                }
+
+                return;
+            }
+
+            /*Nếu là kèo short*/
+            if (checkPs.positionAmt < 0) {
+                
+                /*Nếu lãi*/
+                if (checkPs.entryPrice - Number(process.env.envBinanceFunctionLiquidTPSLVol) > checkPs.markPrice) {
+                    
+                    /*Đóng lệnh*/
+                    const ClosePs = (await binance.FuturesPositionRisk(symbol))[0];
+                    await binance.FuturesMarketBuySell(symbol, ClosePs.positionAmt, "BUY");
+
+                    /*Gửi thông báo*/
+                    await telegram.log(`✔️🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${ClosePs.positionAmt}: ${ClosePs.unRealizedProfit}USDT`);
+                    return;
+                }
+
+                /*Nếu lỗ*/
+                if (checkPs.entryPrice + (Number(process.env.envBinanceFunctionLiquidTPSLVol)*2) < checkPs.markPrice) {
+                    
+                    /*Đóng lệnh*/
+                    const ClosePs = (await binance.FuturesPositionRisk(symbol))[0];
+                    await binance.FuturesMarketBuySell(symbol, ClosePs.positionAmt, "BUY");
+
+                    /*Gửi thông báo*/
+                    await telegram.log(`❌🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${ClosePs.positionAmt}: ${ClosePs.unRealizedProfit}USDT`);
+                    return;
+                }
+
+                return;
             }
         } catch (e) {
             console.log(e);

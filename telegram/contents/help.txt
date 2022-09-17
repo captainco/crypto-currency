@@ -8,14 +8,10 @@ Thông tin lệnh chung:
 --> coin: Đồng coin đang trade
 --> value: Giá trị min coin
 --> valueLeverage: Đòn bẩy
-
-
-
---------------------
-/lq {O|value}: Kiểm tra/set giá thanh lý cho bot
---> value: Giá trị thanh lý
 --------------------
 /p {coin}: Xem vị thế coin của bạn
+
+Lệnh RSI:
 --------------------
 /r {coin} {interval}: RSI hiện tại
 --> coin: Hợp đồng
@@ -25,3 +21,12 @@ Thông tin lệnh chung:
 --> min: Vị thế quá bán
 --> max: Vị thế quá mua
 --> value: Thiết lập giá trị
+
+Lệnh thanh lý:
+--------------------
+/lq {O|value}: Kiểm tra/set giá thanh lý cho bot
+--> value: Giá trị thanh lý
+--------------------
+/lqa {O|0/1}: Kiểm tra/set thông báo thanh lý
+--> 0: Ngừng thông báo
+--> 1: Thông báo

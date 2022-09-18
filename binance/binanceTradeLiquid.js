@@ -7,7 +7,7 @@ const sleep                                    = require('thread-sleep');
 process.env.envBinanceFunctionLiquidOpenTrade  = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@forceOrder`;
 process.env.envBinanceFunctionLiquidCloseTrade = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@markPrice@1s`;
 _CloseTrading                                  = "0";
-var liquidTPSLVol                              = 5;
+var liquidTPSLVol                              = 10;
 
 async function Main() {
     /*wss://fstream.binance.com/ws/!forceOrder@arr*/

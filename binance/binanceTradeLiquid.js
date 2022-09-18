@@ -5,6 +5,7 @@ const binance                                  = require('./binance');
 const common                                   = require('../common');
 process.env.envBinanceFunctionLiquidOpenTrade  = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@forceOrder`;
 process.env.envBinanceFunctionLiquidCloseTrade = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@markPrice@1s`;
+process.env.CloseTrading                       = "0";
 
 async function Main() {
     /*wss://fstream.binance.com/ws/!forceOrder@arr*/
@@ -58,6 +59,8 @@ async function Main() {
                         const alertPs = (await binance.FuturesPositionRisk(symbol))[0];
                         const iconLongShort = (sideMy == "BUY") ? "🟢" : "🔴";
                         await telegram.log(`${iconLongShort} ${symbol} ${process.env.envBinanceFunctionLeverage}x|${alertPs.positionAmt}: ${alertPs.entryPrice}`);
+
+                        process.env.CloseTrading = "0";
                     }
                 }
             }
@@ -69,6 +72,13 @@ async function Main() {
     const CloseTrading = new WebSocket(process.env.envBinanceFunctionLiquidCloseTrade);
     CloseTrading.on('message', async (event) => {
         try {
+            /*Nếu lệnh đang đóng thì return*/
+            if (process.env.CloseTrading == "1") {
+                return;
+            }
+
+            process.env.CloseTrading = "1";
+
             /*Kiểm tra xem có lệnh không? Nếu có thì sẽ cắt lãi hoặc lỗ*/
             const symbol = process.env.envBinanceFunctionSymbol;
             const checkPs = (await binance.FuturesPositionRisk(symbol))[0];
@@ -117,7 +127,10 @@ async function Main() {
                     await telegram.log(`❌🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${checkPs.positionAmt}: ${checkPs.unRealizedProfit}USDT`);
                 }
             }
+
+            process.env.CloseTrading = "0";
         } catch (e) {
+            process.env.CloseTrading = "0";
             await telegram.log(`⚠ ${e}`);
         }
     });

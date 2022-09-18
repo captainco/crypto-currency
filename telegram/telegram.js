@@ -103,7 +103,7 @@ bot.command('lq', async (ctx) => {
             var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
             var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lq_template.txt");
         } else {
-            if (Number(content) < 10000) {
+            if (Number(content) < 1000) {
                 var nc = ["", GetMoment()];
                 var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqe_template.txt");
             } else {

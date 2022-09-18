@@ -103,9 +103,14 @@ bot.command('lq', async (ctx) => {
             var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
             var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lq_template.txt");
         } else {
-            process.env.envBinanceFunctionLiquidAmount = Number(content);
-            var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqs_template.txt");
+            if (Number(content) < 10000) {
+                var nc = ["", GetMoment()];
+                var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqe_template.txt");
+            } else {
+                process.env.envBinanceFunctionLiquidAmount = Number(content);
+                var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
+                var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqs_template.txt");
+            }
         }
         ctx.reply(temp);
     } catch (error) {

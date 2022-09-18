@@ -24,7 +24,7 @@ async function Main() {
                 }
             }
         } catch (e) {
-            console.log(e);
+            await telegram.log(`⚠ ${e}`);
         }
     });
 
@@ -51,6 +51,9 @@ async function Main() {
                         const quantity = (totalValue * Number(process.env.envBinanceFunctionPrice) / Number(process.env.envBinanceFunctionLiquidAmount)).toFixed(fraction);
                         await binance.FuturesMarketBuySell(symbol, quantity, sideMy);
                         process.env.envBinanceFunctionLiquidTPSLVol = (totalValue / 10000).toFixed(0);
+                        
+                        /*Fix cứng vượt quá 10 giá thì mặc định 10 giá*/
+                        process.env.envBinanceFunctionLiquidTPSLVol = process.env.envBinanceFunctionLiquidTPSLVol > 10 ? 10 : process.env.envBinanceFunctionLiquidTPSLVol;
 
                         /*Gửi thông báo*/
                         const alertPs = (await binance.FuturesPositionRisk(symbol))[0];
@@ -60,7 +63,7 @@ async function Main() {
                 }
             }
         } catch (e) {
-            console.log(e);
+            await telegram.log(`⚠ ${e}`);
         }
     });
 
@@ -127,7 +130,7 @@ async function Main() {
                 return;
             }
         } catch (e) {
-            console.log(e);
+            await telegram.log(`⚠ ${e}`);
         }
     });
 }

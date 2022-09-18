@@ -3,7 +3,7 @@ require('dotenv').config({ path: '../env/live.env' });
 var indicators             = require('technicalindicators');
 const Binance              = require('node-binance-api');
 const _                    = require("lodash");
-
+const common               = require("../common");
 const envBinanceAPIKEY     = process.env.envBinanceAPIKEY;
 const envBinanceAPISECRET  = process.env.envBinanceAPISECRET;
 const envBinanceEnviroment = process.env.envBinanceEnviroment.toUpperCase();
@@ -21,6 +21,25 @@ else {
         APIKEY: envBinanceAPIKEY,
         APISECRET: envBinanceAPISECRET
     });
+}
+
+async function FuturesGetMinQuantity(symbol_) {
+    const exchangeInfo = await binance.futuresExchangeInfo();
+    const symbols = _.get(exchangeInfo, 'symbols');
+    let newSymbol = {};
+    _.map(symbols, (symbol) => {
+        if (symbol.symbol == symbol_.toUpperCase()) {
+            newSymbol.symbol = symbol.symbol;
+            _.filter(_.get(symbol, 'filters'), (filter) => {
+                if (filter.filterType == 'LOT_SIZE') {
+                    newSymbol.lotSize = filter.stepSize;
+                } else if (filter.filterType == 'MIN_NOTIONAL') {
+                    newSymbol.notional = filter.notional
+                }
+            });
+        }
+    });
+    return Number(newSymbol.lotSize);
 }
 
 async function FetchPositions() {
@@ -45,7 +64,8 @@ async function FuturesAccount(symbol) {
 }
 
 async function FuturesBalance() {
-    return await binance.futuresBalance();
+    const balances = await binance.futuresBalance();
+    return (_.filter(balances, (p) => {return p.asset == "USDT"}))[0].balance;
 }
 
 async function FuturesPositionRisk(symbol) {
@@ -57,6 +77,7 @@ async function FuturesLeverage(symbol, leverage) {
 }
 
 async function FuturesMarketBuySell(symbol, quantity, buySell) {
+    quantity = common.ConvertToPositiveNumber(quantity);
     if (buySell.toUpperCase() == "BUY") {
         return await binance.futuresMarketBuy(symbol, quantity);
     }
@@ -82,6 +103,7 @@ async function RSI(symbol, interval) {
 }
 
 module.exports = {
+    FuturesGetMinQuantity,
     FetchPositions,
     FuturesPrices,
     FuturesAccount,

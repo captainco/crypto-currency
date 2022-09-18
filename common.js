@@ -31,7 +31,7 @@ function ReplaceTextByTemplate(oldChar, newChar, templatePath) {
 }
 
 function ConvertToPositiveNumber(number) {
-    return number < 0 ? number * -1 : number;
+    return Math.abs(number);
 }
 
 function NumDigitsAfterDecimal(x) {

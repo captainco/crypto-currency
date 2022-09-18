@@ -3,6 +3,7 @@ const telegram                                 = require("../telegram/telegram")
 const WebSocket                                = require("ws");
 const binance                                  = require('./binance');
 const common                                   = require('../common');
+const sleep                                    = require('thread-sleep');
 process.env.envBinanceFunctionLiquidOpenTrade  = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@forceOrder`;
 process.env.envBinanceFunctionLiquidCloseTrade = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@markPrice@1s`;
 process.env.CloseTrading                       = "0";
@@ -61,6 +62,8 @@ async function Main() {
                         await telegram.log(`${iconLongShort} ${symbol} ${process.env.envBinanceFunctionLeverage}x|${alertPs.positionAmt}: ${alertPs.entryPrice}`);
 
                         process.env.CloseTrading = "0";
+
+                        sleep(1000);
                     }
                 }
             }
@@ -129,6 +132,8 @@ async function Main() {
             }
 
             process.env.CloseTrading = "0";
+
+            sleep(1000);
         } catch (e) {
             process.env.CloseTrading = "0";
             await telegram.log(`⚠ ${e}`);

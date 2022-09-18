@@ -145,16 +145,14 @@ bot.command('p', async (ctx) => {
     try {
         if (content == "") {
             var symbol = process.env.envBinanceFunctionSymbol;
-            var r_ = await binance.FuturesPositionRisk(symbol);
-            var result = r_[0];
+            var result = (await binance.FuturesPositionRisk(symbol))[0];
             var iconLongShort = result.positionAmt == 0 ? "⚪" : (result.positionAmt > 0 ? "🟢" : "🔴");
             var oc = ["symbol_in", "longshort_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "time_in"];
             var nc = [symbol, iconLongShort, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, GetMoment()];
             var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/p_template.txt");
         } else {
             var symbol = `${content.toUpperCase()}USDT`;
-            var r_ = await binance.FuturesPositionRisk(symbol);
-            var result = r_[0];
+            var result = (await binance.FuturesPositionRisk(symbol))[0];
             var oc = ["symbol_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "maxNotionalValue_in", "marginType_in", "isolatedMargin_in", "isAutoAddMargin_in", "positionSide_in", "notional_in", "isolatedWallet_in", "time_in"];
             var nc = [symbol, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, result.maxNotionalValue, result.marginType, result.isolatedMargin, result.isAutoAddMargin, result.positionSide, result.notional, result.isolatedWallet, GetMoment()];
             var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/pc_template.txt");

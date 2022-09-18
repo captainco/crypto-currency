@@ -1,7 +1,6 @@
 const moment = require('moment-timezone');
 const _ = require('lodash');
 const fs = require('fs');
-const { sendMessage, log } = require("./telegram/telegram");
 
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const envTelegramMyTelegram = process.env.envTelegramMyTelegram;

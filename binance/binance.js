@@ -72,6 +72,11 @@ async function FuturesPositionRisk(symbol) {
     return await binance.futuresPositionRisk({ symbol: symbol });
 }
 
+async function FuturesCheckPositionRisk(symbol) {
+    const risk = await binance.futuresPositionRisk({symbol});
+    return _.filter(risk, (p) => { return p.positionAmt != 0});
+}
+
 async function FuturesLeverage(symbol, leverage) {
     return await binance.futuresLeverage(symbol, leverage);
 }
@@ -109,6 +114,7 @@ module.exports = {
     FuturesAccount,
     FuturesBalance,
     FuturesPositionRisk,
+    FuturesCheckPositionRisk,
     FuturesLeverage,
     FuturesMarketBuySell,
     FuturesCandles,

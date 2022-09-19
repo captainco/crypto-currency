@@ -44,13 +44,13 @@ function FormatNumberToString(num) {
     if (Math.abs(num) < 1000) {
         output = num;
     }else if (Math.abs(num) >= 1000 && Math.abs(num) < 1000000) {
-        output = Math.sign(num) * ((Math.abs(num) / 1000).toFixed(1)) + 'K';
+        output = Math.sign(num) * ((Math.abs(num) / 1000).toFixed(2)) + 'K';
     }
     else if(Math.abs(num) >= 1000000 && Math.abs(num) < 1000000000) {
-        output = Math.sign(num) * ((Math.abs(num) / 1000000).toFixed(1)) + 'M';
+        output = Math.sign(num) * ((Math.abs(num) / 1000000).toFixed(2)) + 'M';
     }
     else {
-        output = Math.sign(num) * ((Math.abs(num) / 1000000000).toFixed(1)) + 'B';
+        output = Math.sign(num) * ((Math.abs(num) / 1000000000).toFixed(2)) + 'B';
     }
     return output;
 }

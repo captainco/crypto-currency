@@ -74,7 +74,7 @@ async function FuturesPositionRisk(symbol) {
 
 async function FuturesCheckPositionRisk(symbol) {
     const risk = await binance.futuresPositionRisk({symbol});
-    return _.filter(risk, (p) => { return p.positionAmt != 0});
+    return _.nth(_.filter(risk, (p) => { return p.positionAmt != 0}), 0);
 }
 
 async function FuturesLeverage(symbol, leverage) {

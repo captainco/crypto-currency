@@ -21,7 +21,7 @@ async function Main() {
 
             /*Thông báo thanh lý*/
             if (process.env.envBinanceFunctionLiquidAlert == "1") {
-                if (symbol == process.env.envBinanceFunctionSymbol) {
+                if (symbol == process.env.envBinanceFunctionSymbol && totalValue > Number(process.env.envBinanceFunctionLiquidVolAlert)) {
                     const iconLongShort = (result.o.S == "BUY") ? "🟢" : "🔴";
                     await telegram.log(`🤖 ${symbol} thanh lý ${iconLongShort}: ${common.FormatNumberToString(totalValue)}`);
                 }

@@ -121,18 +121,24 @@ bot.command('lq', async (ctx) => {
 bot.command('lqa', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'lqa');
+    const contents = content.split(' ');
     try {
         if (content == "") {
             ctx.reply(`🤖 Thông báo thanh lý: ${process.env.envBinanceFunctionLiquidAlert == "0" ? "Đã dừng" : "Hoạt động"}`);
+            ctx.reply(`🤖 Giá tối thiểu để nhận thông báo: ${process.env.envBinanceFunctionLiquidVolAlert}`);
         }
         else {
-            if (content == "0") {
+            const ss = contents[0];
+            const value = Number(contents[1]);
+            if (ss == "0") {
                 process.env.envBinanceFunctionLiquidAlert = "0";
                 ctx.reply(`✅ Thiết lập thông báo thanh lý: Đã dừng`);
             } else {
                 process.env.envBinanceFunctionLiquidAlert = "1";
                 ctx.reply(`✅ Thiết lập thông báo thanh lý: Hoạt động`);
             }
+            process.env.envBinanceFunctionLiquidVolAlert = value;
+            ctx.reply(`✅ Thiết lập giá tối thiểu để nhận thông báo: ${value}`);
         }
     } catch (error) {
         ctx.reply(error);

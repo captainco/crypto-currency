@@ -3,7 +3,6 @@ require('dotenv').config({ path: 'env/live.env' });
 const binanceAutoTakeProfitByPercent = require('./binance/binanceAutoTakeProfitByPercent');
 const binanceTradeRSI                = require('./binance/binanceTradeRSI');
 const binanceTradeLiquid             = require('./binance/binanceTradeLiquid');
-const binance = require('./binance/binance');
 const indexRouter                    = require('./index');
 const express                        = require("express");
 const http                           = require("http");

@@ -29,6 +29,7 @@ Lệnh thanh lý:
 /lq {O|value}: Kiểm tra/set giá thanh lý cho bot
 --> value: Giá trị thanh lý
 --------------------
-/lqa {O|0/1}: Kiểm tra/set thông báo thanh lý
+/lqa {O|0/1} {O|value}: Kiểm tra/set thông báo thanh lý
 --> 0: Ngừng thông báo
 --> 1: Thông báo
+--> value: Giá tối thiểu để nhận thông báo

@@ -62,7 +62,7 @@ async function Main() {
                         //const iconLongShort = PsAlert.positionAmt > 0 ? "🟢" : "🔴";
                         const iconLongShort = isPs > 0 ? "🟢" : "🔴";
                         _entryPrice = PsAlert.entryPrice;
-                        await telegram.log(`${iconLongShort} ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionLiquidAmount} -> E: ${_entryPrice}; LQ: ${common.FormatNumberToString(totalValue)}`);
+                        await telegram.log(`${iconLongShort} ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; LQ: ${common.FormatNumberToString(totalValue)}`);
                     }
                 }
             }
@@ -84,7 +84,7 @@ async function Main() {
                 /*Kèo long*/
                 if (isPs > 0) {
 
-                    const unRealizedProfit = ((((Ps.markPrice * 100 / _entryPrice) - 100) / 100) * Number(process.env.envBinanceFunctionLiquidAmount) * Number(process.env.envBinanceFunctionLeverage)).toFixed(2);
+                    const unRealizedProfit = ((((Ps.markPrice * 100 / _entryPrice) - 100) / 100) * Number(process.env.envBinanceFunctionPrice) * Number(process.env.envBinanceFunctionLeverage)).toFixed(2);
                     const iconTPSL = unRealizedProfit > 0 ? "✅" : "❌";
 
                     let priceDiff = Ps.markPrice - _entryPrice;
@@ -93,13 +93,13 @@ async function Main() {
                         isPs = 0;
                         sleep(100);
                         fakeTotal = fakeTotal + unRealizedProfit;
-                        await telegram.log(`${iconTPSL}🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionLiquidAmount} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff}; U: ${unRealizedProfit}USDT; TOTAL: ${fakeTotal}USDT`);
+                        await telegram.log(`${iconTPSL}🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff.toFixed(2)}; U: ${unRealizedProfit} USDT; TOTAL: ${fakeTotal} USDT`);
                     }
                 }
                 /*Kèo short*/
                 else {
                     
-                    const unRealizedProfit = (((100 - (Ps.markPrice * 100 / _entryPrice)) / 100) * Number(process.env.envBinanceFunctionLiquidAmount) * Number(process.env.envBinanceFunctionLeverage)).toFixed(2);
+                    const unRealizedProfit = (((100 - (Ps.markPrice * 100 / _entryPrice)) / 100) * Number(process.env.envBinanceFunctionPrice) * Number(process.env.envBinanceFunctionLeverage)).toFixed(2);
                     const iconTPSL = unRealizedProfit > 0 ? "✅" : "❌";
 
                     let priceDiff = Ps.entryPrice - Ps.markPrice;
@@ -108,7 +108,7 @@ async function Main() {
                         isPs = 0;
                         sleep(100);
                         fakeTotal = fakeTotal + unRealizedProfit;
-                        await telegram.log(`${iconTPSL}🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionLiquidAmount} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff}; U: ${unRealizedProfit}USDT; TOTAL: ${fakeTotal}USDT`);
+                        await telegram.log(`${iconTPSL}🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff.toFixed(2)}; U: ${unRealizedProfit} USDT; TOTAL: ${fakeTotal} USDT`);
                     }
                 }
             }

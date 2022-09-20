@@ -108,9 +108,10 @@ bot.command('lq', async (ctx) => {
                 var nc = ["", "", GetMoment()];
                 var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqe_template.txt");
             } else {
-                process.env.envBinanceFunctionLiquidAmount = Number(content[0]);
-                process.env.envBinanceFunctionLiquidTrade = content[1];
-                var nc = [process.env.envBinanceFunctionLiquidAmount, (process.env.envBinanceFunctionLiquidTrade == "0" ? "Ngược thanh lý": "Thuận thanh lý"), GetMoment()];
+                process.env.envBinanceFunctionLiquidAmount = Number(contents[0]);
+                process.env.envBinanceFunctionLiquidTrade = contents[1];
+                const alertTrade = process.env.envBinanceFunctionLiquidTrade == "0" ? "Ngược thanh lý" : "Thuận thanh lý";
+                var nc = [process.env.envBinanceFunctionLiquidAmount, alertTrade, GetMoment()];
                 var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqs_template.txt");
             }
         }

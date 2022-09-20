@@ -3,6 +3,7 @@ require('dotenv').config({ path: 'env/live.env' });
 const binanceAutoTakeProfitByPercent = require('./binance/binanceAutoTakeProfitByPercent');
 const binanceTradeRSI                = require('./binance/binanceTradeRSI');
 const binanceTradeLiquid             = require('./binance/binanceTradeLiquid');
+const binanceTradeLiquidTest         = require('./binance/binanceTradeLiquidTest');
 const indexRouter                    = require('./index');
 const express                        = require("express");
 const http                           = require("http");
@@ -16,7 +17,8 @@ server.listen(port);
 async function main() {
     //binanceAutoTakeProfitByPercent.Main();
     //binanceTradeRSI.Main();
-    binanceTradeLiquid.Main();
+    //binanceTradeLiquid.Main();
+    binanceTradeLiquidTest.Main();
 }
 
 main();

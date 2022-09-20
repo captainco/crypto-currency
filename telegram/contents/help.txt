@@ -26,8 +26,10 @@ Lệnh RSI:
 
 Lệnh thanh lý:
 --------------------
-/lq {O|value}: Kiểm tra/set giá thanh lý cho bot
+/lq {O|value} {O|0/1}: Kiểm tra/set giá thanh lý cho bot
 --> value: Giá trị thanh lý
+--> 0: Trade ngược giá thanh lý
+--> 1: Trade thuận giá thanh lý
 --------------------
 /lqa {O|0/1} {O|value}: Kiểm tra/set thông báo thanh lý
 --> 0: Ngừng thông báo

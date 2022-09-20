@@ -1,3 +1,4 @@
 ✅ Bot đã thiết lập giá thanh lý: lq_in
+✅ Bot đã thiết lập trade thanh lý: trend_in
 --------------------
 time: time_in

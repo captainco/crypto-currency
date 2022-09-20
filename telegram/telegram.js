@@ -97,18 +97,20 @@ bot.command('c', async (ctx) => {
 bot.command('lq', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'lq');
+    const contents = content.split(' ');
     try {
-        var oc = ["lq_in", "time_in"];
+        var oc = ["lq_in", "trend_in", "time_in"];
         if (content == "") {
-            var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
+            var nc = [process.env.envBinanceFunctionLiquidAmount, (process.env.envBinanceFunctionLiquidTrade == "0" ? "Ngược thanh lý": "Thuận thanh lý"), GetMoment()];
             var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lq_template.txt");
         } else {
-            if (Number(content) < 1000) {
-                var nc = ["", GetMoment()];
+            if (Number(contents[0]) < 1000) {
+                var nc = ["", "", GetMoment()];
                 var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqe_template.txt");
             } else {
-                process.env.envBinanceFunctionLiquidAmount = Number(content);
-                var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
+                process.env.envBinanceFunctionLiquidAmount = Number(content[0]);
+                process.env.envBinanceFunctionLiquidTrade = content[1];
+                var nc = [process.env.envBinanceFunctionLiquidAmount, (process.env.envBinanceFunctionLiquidTrade == "0" ? "Ngược thanh lý": "Thuận thanh lý"), GetMoment()];
                 var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqs_template.txt");
             }
         }

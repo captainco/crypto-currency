@@ -54,7 +54,13 @@ async function Main() {
                         
                         /*Fake vào lệnh*/
                         //await binance.FuturesMarketBuySell(symbol, Number(process.env.envBinanceFunctionPrice), side);
-                        isPs = side == "BUY" ? 1 : -1;
+                        if (process.env.envBinanceFunctionLiquidTrade == "0") {
+                            isPs = side == "BUY" ? 1 : -1;    
+                        }
+                        else {
+                            isPs = side == "BUY" ? -1 : 1;
+                        }
+                        
                         sleep(100);
 
                         /*Alert*/
@@ -92,7 +98,7 @@ async function Main() {
                         //await binance.FuturesMarketBuySell(symbol, Ps.positionAmt, "SELL");
                         isPs = 0;
                         sleep(100);
-                        fakeTotal = fakeTotal + unRealizedProfit;
+                        fakeTotal = Number(fakeTotal) + Number(unRealizedProfit);
                         await telegram.log(`${iconTPSL}🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff.toFixed(2)}; U: ${unRealizedProfit} USDT; TOTAL: ${fakeTotal} USDT`);
                     }
                 }
@@ -102,12 +108,12 @@ async function Main() {
                     const unRealizedProfit = (((100 - (Ps.markPrice * 100 / _entryPrice)) / 100) * Number(process.env.envBinanceFunctionPrice) * Number(process.env.envBinanceFunctionLeverage)).toFixed(2);
                     const iconTPSL = unRealizedProfit > 0 ? "✅" : "❌";
 
-                    let priceDiff = Ps.entryPrice - Ps.markPrice;
+                    let priceDiff = _entryPrice - Ps.markPrice;
                     if (priceDiff >= liquidTPSLVol || priceDiff < liquidTPSLVol * -2) {
                         //await binance.FuturesMarketBuySell(symbol, Ps.positionAmt, "BUY");
                         isPs = 0;
                         sleep(100);
-                        fakeTotal = fakeTotal + unRealizedProfit;
+                        fakeTotal = Number(fakeTotal) + Number(unRealizedProfit);
                         await telegram.log(`${iconTPSL}🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff.toFixed(2)}; U: ${unRealizedProfit} USDT; TOTAL: ${fakeTotal} USDT`);
                     }
                 }

@@ -1,4 +1,5 @@
 🤖 Bot cho biết:
 Giá thanh lý hiện tại: lq_in
+Trade thanh lý: trend_in
 --------------------
 time: time_in

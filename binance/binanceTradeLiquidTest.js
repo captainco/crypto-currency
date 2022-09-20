@@ -85,7 +85,7 @@ async function Main() {
             const Ps = (await binance.FuturesPositionRisk(symbol))[0];
 
             //if (!_.isEmpty(Ps)) {
-            if (isPs != 0) {
+            if (isPs != 0 && _entryPrice != 0) {
 
                 /*Kèo long*/
                 if (isPs > 0) {
@@ -100,6 +100,7 @@ async function Main() {
                         sleep(100);
                         fakeTotal = Number(fakeTotal) + Number(unRealizedProfit);
                         await telegram.log(`${iconTPSL}🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff.toFixed(2)}; U: ${unRealizedProfit} USDT; TOTAL: ${fakeTotal} USDT`);
+                        _entryPrice = 0;
                     }
                 }
                 /*Kèo short*/
@@ -115,6 +116,7 @@ async function Main() {
                         sleep(100);
                         fakeTotal = Number(fakeTotal) + Number(unRealizedProfit);
                         await telegram.log(`${iconTPSL}🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff.toFixed(2)}; U: ${unRealizedProfit} USDT; TOTAL: ${fakeTotal} USDT`);
+                        _entryPrice = 0;
                     }
                 }
             }

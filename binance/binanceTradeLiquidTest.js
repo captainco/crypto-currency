@@ -61,7 +61,7 @@ async function Main() {
                         const PsAlert = (await binance.FuturesPositionRisk(symbol))[0];
                         //const iconLongShort = PsAlert.positionAmt > 0 ? "🟢" : "🔴";
                         const iconLongShort = isPs > 0 ? "🟢" : "🔴";
-                        _entryPrice = PsAlert.entryPrice;
+                        _entryPrice = PsAlert.markPrice;
                         await telegram.log(`${iconLongShort} ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; LQ: ${common.FormatNumberToString(totalValue)}`);
                     }
                 }

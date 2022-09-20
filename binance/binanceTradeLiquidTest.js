@@ -7,7 +7,7 @@ const sleep                                    = require('thread-sleep');
 const _                                        = require("lodash");
 process.env.envBinanceFunctionLiquidOpenTrade  = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@forceOrder`;
 process.env.envBinanceFunctionLiquidCloseTrade = `wss://fstream.binance.com/ws/${process.env.envBinanceFunctionSymbol.toLocaleLowerCase()}@markPrice@1s`;
-var liquidTPSLVol                              = 10;
+var liquidTPSLVol                              = 5;
 var fakeTotal                                  = 0;
 var isPs                                       = 0;
 var _entryPrice                                = 0;
@@ -98,7 +98,7 @@ async function Main() {
                         //await binance.FuturesMarketBuySell(symbol, Ps.positionAmt, "SELL");
                         isPs = 0;
                         sleep(100);
-                        fakeTotal = Number(fakeTotal) + Number(unRealizedProfit);
+                        fakeTotal = (Number(fakeTotal) + Number(unRealizedProfit)).toFixed(2);
                         await telegram.log(`${iconTPSL}🟢 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff.toFixed(2)}; U: ${unRealizedProfit} USDT; TOTAL: ${fakeTotal} USDT`);
                         _entryPrice = 0;
                     }
@@ -114,7 +114,7 @@ async function Main() {
                         //await binance.FuturesMarketBuySell(symbol, Ps.positionAmt, "BUY");
                         isPs = 0;
                         sleep(100);
-                        fakeTotal = Number(fakeTotal) + Number(unRealizedProfit);
+                        fakeTotal = (Number(fakeTotal) + Number(unRealizedProfit)).toFixed(2);
                         await telegram.log(`${iconTPSL}🔴 ${symbol} ${process.env.envBinanceFunctionLeverage}x|${process.env.envBinanceFunctionPrice} -> E: ${_entryPrice}; M: ${Ps.markPrice}; PD: ${priceDiff.toFixed(2)}; U: ${unRealizedProfit} USDT; TOTAL: ${fakeTotal} USDT`);
                         _entryPrice = 0;
                     }

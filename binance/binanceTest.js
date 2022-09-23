@@ -19,7 +19,7 @@ async function Main() {
             const iconLongShort = result.o.S == 'BUY' ? '🟢': '🔴';
             const rsi = await binance.RSI(symbol, '1m');
             if (rsi < 30 || rsi > 70) {
-                const price = binance.SpotPositionRisk();
+                const price = await binance.SpotPositionRisk();
                 const Ps = (await binance.FuturesPositionRisk(symbol))[0];
                 const priceSpot = price.BTCUSDT;
                 const spFt = priceSpot - Ps.markPrice;
@@ -36,7 +36,7 @@ async function Main() {
             if (common.GetMomentSecond() == 59) {
                 const rsi = await binance.RSI('BTCUSDT', '1m');
                 if (rsi < 30 || rsi > 70) {
-                    const price = binance.SpotPositionRisk();
+                    const price = await binance.SpotPositionRisk();
                     const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                     const priceSpot = price.BTCUSDT;
                     const spFt = priceSpot - Ps.markPrice;

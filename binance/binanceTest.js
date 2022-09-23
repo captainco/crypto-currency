@@ -23,7 +23,7 @@ async function Main() {
                 const Ps = (await binance.FuturesPositionRisk(symbol))[0];
                 const priceSpot = price.BTCUSDT;
                 const spFt = (priceSpot - Ps.markPrice).toFixed(2);
-                await telegram.logAlert(symbol, rsi, iconLongShort, common.ConvertToPositiveNumber(totalValue), (priceSpot).toFixed(2), (Ps.markPrice).toFixed(2), spFt);
+                await telegram.logAlert(symbol, rsi, iconLongShort, common.ConvertToPositiveNumber(totalValue), priceSpot.toFixed(2), Ps.markPrice.toFixed(2), spFt);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
@@ -40,7 +40,7 @@ async function Main() {
                     const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                     const priceSpot = price.BTCUSDT;
                     const spFt = (priceSpot - Ps.markPrice).toFixed(2);
-                    await telegram.logAlert('BTCUSDT', rsi, '⚪', 'Chưa xác định', (priceSpot).toFixed(2), (Ps.markPrice).toFixed(2), spFt);
+                    await telegram.logAlert('BTCUSDT', rsi, '⚪', 'Chưa xác định', priceSpot.toFixed(2), Ps.markPrice.ToFixed(2), spFt);
                 }
             }
         } catch (e) {

@@ -40,7 +40,7 @@ async function Main() {
                     const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                     const priceSpot = price.BTCUSDT;
                     const spFt = priceSpot - Ps.markPrice;
-                    await telegram.logAlert(symbol, rsi, '⚪', 'Chưa xác định', priceSpot, Ps.markPrice, spFt);
+                    await telegram.logAlert('BTCUSDT', rsi, '⚪', 'Chưa xác định', priceSpot, Ps.markPrice, spFt);
                 }
             }
         } catch (e) {

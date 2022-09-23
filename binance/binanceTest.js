@@ -15,15 +15,14 @@ async function Main() {
                 return;
             }
             const totalValue = result.o.q * result.o.ap;
-            const symbol = result.o.s;
             const iconLongShort = result.o.S == 'BUY' ? '🟢': '🔴';
             const rsi = await binance.RSI(symbol, '1m');
-            if (rsi < 30 || rsi > 70) {
+            if ((rsi < 30 || rsi > 70) && totalValue > 1000) {
                 const price = await binance.SpotPositionRisk();
-                const Ps = (await binance.FuturesPositionRisk(symbol))[0];
-                const priceSpot = price.BTCUSDT;
+                const priceSpot = Number(price.BTCUSDT);
+                const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                 const spFt = (priceSpot - Ps.markPrice).toFixed(2);
-                await telegram.logAlert(symbol, rsi, iconLongShort, common.ConvertToPositiveNumber(totalValue), priceSpot.toFixed(2), Ps.markPrice.toFixed(2), spFt);
+                await telegram.logAlert('BTCUSDT', rsi, iconLongShort, common.ConvertToPositiveNumber(totalValue), priceSpot.toFixed(2), Ps.markPrice.toFixed(2), spFt);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
@@ -37,10 +36,10 @@ async function Main() {
                 const rsi = await binance.RSI('BTCUSDT', '1m');
                 if (rsi < 30 || rsi > 70) {
                     const price = await binance.SpotPositionRisk();
+                    const priceSpot = Number(price.BTCUSDT);
                     const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
-                    const priceSpot = price.BTCUSDT;
                     const spFt = (priceSpot - Ps.markPrice).toFixed(2);
-                    await telegram.logAlert('BTCUSDT', rsi, '⚪', 'Chưa xác định', priceSpot.toFixed(2), Ps.markPrice.ToFixed(2), spFt);
+                    await telegram.logAlert('BTCUSDT', rsi, '⚪', 'Không xác định', priceSpot.toFixed(2), Ps.markPrice.toFixed(2), spFt);
                 }
             }
         } catch (e) {

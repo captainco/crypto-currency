@@ -1,0 +1,12 @@
+🤖 Bot cho biết:
+Coin: coin_in
+RSI: rsi_in
+
+Thanh lý: icon_in
+Thanh lý tại giá: liquid_in
+
+Giá spot: spot_in 
+Giá FT: ft_in
+Chênh giá spot-ft: sp_ft_in
+--------------------
+time: time_in

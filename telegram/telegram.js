@@ -97,21 +97,18 @@ bot.command('c', async (ctx) => {
 bot.command('lq', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'lq');
-    const contents = content.split(' ');
     try {
-        var oc = ["lq_in", "trend_in", "time_in"];
+        var oc = ["lq_in", "time_in"];
         if (content == "") {
-            var nc = [process.env.envBinanceFunctionLiquidAmount, (process.env.envBinanceFunctionLiquidTrade == "0" ? "Ngược thanh lý": "Thuận thanh lý"), GetMoment()];
+            var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
             var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lq_template.txt");
         } else {
-            if (Number(contents[0]) < 1000) {
-                var nc = ["", "", GetMoment()];
+            if (Number(content) < 1000) {
+                var nc = ["", GetMoment()];
                 var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqe_template.txt");
             } else {
-                process.env.envBinanceFunctionLiquidAmount = Number(contents[0]);
-                process.env.envBinanceFunctionLiquidTrade = contents[1];
-                const alertTrade = process.env.envBinanceFunctionLiquidTrade == "0" ? "Ngược thanh lý" : "Thuận thanh lý";
-                var nc = [process.env.envBinanceFunctionLiquidAmount, alertTrade, GetMoment()];
+                process.env.envBinanceFunctionLiquidAmount = Number(content);
+                var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
                 var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqs_template.txt");
             }
         }
@@ -244,6 +241,13 @@ async function log(message) {
     await sendMessage(`${temp}`);
 }
 
+async function logAlert(coin, rsi, icon, liquid, spot, ft, spFt) {
+    var oc = ["coin_in", "rsi_in", "icon_in", "liquid_in", "spot_in", "ft_in", "sp_ft_in", "time_in"];
+    var nc = [coin, rsi, icon, liquid, spot, ft, spFt, GetMoment()];
+    var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/alert_template.txt");
+    await sendMessage(`${temp}`);
+}
+
 async function sendMessage(message) {
     try {
         await bot.telegram.sendMessage(groupId, message);
@@ -257,4 +261,4 @@ async function sendTeleMessage(message) {
     await bot.telegram.sendMessage(groupId, message);
 }
 
-module.exports = {sendTeleMessage, log}
+module.exports = {sendTeleMessage, log, logAlert}

@@ -68,6 +68,10 @@ async function FuturesBalance() {
     return (_.filter(balances, (p) => {return p.asset == "USDT"}))[0].balance;
 }
 
+async function SpotPositionRisk() {
+    return await binance.prices();
+}
+
 async function FuturesPositionRisk(symbol) {
     return await binance.futuresPositionRisk({ symbol: symbol });
 }
@@ -114,6 +118,7 @@ module.exports = {
     FuturesAccount,
     FuturesBalance,
     FuturesPositionRisk,
+    SpotPositionRisk,
     FuturesCheckPositionRisk,
     FuturesLeverage,
     FuturesMarketBuySell,

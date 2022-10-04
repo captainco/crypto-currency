@@ -1,6 +1,7 @@
 require('dotenv').config({ path: '../env/live.env' });
 
 var indicators             = require('technicalindicators');
+var EMA                    = require('technicalindicators').EMA;
 const Binance              = require('node-binance-api');
 const _                    = require("lodash");
 const common               = require("../common");
@@ -111,6 +112,33 @@ async function RSI(symbol, interval) {
     return _.nth(rs, rs.length - 1);
 }
 
+async function EMA(symbol, interval, limit) {
+    const latestTradeCandles = await binance.futuresCandles(symbol, interval, { limit: 1500 });
+    let values = _.reduce(latestTradeCandles, (result, value) => {
+        result.push(_.toNumber(lodash.nth(value, 4))); return result;
+    }, []);
+    let emaTrades = EMA.calculate({ period: limit, values: values });
+    return _.nth(emaTrades, emaTrades.length - 1);
+}
+
+async function EMAOpen(symbol, interval, limit) {
+    const latestTradeCandles = await binance.futuresCandles(symbol, interval, { limit: 1500 });
+    let values = _.reduce(latestTradeCandles, (result, value) => {
+        result.push(_.toNumber(_.nth(value, 1))); return result;
+    }, []);
+    let emaTrades = EMA.calculate({ period: limit, values: values });
+    return _.nth(emaTrades, emaTrades.length - 1);
+}
+
+async function EMAClose(symbol, interval, limit) {
+    const latestTradeCandles = await binance.futuresCandles(symbol, interval, { limit: 1500 });
+    let values = _.reduce(latestTradeCandles, (result, value) => {
+        result.push(_.toNumber(_.nth(value, 4))); return result;
+    }, []);
+    let emaTrades = EMA.calculate({ period: limit, values: values });
+    return _.nth(emaTrades, emaTrades.length - 1);
+}
+
 module.exports = {
     FuturesGetMinQuantity,
     FetchPositions,
@@ -123,5 +151,6 @@ module.exports = {
     FuturesLeverage,
     FuturesMarketBuySell,
     FuturesCandles,
-    RSI
+    RSI, EMA,
+    EMAOpen, EMAClose
 }

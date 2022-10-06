@@ -18,7 +18,7 @@ async function Main() {
     const EmaTrend = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     EmaTrend.on('message', async (event) => {
         try {
-            EmaTradeSeries = await binance.EMAClose('BTCUSDT', '1m', 2);
+            EmaTradeSeries = await binance.EMAClose('BTCUSDT', '1h', 1);
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
         }
@@ -27,7 +27,7 @@ async function Main() {
     const EmaSupport = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     EmaSupport.on('message', async (event) => {
         try {
-            EmaSupportSeries = await binance.EMAClose('BTCUSDT', '1m', 4);
+            EmaSupportSeries = await binance.EMAClose('BTCUSDT', '1h', 2);
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
         }

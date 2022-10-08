@@ -15,4 +15,4 @@ async function main() {
     binanceTestEma.Main();
 }
 
-main();
+//main();

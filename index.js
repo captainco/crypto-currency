@@ -1,6 +1,6 @@
 var express       = require('express');
 var router        = express.Router();
-const body_parser = require('body-parser');
+const bodyParser  = require('body-parser');
 const telegram    = require("./telegram/telegram");
 
 /* GET home page. */
@@ -9,9 +9,8 @@ router.get('/', function (req, res, next) {
     res.end();
 });
 
-router.post('/webhook', function (req, res) {
+router.post('/webhook', bodyParser.text(), function (req, res) {
     try {
-        req.headers['Content-Type'] = 'text';
         telegram.log(`POST webhook: Test`);
         telegram.log(`POST webhook: ${req.body}`);
         res.end();

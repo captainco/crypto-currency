@@ -11,9 +11,8 @@ router.get('/', function (req, res, next) {
 
 router.post('/webhook', function (req, res) {
     try {
-        console.log(`POST webhook: ${req}`);
         telegram.log(`POST webhook: Test`);
-        telegram.log(`POST webhook: ${req}`);
+        telegram.log(`POST webhook: ${req.body}`);
         res.end();
     } catch (error) {
         telegram.log(`POST webhook: ${error}`);

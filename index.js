@@ -10,9 +10,14 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/webhook', function (req, res) {
-    console.log(`POST webhook: ${req}`);
-    telegram.log(`POST webhook: ${req}`);
-    res.end();
+    try {
+        console.log(`POST webhook: ${req}`);
+        telegram.log(`POST webhook: Test`);
+        telegram.log(`POST webhook: ${req}`);
+        res.end();
+    } catch (error) {
+        telegram.log(`POST webhook: ${error}`);
+    }
 });
 
 module.exports = router;

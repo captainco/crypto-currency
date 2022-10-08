@@ -2,23 +2,30 @@ require('dotenv').config({ path: '../env/live.env' });
 const telegram         = require("../telegram/telegram");
 const WebSocket        = require("ws");
 const binance          = require('./binance');
-const common           = require('../common');
-const sleep            = require('thread-sleep');
 var isTrade            = 0;
 var markPricePre       = 0;
 var totalUSDT          = 0;
 var longShortCond      = '';
-var checkTrend         = '';   
+var checkTrend         = '';
 
 async function Main() {
+    const UpdateUSDT = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
+    UpdateUSDT.on('message', async (event) => {
+        try {
+            process.env.Webhook15mu = Number(totalUSDT);
+        } catch (e) {
+            await telegram.log(`⚠ ${e}`);
+        }
+    });
+
     const Trading = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     Trading.on('message', async (event) => {
         try {
-            if (process.env.Webhook == '' || process.env.Webhook == checkTrend) {
+            if (process.env.Webhook15m == '' || process.env.Webhook15m == checkTrend) {
                 return;
             }
-            checkTrend = process.env.Webhook;
-            longShortCond = process.env.Webhook == 'buy' ? 'LONG' : 'SHORT';
+            checkTrend = process.env.Webhook15m;
+            longShortCond = process.env.Webhook15m == 'buy' ? 'LONG' : 'SHORT';
             const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
             if (longShortCond == 'LONG') {
                 if (isTrade == 0) {

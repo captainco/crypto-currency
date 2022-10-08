@@ -94,52 +94,18 @@ bot.command('c', async (ctx) => {
     }
 });
 
-bot.command('lq', async (ctx) => {
+bot.command('wh', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
-    const content = GetTelegramMessage(ctx, 'lq');
     try {
-        var oc = ["lq_in", "time_in"];
-        if (content == "") {
-            var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lq_template.txt");
-        } else {
-            if (Number(content) < 1000) {
-                var nc = ["", GetMoment()];
-                var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqe_template.txt");
-            } else {
-                process.env.envBinanceFunctionLiquidAmount = Number(content);
-                var nc = [process.env.envBinanceFunctionLiquidAmount, GetMoment()];
-                var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/lqs_template.txt");
-            }
-        }
+        var oc = ["1m_icon", "5m_icon", "15m_icon", "30m_icon", "1h_icon", "1m_u", "5m_u", "15m_u", "30m_u", "1h_u", "time_in"];
+        const _1m_icon =  Number(process.env.Webhook1u) == 0 ? '⚪' : Number(process.env.Webhook1u) > 0 ? '✅' : '❌';
+        const _5m_icon =  Number(process.env.Webhook5u) == 0 ? '⚪' : Number(process.env.Webhook5u) > 0 ? '✅' : '❌';
+        const _15m_icon = Number(process.env.Webhook15u) == 0 ? '⚪' : Number(process.env.Webhook15u) > 0 ? '✅' : '❌';
+        const _30m_icon = Number(process.env.Webhook30u) == 0 ? '⚪' : Number(process.env.Webhook30u) > 0 ? '✅' : '❌';
+        const _1h_icon =  Number(process.env.Webhook1hu) == 0 ? '⚪' : Number(process.env.Webhook1hu) > 0 ? '✅' : '❌';
+        var nc = [_1m_icon, _5m_icon, _15m_icon, _30m_icon, _1h_icon, process.env.Webhook1u, process.env.Webhook5u, process.env.Webhook15u, process.env.Webhook30u, process.env.Webhook1hu, GetMoment()];
+        var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/wh_template.txt");
         ctx.reply(temp);
-    } catch (error) {
-        ctx.reply(error);
-    }
-});
-
-bot.command('lqa', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
-    const content = GetTelegramMessage(ctx, 'lqa');
-    const contents = content.split(' ');
-    try {
-        if (content == "") {
-            ctx.reply(`🤖 Thông báo thanh lý: ${process.env.envBinanceFunctionLiquidAlert == "0" ? "Đã dừng" : "Hoạt động"}`);
-            ctx.reply(`🤖 Giá tối thiểu để nhận thông báo: ${process.env.envBinanceFunctionLiquidVolAlert}`);
-        }
-        else {
-            const ss = contents[0];
-            const value = Number(contents[1]);
-            if (ss == "0") {
-                process.env.envBinanceFunctionLiquidAlert = "0";
-                ctx.reply(`✅ Thiết lập thông báo thanh lý: Đã dừng`);
-            } else {
-                process.env.envBinanceFunctionLiquidAlert = "1";
-                ctx.reply(`✅ Thiết lập thông báo thanh lý: Hoạt động`);
-            }
-            process.env.envBinanceFunctionLiquidVolAlert = value;
-            ctx.reply(`✅ Thiết lập giá tối thiểu để nhận thông báo: ${value}`);
-        }
     } catch (error) {
         ctx.reply(error);
     }
@@ -177,39 +143,6 @@ bot.command('r', async (ctx) => {
         const interval = content[1].toLowerCase();
         const rsi = await binance.RSI(symbol, interval);
         ctx.reply(`🤖 RSI ${symbol}|${interval}: ${rsi}`);
-    } catch (error) {
-        ctx.reply(error);
-    }
-});
-
-bot.command('rsi', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
-    try {
-        const content = GetTelegramMessage(ctx, 'rsi');
-        const contents = content.split(' ');
-        if (content == "") {
-            var oc = ["rsi_min_in", "rsi_max_in", "time_in"];
-            var nc = [process.env.envBinanceFunctionRSIMin, process.env.envBinanceFunctionRSIMax, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/rs_template.txt");
-            ctx.reply(temp);
-        } else {
-            const rsiKey = contents[0].toLowerCase();
-            const rsiValue = contents[1].toLowerCase();
-            if (rsiKey == "min") {
-                process.env.envBinanceFunctionRSIMin = rsiValue;
-                var oc = ["rsi_min_in", "time_in"];
-                var nc = [process.env.envBinanceFunctionRSIMin, GetMoment()];
-                var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/rs_min_template.txt");
-                ctx.reply(temp);
-            } else {
-                process.env.envBinanceFunctionRSIMax = rsiValue;
-                var oc = ["rsi_max_in", "time_in"];
-                var nc = [process.env.envBinanceFunctionRSIMax, GetMoment()];
-                var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/rs_max_template.txt");
-                ctx.reply(temp);
-            }
-        }
-        
     } catch (error) {
         ctx.reply(error);
     }

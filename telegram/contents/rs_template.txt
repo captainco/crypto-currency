@@ -1,5 +1,0 @@
-🤖 Bot cho biết:
-RSI quá mua 🟢: rsi_max_in
-RSI quá bán 🔴: rsi_min_in
---------------------
-time: time_in

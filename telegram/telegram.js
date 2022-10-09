@@ -95,7 +95,7 @@ bot.command('c', async (ctx) => {
 });
 
 bot.command('wh', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
+    //if (!IsMyTelegramAccount(ctx)) return;
     try {
         var oc = ["1m_icon", "5m_icon", "15m_icon", "30m_icon", "1h_icon", "wh_icon", "1m_u", "5m_u", "15m_u", "30m_u", "1h_u", "wh_u", "time_in"];
         const _1m_icon =  Number(process.env.Webhook1mu) == 0 ? '⚪' : Number(process.env.Webhook1mu) > 0 ? '✅' : '❌';

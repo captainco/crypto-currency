@@ -30,7 +30,7 @@ async function Main() {
             if (longShortCond == 'LONG') {
                 if (isTrade == 0) {
                     isTrade = 1;
-                    await telegram.log(`🟢BTCUSDT. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                    await telegram.log(`🟢BTCUSDT 15m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
                 } else {
                     if (isTrade == -1) {
@@ -38,15 +38,15 @@ async function Main() {
                         const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
                         const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
                         totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
-                        await telegram.log(`${iconLongShortAlert}🔴BTCUSDT. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
-                        await telegram.log(`🟢BTCUSDT. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                        await telegram.log(`${iconLongShortAlert}🔴BTCUSDT 15m. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                        await telegram.log(`🟢BTCUSDT 15m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         markPricePre = Number(Ps.markPrice);
                     }
                 }
             } else {
                 if (isTrade == 0) {
                     isTrade = -1;
-                    await telegram.log(`🔴BTCUSDT. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                    await telegram.log(`🔴BTCUSDT 15m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
                 } else {
                     if (isTrade == 1) {
@@ -54,8 +54,8 @@ async function Main() {
                         const tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
                         const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
                         totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
-                        await telegram.log(`${iconLongShortAlert}🟢BTCUSDT. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
-                        await telegram.log(`🔴BTCUSDT. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                        await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 15m. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                        await telegram.log(`🔴BTCUSDT 15m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         markPricePre = Number(Ps.markPrice);
                     }
                 }

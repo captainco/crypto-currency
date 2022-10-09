@@ -1,5 +1,6 @@
 require('dotenv').config({ path: 'env/live.env' });
 
+const binanceCC                      = require('./binance/binanceCC');
 const binanceCC1m                    = require('./binance/binanceCC1m');
 const binanceCC5m                    = require('./binance/binanceCC5m');
 const binanceCC15m                   = require('./binance/binanceCC15m');
@@ -21,6 +22,7 @@ async function main() {
     binanceCC15m.Main();
     binanceCC30m.Main();
     binanceCC1h.Main();
+    binanceCC.Main();
 }
 
 main();

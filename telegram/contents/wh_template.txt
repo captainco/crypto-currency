@@ -5,5 +5,6 @@ Coin: BTCUSDT
 15m_icon 15M: 15m_u USDT
 30m_icon 30M: 30m_u USDT
 1h_icon 1H: 1h_u USDT
+wh_icon WH: wh_u USDT
 --------------------
 time: time_in

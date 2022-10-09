@@ -13,6 +13,7 @@ router.get('/', function (req, res, next) {
 router.post('/webhook1m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook1m = req.body;
+        telegram.log(`POST Webhook1m: ${req.body}`);
         res.end();
     } catch (error) {
         telegram.log(`POST Webhook1m: ${error}`);
@@ -23,6 +24,7 @@ router.post('/webhook1m', bodyParser.text(), function (req, res) {
 router.post('/webhook5m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook5m = req.body;
+        telegram.log(`POST Webhook5m: ${req.body}`);
         res.end();
     } catch (error) {
         telegram.log(`POST Webhook5m: ${error}`);
@@ -33,6 +35,7 @@ router.post('/webhook5m', bodyParser.text(), function (req, res) {
 router.post('/webhook15m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook15m = req.body;
+        telegram.log(`POST Webhook15m: ${req.body}`);
         res.end();
     } catch (error) {
         telegram.log(`POST Webhook15m: ${error}`);
@@ -43,6 +46,7 @@ router.post('/webhook15m', bodyParser.text(), function (req, res) {
 router.post('/webhook30m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook30m = req.body;
+        telegram.log(`POST Webhook30m: ${req.body}`);
         res.end();
     } catch (error) {
         telegram.log(`POST Webhook30m: ${error}`);
@@ -53,6 +57,7 @@ router.post('/webhook30m', bodyParser.text(), function (req, res) {
 router.post('/webhook1h', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook1h = req.body;
+        telegram.log(`POST Webhook1h: ${req.body}`);
         res.end();
     } catch (error) {
         telegram.log(`POST Webhook1h: ${error}`);

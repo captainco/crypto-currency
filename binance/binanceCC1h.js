@@ -12,7 +12,7 @@ async function Main() {
     const UpdateUSDT = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     UpdateUSDT.on('message', async (event) => {
         try {
-            process.env.Webhook1hu = Number(totalUSDT);
+            process.env.Webhook1hu = Number(totalUSDT).toFixed(2);
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
         }

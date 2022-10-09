@@ -3,7 +3,6 @@ const _ = require('lodash');
 const fs = require('fs');
 
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
-const envTelegramMyTelegram = process.env.envTelegramMyTelegram;
 
 function WriteConsoleLog(content) {
     const dateTime = moment(Date.now()).format("DD/MM/YYYY HH:mm:ss");

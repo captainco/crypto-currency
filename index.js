@@ -12,6 +12,32 @@ router.get('/', function (req, res, next) {
     res.end();
 });
 
+router.get('/webhook', bodyParser.text(), function (req, res) {
+    try {
+        common.WriteConsoleLog(`GET webhook: TEST`);
+        telegram.log(`GET webhook: TEST`);
+        res.json({ message: 'GET webhook: TEST' });
+        res.end();
+    } catch (error) {
+        common.WriteConsoleLog(`GET webhook: ${error}`);
+        telegram.log(`GET webhook: ${error}`);
+        res.end();
+    }
+});
+
+router.post('/webhook', bodyParser.text(), function (req, res) {
+    try {
+        common.WriteConsoleLog(`POST webhook: TEST`);
+        telegram.log(`POST webhook: TEST`);
+        res.json({ message: 'POST webhook: TEST' });
+        res.end();
+    } catch (error) {
+        common.WriteConsoleLog(`POST webhook: ${error}`);
+        telegram.log(`POST webhook: ${error}`);
+        res.end();
+    }
+});
+
 router.post('/webhook1m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook1m = req.body;

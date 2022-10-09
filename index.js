@@ -2,20 +2,24 @@ require('dotenv').config({ path: 'env/live.env' });
 var express       = require('express');
 var router        = express.Router();
 var bodyParser    = require('body-parser');
-var telegram      = require("./telegram/telegram");
+var telegram      = require('./telegram/telegram');
+var common        = require('./common')
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.json({ message: 'Welcome to Crypto Currency' });
+    common.WriteConsoleLog('Welcome to Crypto Currency');
     res.end();
 });
 
 router.post('/webhook1m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook1m = req.body;
+        common.WriteConsoleLog(`POST Webhook1m: ${req.body}`);
         telegram.log(`POST Webhook1m: ${req.body}`);
         res.end();
     } catch (error) {
+        common.WriteConsoleLog(`POST Webhook1m: ${error}`);
         telegram.log(`POST Webhook1m: ${error}`);
         res.end();
     }
@@ -24,9 +28,11 @@ router.post('/webhook1m', bodyParser.text(), function (req, res) {
 router.post('/webhook5m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook5m = req.body;
+        common.WriteConsoleLog(`POST Webhook5m: ${req.body}`);
         telegram.log(`POST Webhook5m: ${req.body}`);
         res.end();
     } catch (error) {
+        common.WriteConsoleLog(`POST Webhook5m: ${error}`);
         telegram.log(`POST Webhook5m: ${error}`);
         res.end();
     }
@@ -35,9 +41,11 @@ router.post('/webhook5m', bodyParser.text(), function (req, res) {
 router.post('/webhook15m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook15m = req.body;
+        common.WriteConsoleLog(`POST Webhook15m: ${req.body}`);
         telegram.log(`POST Webhook15m: ${req.body}`);
         res.end();
     } catch (error) {
+        common.WriteConsoleLog(`POST Webhook15m: ${error}`);
         telegram.log(`POST Webhook15m: ${error}`);
         res.end();
     }
@@ -46,9 +54,11 @@ router.post('/webhook15m', bodyParser.text(), function (req, res) {
 router.post('/webhook30m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook30m = req.body;
+        common.WriteConsoleLog(`POST Webhook30m: ${req.body}`);
         telegram.log(`POST Webhook30m: ${req.body}`);
         res.end();
     } catch (error) {
+        common.WriteConsoleLog(`POST Webhook30m: ${error}`);
         telegram.log(`POST Webhook30m: ${error}`);
         res.end();
     }
@@ -57,9 +67,11 @@ router.post('/webhook30m', bodyParser.text(), function (req, res) {
 router.post('/webhook1h', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook1h = req.body;
+        common.WriteConsoleLog(`POST Webhook1h: ${req.body}`);
         telegram.log(`POST Webhook1h: ${req.body}`);
         res.end();
     } catch (error) {
+        common.WriteConsoleLog(`POST Webhook1h: ${error}`);
         telegram.log(`POST Webhook1h: ${error}`);
         res.end();
     }

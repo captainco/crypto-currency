@@ -46,7 +46,7 @@ async function Main() {
             const count = countRecordTrade > 5 ? 5 : countRecordTrade;
             if (isTrade != isTradeTmp) {
                 isTradeTmp = isTrade;
-                totalDCAPrice = (totalDCAPrice + common.ConvertToPositiveNumber(bestMarkPrice-markPricePre) / count).toFixed(0);
+                totalDCAPrice = Number(totalDCAPrice + common.ConvertToPositiveNumber(Number(bestMarkPrice)-Number(markPricePre)) / count).toFixed(0);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);

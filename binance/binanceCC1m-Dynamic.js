@@ -48,7 +48,7 @@ async function Main() {
             const count = countRecordTrade > 5 ? 5 : countRecordTrade;
             if (isTrade != isTradeTmp) {
                 isTradeTmp = isTrade;
-                totalDCAPrice = Number(totalDCAPrice + common.ConvertToPositiveNumber(Number(bestMarkPrice)-Number(markPricePre)) / count).toFixed(0);
+                totalDCAPrice = Number(Number(totalDCAPrice) + Number(common.ConvertToPositiveNumber(Number(bestMarkPrice)-Number(markPricePre)) / count)).toFixed(0);
                 await telegram.log(`✨BTCUSDT 1m. totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
             }
         } catch (e) {

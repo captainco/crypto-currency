@@ -33,7 +33,7 @@ async function Main() {
             ) {
                 bestMarkPrice = markPrice;
                 const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
-                await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. bestMarkPrice hiện tại: ${Number(bestMarkPrice).toFixed(2)}`);
+                await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. bestMarkPrice hiện tại: ${Number(bestMarkPrice).toFixed(2)}; EntryPrice: ${markPricePre}`);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);

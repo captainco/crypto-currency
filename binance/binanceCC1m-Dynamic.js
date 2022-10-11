@@ -74,6 +74,7 @@ async function Main() {
             if (longShortCond == 'LONG') {
                 if (isTrade == 0) {
                     isTrade = 1;
+                    countRecordTrade++;
                     await telegram.log(`🟢BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
                 } else {
@@ -90,6 +91,7 @@ async function Main() {
             } else {
                 if (isTrade == 0) {
                     isTrade = -1;
+                    countRecordTrade++;
                     await telegram.log(`🔴BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
                 } else {

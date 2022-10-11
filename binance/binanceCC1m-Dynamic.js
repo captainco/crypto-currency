@@ -31,7 +31,8 @@ async function Main() {
                 || (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice > markPrice)) && isTrade == -1)
             ) {
                 bestMarkPrice = markPrice;
-                await telegram.log(`✨BTCUSDT 1m. Đã điều chỉnh bestMarkPrice hiện tại: ${Number(bestMarkPrice).toFixed(2)}`);
+                const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
+                await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. bestMarkPrice hiện tại: ${Number(bestMarkPrice).toFixed(2)}`);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
@@ -48,7 +49,7 @@ async function Main() {
             if (isTrade != isTradeTmp) {
                 isTradeTmp = isTrade;
                 totalDCAPrice = Number(totalDCAPrice + common.ConvertToPositiveNumber(Number(bestMarkPrice)-Number(markPricePre)) / count).toFixed(0);
-                await telegram.log(`✨BTCUSDT 1m. Đã điều chỉnh totalDCAPrice hiện tại: ${Number(totalDCAPrice).toFixed(2)}`);
+                await telegram.log(`✨BTCUSDT 1m. totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);

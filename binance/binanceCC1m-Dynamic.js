@@ -7,6 +7,7 @@ const common              = require('../common');
 var isTrade               = 0;
 var isTradeTmp            = 0;
 var markPricePre          = 0;
+var markPricePreTmp       = 0;
 var totalUSDT             = 0;
 var longShortCond         = '';
 var checkTrend            = '';
@@ -46,8 +47,9 @@ async function Main() {
                 return;
             }
             const count = countRecordTrade > 5 ? 5 : countRecordTrade;
-            if (isTrade != isTradeTmp) {
+            if (isTrade != isTradeTmp && markPricePre != markPricePreTmp) {
                 isTradeTmp = isTrade;
+                markPricePreTmp = markPricePre;
                 totalDCAPrice = Number(Number(totalDCAPrice) + Number(common.ConvertToPositiveNumber(Number(bestMarkPrice)-Number(markPricePre)) / count)).toFixed(0);
                 await telegram.log(`✨BTCUSDT 1m. totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
             }

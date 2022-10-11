@@ -1,0 +1,5 @@
+🤖 Bot cho biết:
+Coin: BTCUSDT
+1m_icon 1M DCA: 1m_u USDT
+--------------------
+time: time_in

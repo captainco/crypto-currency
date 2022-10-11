@@ -112,6 +112,19 @@ bot.command('wh', async (ctx) => {
     }
 });
 
+bot.command('whd', async (ctx) => {
+    //if (!IsMyTelegramAccount(ctx)) return;
+    try {
+        var oc = ["1m_icon", "1m_u", "time_in"];
+        const _1m_icon =  Number(process.env.Webhook1mud) == 0 ? '⚪' : Number(process.env.Webhook1mud) > 0 ? '✅' : '❌';
+        var nc = [_1m_icon, process.env.Webhook1mud, GetMoment()];
+        var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/whd_template.txt");
+        ctx.reply(temp);
+    } catch (error) {
+        ctx.reply(error);
+    }
+});
+
 bot.command('p', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'p');

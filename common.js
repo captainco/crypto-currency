@@ -5,7 +5,7 @@ const fs = require('fs');
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 
 function WriteConsoleLog(content) {
-    const dateTime = moment(Date.now()).format("DD/MM/YYYY HH:mm:ss");
+    const dateTime = moment(Date.now()).format("DD/MM/YYYY HH:mm:ss:SSS");
     console.log(dateTime + " => " + content);
 }
 

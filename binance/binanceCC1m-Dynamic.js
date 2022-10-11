@@ -52,8 +52,9 @@ async function Main() {
                 markPricePreTmp = markPricePre;
                 const _Price = Number(bestMarkPrice)-Number(markPricePre);
                 const Price = Number(common.ConvertToPositiveNumber(_Price) / count);
+                await telegram.log(`✨BTCUSDT 1m. totalDCAPrice trước thay đổi: ${totalDCAPrice} giá`);
                 totalDCAPrice = Number(Number(totalDCAPrice) + Price).toFixed(0);
-                await telegram.log(`✨BTCUSDT 1m. totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
+                await telegram.log(`✨BTCUSDT 1m. _Price: ${_Price}; count: ${count}; Price: ${Price}; totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);

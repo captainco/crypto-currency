@@ -12,7 +12,7 @@ Thông tin lệnh chung:
 --------------------
 /wh: Kiểm tra webhook đa khung
 --------------------
-/whd: Kiểm tra webhook test
+/d: Kiểm tra webhook test
 --------------------
 /p {O|coin}: Xem vị thế coin của bạn
 --> coin: Xem vị thế coin chi tiết

@@ -112,7 +112,7 @@ bot.command('wh', async (ctx) => {
     }
 });
 
-bot.command('whd', async (ctx) => {
+bot.command('d', async (ctx) => {
     //if (!IsMyTelegramAccount(ctx)) return;
     try {
         var oc = ["1m_icon", "1m_u", "time_in"];

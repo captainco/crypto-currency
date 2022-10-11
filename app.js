@@ -25,7 +25,7 @@ async function main() {
     // binanceCC30m.Main();
     // binanceCC1h.Main();
 
-    binanceCC1mDynamic.Main();
+    //binanceCC1mDynamic.Main();
     //binanceCC.Main();
 }
 

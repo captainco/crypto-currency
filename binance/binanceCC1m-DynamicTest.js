@@ -12,7 +12,7 @@ var totalUSDT             = 0;
 var longShortCond         = '';
 var checkTrend            = '';
 
-var countRecordTrade      = 0;
+var DCAPrice              = 0;
 var totalDCAPrice         = 0;
 var bestMarkPrice         = 0;
 
@@ -33,7 +33,8 @@ async function Main() {
             ) {
                 bestMarkPrice = markPrice;
                 const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
-                await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. bestMarkPrice hiện tại: ${Number(bestMarkPrice).toFixed(2)}; EntryPrice: ${markPricePre}`);
+                DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
+                await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
@@ -43,10 +44,10 @@ async function Main() {
     const DCAPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     DCAPrice.on('message', async (event) => {
         try {
-            if (countRecordTrade == 0 || bestMarkPrice == 0) {
+            if (bestMarkPrice == 0) {
                 return;
             }
-            const count = countRecordTrade > 5 ? 5 : countRecordTrade;
+            
             if (isTrade != isTradeTmp && markPricePre != markPricePreTmp) {
                 isTradeTmp = isTrade;
                 markPricePreTmp = markPricePre;
@@ -56,6 +57,25 @@ async function Main() {
                 totalDCAPrice = Number(Number(totalDCAPrice) + Price).toFixed(0);
                 await telegram.log(`✨BTCUSDT 1m. _Price: ${_Price}; count: ${count}; Price: ${Price}; totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
             }
+
+
+            for (let index = 1; index <= 3; index++) {
+                demo.push(index);
+            }
+            const _demo = demo;
+            demo = [];
+            const _demoMO = _demo.length > 5 ? _demo.length - 4 : 1;
+            var indexDemo = 0;
+            var dca = 0;
+            for (let index = _demo.length; index >= _demoMO; index--) {
+                indexDemo++;
+                demo.push(index);
+                dca = dca + index;
+            }
+            dca = Number(dca/indexDemo).toFixed(0);
+            console.log(indexDemo);
+            console.log(demo);
+            console.log(dca);
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
         }
@@ -82,7 +102,6 @@ async function Main() {
             if (longShortCond == 'LONG') {
                 if (isTrade == 0) {
                     isTrade = 1;
-                    countRecordTrade++;
                     //await telegram.log(`🟢BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
                 } else {
@@ -99,7 +118,6 @@ async function Main() {
             } else {
                 if (isTrade == 0) {
                     isTrade = -1;
-                    countRecordTrade++;
                     //await telegram.log(`🔴BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
                 } else {

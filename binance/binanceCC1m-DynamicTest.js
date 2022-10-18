@@ -44,19 +44,19 @@ async function Main() {
     const DCAPriceSocket = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     DCAPriceSocket.on('message', async (event) => {
         try {
-            if (bestMarkPrice == 0) {
-                return;
-            }
+            // if (bestMarkPrice == 0) {
+            //     return;
+            // }
             
-            if (isTrade != isTradeTmp && markPricePre != markPricePreTmp) {
-                isTradeTmp = isTrade;
-                markPricePreTmp = markPricePre;
-                const _Price = Number(bestMarkPrice)-Number(markPricePre);
-                const Price = Number(common.ConvertToPositiveNumber(_Price) / count);
-                await telegram.log(`✨BTCUSDT 1m. totalDCAPrice trước thay đổi: ${totalDCAPrice} giá`);
-                totalDCAPrice = Number(Number(totalDCAPrice) + Price).toFixed(0);
-                await telegram.log(`✨BTCUSDT 1m. _Price: ${_Price}; count: ${count}; Price: ${Price}; totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
-            }
+            // if (isTrade != isTradeTmp && markPricePre != markPricePreTmp) {
+            //     isTradeTmp = isTrade;
+            //     markPricePreTmp = markPricePre;
+            //     const _Price = Number(bestMarkPrice)-Number(markPricePre);
+            //     const Price = Number(common.ConvertToPositiveNumber(_Price) / count);
+            //     await telegram.log(`✨BTCUSDT 1m. totalDCAPrice trước thay đổi: ${totalDCAPrice} giá`);
+            //     totalDCAPrice = Number(Number(totalDCAPrice) + Price).toFixed(0);
+            //     await telegram.log(`✨BTCUSDT 1m. _Price: ${_Price}; count: ${count}; Price: ${Price}; totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
+            // }
             // for (let index = 1; index <= 3; index++) {
             //     demo.push(index);
             // }

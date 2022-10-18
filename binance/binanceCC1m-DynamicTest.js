@@ -41,8 +41,8 @@ async function Main() {
         }
     });
 
-    const DCAPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
-    DCAPrice.on('message', async (event) => {
+    const DCAPriceSocket = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
+    DCAPriceSocket.on('message', async (event) => {
         try {
             if (bestMarkPrice == 0) {
                 return;

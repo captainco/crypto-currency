@@ -57,25 +57,23 @@ async function Main() {
                 totalDCAPrice = Number(Number(totalDCAPrice) + Price).toFixed(0);
                 await telegram.log(`✨BTCUSDT 1m. _Price: ${_Price}; count: ${count}; Price: ${Price}; totalDCAPrice hiện tại: ${totalDCAPrice} giá`);
             }
-
-
-            for (let index = 1; index <= 3; index++) {
-                demo.push(index);
-            }
-            const _demo = demo;
-            demo = [];
-            const _demoMO = _demo.length > 5 ? _demo.length - 4 : 1;
-            var indexDemo = 0;
-            var dca = 0;
-            for (let index = _demo.length; index >= _demoMO; index--) {
-                indexDemo++;
-                demo.push(index);
-                dca = dca + index;
-            }
-            dca = Number(dca/indexDemo).toFixed(0);
-            console.log(indexDemo);
-            console.log(demo);
-            console.log(dca);
+            // for (let index = 1; index <= 3; index++) {
+            //     demo.push(index);
+            // }
+            // const _demo = demo;
+            // demo = [];
+            // const _demoMO = _demo.length > 5 ? _demo.length - 4 : 1;
+            // var indexDemo = 0;
+            // var dca = 0;
+            // for (let index = _demo.length; index >= _demoMO; index--) {
+            //     indexDemo++;
+            //     demo.push(index);
+            //     dca = dca + index;
+            // }
+            // dca = Number(dca/indexDemo).toFixed(0);
+            // console.log(indexDemo);
+            // console.log(demo);
+            // console.log(dca);
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
         }

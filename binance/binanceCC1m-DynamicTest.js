@@ -48,6 +48,7 @@ async function Main() {
             } else {
                 const iconLongShortAlert = Number(DCAPrice) > 0 ? '🟢' : '🔴';
                 await telegram.log(`✨${iconLongShortAlert}✨BTCUSDT 1m. DCAPrice tốt nhất: ${DCAPrice}`);
+                isChangeDCA = process.env.Webhook1m;
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);

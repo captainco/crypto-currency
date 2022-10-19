@@ -12,6 +12,8 @@ var totalUSDT             = 0;
 var longShortCond         = '';
 var checkTrend            = '';
 
+var isChangeDCA           = '';
+var isDCAPrice            = 0;
 var DCAPrice              = 0;
 var DCAPriceTmp           = 0;
 var totalDCAPrice         = 0;
@@ -21,37 +23,31 @@ async function Main() {
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {
-            if (isTrade == 0) {
+            if (process.env.Webhook1m == '' || isTrade == 0) {
                 return;
             }
 
-            if (isTradeTmp == 0) {
-                isTradeTmp = isTrade;
-            }
-            
-            const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
-            const markPrice = Number(Ps.markPrice);
-            if
-                (
-                (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice < markPrice)) && isTrade == 1)
-                || (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice > markPrice)) && isTrade == -1)
-            ) {
-                bestMarkPrice = markPrice;
-                const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
-                DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
-                DCAPriceTmp = DCAPrice;
-                await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
-            }
-
-            if (DCAPriceTmp == 0) {
+            if (isDCAPrice == 0) {
+                isDCAPrice = 1;
+                isChangeDCA = process.env.Webhook1m;
                 return;
             }
-            
-            if (isTrade != isTradeTmp) {
-                isTradeTmp = isTrade;
-                const iconLongShortAlert = Number(DCAPriceTmp) > 0 ? '🟢' : '🔴';
-                await telegram.log(`✨${iconLongShortAlert}✨BTCUSDT 1m. DCAPrice tốt nhất: ${DCAPriceTmp}`);
-                DCAPriceTmp = 0;
+
+            if (process.env.Webhook1m == isChangeDCA) {
+                const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
+                const markPrice = Number(Ps.markPrice);
+                if (
+                    (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice < markPrice)) && isTrade == 1)
+                    || (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice > markPrice)) && isTrade == -1)
+                ){
+                    bestMarkPrice = markPrice;
+                    const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
+                    DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
+                    await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
+                }
+            } else {
+                const iconLongShortAlert = Number(DCAPrice) > 0 ? '🟢' : '🔴';
+                await telegram.log(`✨${iconLongShortAlert}✨BTCUSDT 1m. DCAPrice tốt nhất: ${DCAPrice}`);
             }
         } catch (e) {
             await telegram.log(`⚠ ${e}`);

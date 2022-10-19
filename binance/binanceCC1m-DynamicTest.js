@@ -5,6 +5,7 @@ const binance             = require('./binance');
 const common              = require('../common');
 
 var isTrade               = 0;
+var isTradeTmp            = 0;
 var markPricePre          = 0;
 var markPricePreTmp       = 0;
 var totalUSDT             = 0;

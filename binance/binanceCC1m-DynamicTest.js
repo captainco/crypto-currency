@@ -38,14 +38,7 @@ async function Main() {
                 DCAPriceTmp = DCAPrice;
                 await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
             }
-        } catch (e) {
-            await telegram.log(`⚠ ${e}`);
-        }
-    });
 
-    const DCAPriceSocket = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
-    DCAPriceSocket.on('message', async (event) => {
-        try {
             if (DCAPriceTmp == 0) {
                 return;
             }
@@ -56,27 +49,36 @@ async function Main() {
                 await telegram.log(`✨${iconLongShortAlert}✨BTCUSDT 1m. DCAPrice tốt nhất: ${DCAPriceTmp}`);
                 DCAPriceTmp = 0;
             }
-            // for (let index = 1; index <= 3; index++) {
-            //     demo.push(index);
-            // }
-            // const _demo = demo;
-            // demo = [];
-            // const _demoMO = _demo.length > 5 ? _demo.length - 4 : 1;
-            // var indexDemo = 0;
-            // var dca = 0;
-            // for (let index = _demo.length; index >= _demoMO; index--) {
-            //     indexDemo++;
-            //     demo.push(index);
-            //     dca = dca + index;
-            // }
-            // dca = Number(dca/indexDemo).toFixed(0);
-            // console.log(indexDemo);
-            // console.log(demo);
-            // console.log(dca);
         } catch (e) {
             await telegram.log(`⚠ ${e}`);
         }
     });
+
+    // const DCAPriceSocket = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
+    // DCAPriceSocket.on('message', async (event) => {
+    //     try {
+            
+    //         // for (let index = 1; index <= 3; index++) {
+    //         //     demo.push(index);
+    //         // }
+    //         // const _demo = demo;
+    //         // demo = [];
+    //         // const _demoMO = _demo.length > 5 ? _demo.length - 4 : 1;
+    //         // var indexDemo = 0;
+    //         // var dca = 0;
+    //         // for (let index = _demo.length; index >= _demoMO; index--) {
+    //         //     indexDemo++;
+    //         //     demo.push(index);
+    //         //     dca = dca + index;
+    //         // }
+    //         // dca = Number(dca/indexDemo).toFixed(0);
+    //         // console.log(indexDemo);
+    //         // console.log(demo);
+    //         // console.log(dca);
+    //     } catch (e) {
+    //         await telegram.log(`⚠ ${e}`);
+    //     }
+    // });
 
     const UpdateUSDT = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     UpdateUSDT.on('message', async (event) => {

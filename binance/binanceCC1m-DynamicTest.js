@@ -24,6 +24,10 @@ async function Main() {
             if (isTrade == 0) {
                 return;
             }
+
+            if (isTradeTmp == 0) {
+                isTradeTmp = isTrade;
+            }
             
             const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
             const markPrice = Number(Ps.markPrice);

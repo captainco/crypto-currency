@@ -41,7 +41,7 @@ router.post('/webhook', bodyParser.text(), function (req, res) {
 router.post('/webhook1m', bodyParser.text(), function (req, res) {
     try {
         process.env.Webhook1m = req.body;
-        telegram.log(`POST Webhook1m: ${req.body}`);
+        // telegram.log(`POST Webhook1m: ${req.body}`);
         res.end();
     } catch (error) {
         res.end();

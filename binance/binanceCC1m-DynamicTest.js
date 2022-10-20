@@ -41,13 +41,15 @@ async function Main() {
                     || (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice > markPrice)) && isTrade == -1)
                 ){
                     bestMarkPrice = markPrice;
-                    const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
+                    //const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
                     DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
                     // await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
                 }
             } else {
-                const iconLongShortAlert = Number(DCAPrice) > 0 ? '🟢' : '🔴';
-                await telegram.log(`✨${iconLongShortAlert}✨BTCUSDT 1m. DCAPrice tốt nhất: ${DCAPrice}`);
+                if (DCAPrice > 5 || DCAPrice < -5) {
+                    const iconLongShortAlert = Number(DCAPrice) > 0 ? '🟢' : '🔴';
+                    await telegram.log(`✨${iconLongShortAlert}✨BTCUSDT 1m. DCAPrice tốt nhất: ${DCAPrice}`);
+                }
                 isChangeDCA = process.env.Webhook1m;
             }
         } catch (e) {

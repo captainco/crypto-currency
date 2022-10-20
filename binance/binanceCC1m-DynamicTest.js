@@ -43,7 +43,7 @@ async function Main() {
                     bestMarkPrice = markPrice;
                     const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
                     DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
-                    await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
+                    // await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
                 }
             } else {
                 const iconLongShortAlert = Number(DCAPrice) > 0 ? '🟢' : '🔴';

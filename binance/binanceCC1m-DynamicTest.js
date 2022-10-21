@@ -69,12 +69,22 @@ async function Main() {
         }
     });
 
+    const reportDCALongPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
+    reportDCALongPrice.on('message', async (event) => {
+        try {
+            if (common.GetMomentSecond() == "59") {
+                await telegram.log(`✨DCALong.length -> ${DCALong.length}`);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    });
+
     const UpdateDCALong = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     UpdateDCALong.on('message', async (event) => {
         try {
             if (DCALong.length < 10) {
                 DCALongPrice = 10;
-                await telegram.log(`✨DCALong.length -> ${DCALong.length}`);
             } else {
                 const DCALongLMax = DCALong.length;
                 const DCALongLMin = DCALongLMax - 10;

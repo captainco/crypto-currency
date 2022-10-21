@@ -46,7 +46,7 @@ async function Main() {
                     // await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
                 }
             } else {
-                if (DCAPrice > 5 || DCAPrice < -5) {
+                if (DCAPrice > 10 || DCAPrice < -10) {
                     const iconLongShortAlert = Number(DCAPrice) > 0 ? '🟢' : '🔴';
                     await telegram.log(`✨${iconLongShortAlert}✨BTCUSDT 1m. DCAPrice tốt nhất: ${Math.abs(DCAPrice)}`);
                 }

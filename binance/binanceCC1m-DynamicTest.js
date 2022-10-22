@@ -71,13 +71,9 @@ async function Main() {
     reportDCALongShortPrice.on('message', async (event) => {
         try {
             if (common.GetMomentSecond() == "59") {
-                await telegram.log(`✨DCALong.length -> ${DCALong.length}`);
-                await telegram.log(`✨DCALongStringPrice -> ${DCALongStringPrice}`);
-                await telegram.log(`✨DCALongTotalPrice -> ${DCALongTotalPrice}`);
-
-                await telegram.log(`✨DCAShort.length -> ${DCAShort.length}`);
-                await telegram.log(`✨DCAShortStringPrice -> ${DCAShortStringPrice}`);
-                await telegram.log(`✨DCAShortTotalPrice -> ${DCAShortTotalPrice}`);
+                await telegram.log(`✨DCALong.length -> ${DCALong.length}✨DCAShort.length -> ${DCAShort.length}`);
+                await telegram.log(`✨DCALongStringPrice -> ${DCALongStringPrice}✨DCAShortStringPrice -> ${DCAShortStringPrice}`);
+                await telegram.log(`✨DCALongTotalPrice -> ${DCALongTotalPrice}✨DCAShortTotalPrice -> ${DCAShortTotalPrice}`);
             }
         } catch (e) {
             console.log(e);

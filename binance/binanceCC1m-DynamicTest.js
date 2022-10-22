@@ -15,7 +15,7 @@ var checkTrend            = '';
 var isChangeDCA           = '';
 var isDCAPrice            = 0;
 var DCAPrice              = 0;
-var DCATakeProfit         = 10;
+var DCATakeProfit         = 5;
 var bestMarkPrice         = 0;
 
 var DCALong               = [];
@@ -51,13 +51,13 @@ async function Main() {
                     DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
                 }
             } else {
+                await telegram.log(`✅DCAPrice -> ${DCAPrice}`);
                 if (DCAPrice > 10 || DCAPrice < -10) {
-                    const NumberDCAPrice = Number(DCAPrice);
                     //Push to array
-                    if (NumberDCAPrice > 0) {
-                        DCALong.push(NumberDCAPrice);
+                    if (DCAPrice > 0) {
+                        DCALong.push(DCAPrice);
                     } else {
-                        DCAShort.push(NumberDCAPrice);
+                        DCAShort.push(DCAPrice);
                     }
                 }
                 isChangeDCA = process.env.Webhook1m;
@@ -71,9 +71,7 @@ async function Main() {
     reportDCALongShortPrice.on('message', async (event) => {
         try {
             if (common.GetMomentSecond() == "59") {
-                await telegram.log(`✨DCALong.length -> ${DCALong.length}✨DCAShort.length -> ${DCAShort.length}`);
-                await telegram.log(`✨DCALongStringPrice -> ${DCALongStringPrice}✨DCAShortStringPrice -> ${DCAShortStringPrice}`);
-                await telegram.log(`✨DCALongTotalPrice -> ${DCALongTotalPrice}✨DCAShortTotalPrice -> ${DCAShortTotalPrice}`);
+                await telegram.log(`✨DCALong.length -> ${DCALong.length}✨DCAShort.length -> ${DCAShort.length}✨DCALongStringPrice -> ${DCALongStringPrice}✨DCAShortStringPrice -> ${DCAShortStringPrice}✨DCALongTotalPrice -> ${DCALongTotalPrice}✨DCAShortTotalPrice -> ${DCAShortTotalPrice}`);
             }
         } catch (e) {
             console.log(e);

@@ -48,40 +48,4 @@ router.post('/webhook1m', bodyParser.text(), function (req, res) {
     }
 });
 
-router.post('/webhook5m', bodyParser.text(), function (req, res) {
-    try {
-        process.env.Webhook5m = req.body;
-        res.end();
-    } catch (error) {
-        res.end();
-    }
-});
-
-router.post('/webhook15m', bodyParser.text(), function (req, res) {
-    try {
-        process.env.Webhook15m = req.body;
-        res.end();
-    } catch (error) {
-        res.end();
-    }
-});
-
-router.post('/webhook30m', bodyParser.text(), function (req, res) {
-    try {
-        process.env.Webhook30m = req.body;
-        res.end();
-    } catch (error) {
-        res.end();
-    }
-});
-
-router.post('/webhook1h', bodyParser.text(), function (req, res) {
-    try {
-        process.env.Webhook1h = req.body;
-        res.end();
-    } catch (error) {
-        res.end();
-    }
-});
-
 module.exports = router;

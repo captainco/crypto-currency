@@ -10,8 +10,6 @@ Thông tin lệnh chung:
 --> value: Giá trị min coin
 --> valueLeverage: Đòn bẩy
 --------------------
-/wh: Kiểm tra webhook đa khung
---------------------
 /d: Kiểm tra webhook test
 --------------------
 /p {O|coin}: Xem vị thế coin của bạn

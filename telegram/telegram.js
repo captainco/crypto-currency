@@ -94,26 +94,7 @@ bot.command('c', async (ctx) => {
     }
 });
 
-bot.command('wh', async (ctx) => {
-    //if (!IsMyTelegramAccount(ctx)) return;
-    try {
-        var oc = ["1m_icon", "5m_icon", "15m_icon", "30m_icon", "1h_icon", "wh_icon", "1m_u", "5m_u", "15m_u", "30m_u", "1h_u", "wh_u", "time_in"];
-        const _1m_icon =  Number(process.env.Webhook1mu) == 0 ? '⚪' : Number(process.env.Webhook1mu) > 0 ? '✅' : '❌';
-        const _5m_icon =  Number(process.env.Webhook5mu) == 0 ? '⚪' : Number(process.env.Webhook5mu) > 0 ? '✅' : '❌';
-        const _15m_icon = Number(process.env.Webhook15mu) == 0 ? '⚪' : Number(process.env.Webhook15mu) > 0 ? '✅' : '❌';
-        const _30m_icon = Number(process.env.Webhook30mu) == 0 ? '⚪' : Number(process.env.Webhook30mu) > 0 ? '✅' : '❌';
-        const _1h_icon =  Number(process.env.Webhook1hu) == 0 ? '⚪' : Number(process.env.Webhook1hu) > 0 ? '✅' : '❌';
-        const _wh_icon =  Number(process.env.Webhooku) == 0 ? '⚪' : Number(process.env.Webhooku) > 0 ? '✅' : '❌';
-        var nc = [_1m_icon, _5m_icon, _15m_icon, _30m_icon, _1h_icon, _wh_icon, process.env.Webhook1mu, process.env.Webhook5mu, process.env.Webhook15mu, process.env.Webhook30mu, process.env.Webhook1hu, process.env.Webhooku, GetMoment()];
-        var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/wh_template.txt");
-        ctx.reply(temp);
-    } catch (error) {
-        ctx.reply(error);
-    }
-});
-
 bot.command('d', async (ctx) => {
-    //if (!IsMyTelegramAccount(ctx)) return;
     try {
         var oc = ["1m_icon", "1m_u", "time_in"];
         const _1m_icon =  Number(process.env.Webhook1mud) == 0 ? '⚪' : Number(process.env.Webhook1mud) > 0 ? '✅' : '❌';

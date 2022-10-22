@@ -4,13 +4,19 @@ markPricePre: _markPricePre
 totalUSDT: _totalUSDT
 longShortCond: _longShortCond
 checkTrend: _checkTrend
+
 isChangeDCA: _isChangeDCA
 isDCAPrice: _isDCAPrice
 DCAPrice: _DCAPrice
 DCATakeProfit: _DCATakeProfit
 bestMarkPrice: _bestMarkPrice
+bestMarkPrice: _bestMarkPrice
+
+DCALong: _DCALong
 DCALongStringPrice: _DCALongStringPrice
 DCALongTotalPrice: _DCALongTotalPrice
+
+DCAShort: _DCAShort
 DCAShortStringPrice: _DCAShortStringPrice
 DCAShortTotalPrice: _DCAShortTotalPrice
 --------------------

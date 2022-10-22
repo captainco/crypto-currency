@@ -68,8 +68,8 @@ async function Main() {
     reportDCALongShortPrice.on('message', async (event) => {
         try {
             if (common.GetMomentSecond() == "59") {
-                var oc = ["_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_DCATakeProfit", "_bestMarkPrice", "_DCALongStringPrice", "_DCALongTotalPrice", "_DCAShortStringPrice", "_DCAShortTotalPrice", "time_in"];
-                var nc = [isTrade, markPricePre, totalUSDT, longShortCond, checkTrend, isChangeDCA, isDCAPrice, DCAPrice, DCATakeProfit, bestMarkPrice, DCALongStringPrice, DCALongTotalPrice, DCAShortStringPrice, DCAShortTotalPrice, common.GetMoment()];
+                var oc = ["_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_DCATakeProfit", "_bestMarkPrice", "_DCALong", "_DCALongStringPrice", "_DCALongTotalPrice", "_DCAShort", "_DCAShortStringPrice", "_DCAShortTotalPrice", "time_in"];
+                var nc = [isTrade, markPricePre, totalUSDT, longShortCond, checkTrend, isChangeDCA, isDCAPrice, DCAPrice, DCATakeProfit, bestMarkPrice, DCALong.toString(), DCALongStringPrice, DCALongTotalPrice, DCAShort.toString(), DCAShortStringPrice, DCAShortTotalPrice, common.GetMoment()];
                 await telegram.logAlert(oc, nc);
             }
         } catch (e) {

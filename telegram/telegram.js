@@ -169,9 +169,7 @@ async function log(message) {
     await sendMessage(`${temp}`);
 }
 
-async function logAlert(coin, rsi, icon, liquid, spot, ft, spFt) {
-    var oc = ["coin_in", "rsi_in", "icon_in", "liquid_in", "spot_in", "ft_in", "sp_ft_in", "time_in"];
-    var nc = [coin, rsi, icon, liquid, spot, ft, spFt, GetMoment()];
+async function logAlert(oc, nc) {
     var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/alert_template.txt");
     await sendMessage(`${temp}`);
 }

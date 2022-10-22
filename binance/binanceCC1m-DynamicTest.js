@@ -5,9 +5,7 @@ const binance             = require('./binance');
 const common              = require('../common');
 
 var isTrade               = 0;
-var isTradeTmp            = 0;
 var markPricePre          = 0;
-var markPricePreTmp       = 0;
 var totalUSDT             = 0;
 var longShortCond         = '';
 var checkTrend            = '';
@@ -51,7 +49,6 @@ async function Main() {
                     DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
                 }
             } else {
-                await telegram.log(`✅DCAPrice -> ${DCAPrice}`);
                 if (DCAPrice > 10 || DCAPrice < -10) {
                     //Push to array
                     if (DCAPrice > 0) {
@@ -71,7 +68,9 @@ async function Main() {
     reportDCALongShortPrice.on('message', async (event) => {
         try {
             if (common.GetMomentSecond() == "59") {
-                await telegram.log(`✨DCALong.length -> ${DCALong.length}✨DCAShort.length -> ${DCAShort.length}✨DCALongStringPrice -> ${DCALongStringPrice}✨DCAShortStringPrice -> ${DCAShortStringPrice}✨DCALongTotalPrice -> ${DCALongTotalPrice}✨DCAShortTotalPrice -> ${DCAShortTotalPrice}`);
+                var oc = ["_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_DCATakeProfit", "_bestMarkPrice", "_DCALongStringPrice", "_DCALongTotalPrice", "_DCAShortStringPrice", "_DCAShortTotalPrice", "time_in"];
+                var nc = [isTrade, markPricePre, totalUSDT, longShortCond, checkTrend, isChangeDCA, isDCAPrice, DCAPrice, DCATakeProfit, bestMarkPrice, DCALongStringPrice, DCALongTotalPrice, DCAShortStringPrice, DCAShortTotalPrice, common.GetMoment()];
+                await telegram.logAlert(oc, nc);
             }
         } catch (e) {
             console.log(e);
@@ -83,14 +82,14 @@ async function Main() {
         try {
             if (DCALong.length != 0) {
                 const DCALongLMax = DCALong.length;
-                const DCALongLMin = DCALongLMax < 10 ? 0 : DCALongLMax - 10;
+                const DCALongLMin = DCALongLMax < 5 ? 0 : DCALongLMax - 5;
                 DCALongStringPrice = '';
                 for (let index = DCALongLMax; index >= DCALongLMin; index--) {
                     DCALongStringPrice = `${DCALong[index]};`;
-                    DCALongTotalPrice = Number(DCALongTotalPrice + (DCALong[index]/10)).toFixed(2);
+                    DCALongTotalPrice = Number(DCALongTotalPrice + (DCALong[index]/5)).toFixed(2);
                 }
             }
-            DCALongTotalPrice = DCALongTotalPrice < 10 ? 10 : DCALongTotalPrice;
+            DCALongTotalPrice = DCALongTotalPrice < 5 ? 5 : DCALongTotalPrice;
         } catch (e) {
             console.log(e);
         }
@@ -101,14 +100,14 @@ async function Main() {
         try {
             if (DCAShort.length != 0) {
                 const DCAShortLMax = DCAShort.length;
-                const DCAShortLMin = DCAShortLMax < 10 ? 0 : DCAShortLMax - 10;
+                const DCAShortLMin = DCAShortLMax < 5 ? 0 : DCAShortLMax - 5;
                 DCALongStringPrice = '';
                 for (let index = DCAShortLMax; index >= DCAShortLMin; index--) {
                     DCAShortStringPrice = `${DCAShort[index]};`;
-                    DCAShortTotalPrice = Number(DCAShortTotalPrice + (DCAShort[index]/10)).toFixed(2);
+                    DCAShortTotalPrice = Number(DCAShortTotalPrice + (DCAShort[index]/5)).toFixed(2);
                 }
             }
-            DCAShortTotalPrice = DCAShortTotalPrice < 10 ? 10 : DCAShortTotalPrice;
+            DCAShortTotalPrice = DCAShortTotalPrice < 5 ? 5 : DCAShortTotalPrice;
         } catch (e) {
             console.log(e);
         }
@@ -137,6 +136,7 @@ async function Main() {
                     isTrade = 1;
                     await telegram.log(`🟢BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
+                    DCATakeProfit = DCALongTotalPrice;
                 } else {
                     if (isTrade == -1) {
                         isTrade = 1;
@@ -153,6 +153,7 @@ async function Main() {
                     isTrade = -1;
                     await telegram.log(`🔴BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
+                    DCATakeProfit = DCAShortTotalPrice;
                 } else {
                     if (isTrade == 1) {
                         isTrade = -1;

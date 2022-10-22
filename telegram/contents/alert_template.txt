@@ -1,12 +1,17 @@
 🤖 Bot cho biết:
-Coin: coin_in
-RSI: rsi_in
-
-Thanh lý: icon_in
-Thanh lý tại giá: liquid_in
-
-Giá spot: spot_in 
-Giá FT: ft_in
-Chênh giá spot-ft: sp_ft_in
+isTrade: _isTrade
+markPricePre: _markPricePre
+totalUSDT: _totalUSDT
+longShortCond: _longShortCond
+checkTrend: _checkTrend
+isChangeDCA: _isChangeDCA
+isDCAPrice: _isDCAPrice
+DCAPrice: _DCAPrice
+DCATakeProfit: _DCATakeProfit
+bestMarkPrice: _bestMarkPrice
+DCALongStringPrice: _DCALongStringPrice
+DCALongTotalPrice: _DCALongTotalPrice
+DCAShortStringPrice: _DCAShortStringPrice
+DCAShortTotalPrice: _DCAShortTotalPrice
 --------------------
 time: time_in

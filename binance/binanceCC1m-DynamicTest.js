@@ -15,17 +15,13 @@ var checkTrend            = '';
 var isChangeDCA           = '';
 var isDCAPrice            = 0;
 var DCAPrice              = 0;
-var DCAPriceTmp           = 0;
-var totalDCAPrice         = 0;
 var bestMarkPrice         = 0;
 
 var DCALong               = [];
-var DCAShort              = [];
 var DCALongStringPrice    = '';
-var DCALongPrice          = 0;
-var DCAShortPrice         = 0;
 var DCALongTotalPrice     = 0;
-var DCAShortTotalPrice    = 0;
+
+var DCAShort              = [];
 
 async function Main() {
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
@@ -49,14 +45,11 @@ async function Main() {
                     || (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice > markPrice)) && isTrade == -1)
                 ){
                     bestMarkPrice = markPrice;
-                    //const iconLongShortAlert = isTrade == 1 ? '🟢' : '🔴';
                     DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
-                    // await telegram.log(`✨${iconLongShortAlert}BTCUSDT 1m. DCAPrice hiện tại: ${DCAPrice}`);
                 }
             } else {
                 if (DCAPrice > 10 || DCAPrice < -10) {
                     const NumberDCAPrice = Number(DCAPrice);
-                    const iconLongShortAlert = NumberDCAPrice > 0 ? '🟢' : '🔴';
                     //Push to array
                     if (NumberDCAPrice > 0) {
                         DCALong.push(NumberDCAPrice);
@@ -87,9 +80,7 @@ async function Main() {
     const UpdateDCALong = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     UpdateDCALong.on('message', async (event) => {
         try {
-            if (DCALong.length < 10) {
-                DCALongPrice = 10;
-            } else {
+            if (DCALong.length > 9) {
                 const DCALongLMax = DCALong.length;
                 const DCALongLMin = DCALongLMax - 10;
                 DCALongStringPrice = '';
@@ -97,21 +88,12 @@ async function Main() {
                     DCALongStringPrice = `${DCALong[index]};`;
                     DCALongTotalPrice = Number(DCALongTotalPrice + (DCALong[index]/10)).toFixed(2);
                 }
-                DCALongTotalPrice = DCALongTotalPrice < 10 ? 10 : DCALongTotalPrice;
             }
+            DCALongTotalPrice = DCALongTotalPrice < 10 ? 10 : DCALongTotalPrice;
         } catch (e) {
             console.log(e);
         }
     });
-
-    // const UpdateDCAShort = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
-    // UpdateDCAShort.on('message', async (event) => {
-    //     try {
-
-    //     } catch (e) {
-    //         console.log(e);
-    //     }
-    // });
 
     const UpdateUSDT = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     UpdateUSDT.on('message', async (event) => {

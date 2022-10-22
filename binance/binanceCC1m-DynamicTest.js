@@ -49,7 +49,7 @@ async function Main() {
                     DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
                 }
             } else {
-                if (DCAPrice > 10 || DCAPrice < -10) {
+                if (DCAPrice > 5 || DCAPrice < -5) {
                     //Push to array
                     if (DCAPrice > 0) {
                         DCALong.push(DCAPrice);

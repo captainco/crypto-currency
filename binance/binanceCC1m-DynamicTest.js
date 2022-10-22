@@ -181,21 +181,21 @@ async function Main() {
 
             const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
             if (isTrade = 1) {
-                if (Number(markPricePre) + totalDCAPrice < Number(Ps.markPrice)) {
+                if (Number(markPricePre) + DCATakeProfit < Number(Ps.markPrice)) {
                     isTrade = 0;
                     const tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
                     const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
                     totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
-                    await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 1m Đóng lệnh sớm. DCAPrice: ${totalDCAPrice}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                    await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 1m Đóng lệnh sớm. DCAPrice: ${DCATakeProfit}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = 0;
                 }
             } else {
-                if (Number(markPricePre) - totalDCAPrice > Number(Ps.markPrice)) {
+                if (Number(markPricePre) - DCATakeProfit > Number(Ps.markPrice)) {
                     isTrade = 0;
                     const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
                     const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
                     totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
-                    await telegram.log(`${iconLongShortAlert}🔴BTCUSDT 1m Đóng lệnh sớm. DCAPrice: ${totalDCAPrice}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                    await telegram.log(`${iconLongShortAlert}🔴BTCUSDT 1m Đóng lệnh sớm. DCAPrice: ${DCATakeProfit}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = 0;
                 }
             }

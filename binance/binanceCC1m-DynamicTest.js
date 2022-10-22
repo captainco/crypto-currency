@@ -21,8 +21,11 @@ var bestMarkPrice         = 0;
 
 var DCALong               = [];
 var DCAShort              = [];
+var DCALongStringPrice    = '';
 var DCALongPrice          = 0;
 var DCAShortPrice         = 0;
+var DCALongTotalPrice     = 0;
+var DCAShortTotalPrice    = 0;
 
 async function Main() {
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
@@ -60,7 +63,6 @@ async function Main() {
                     } else {
                         DCAShort.push(NumberDCAPrice);
                     }
-                    await telegram.log(`✨${iconLongShortAlert}✨BTCUSDT 1m. DCAPrice tốt nhất: ${Math.abs(DCAPrice)}`);
                 }
                 isChangeDCA = process.env.Webhook1m;
             }
@@ -74,6 +76,8 @@ async function Main() {
         try {
             if (common.GetMomentSecond() == "59") {
                 await telegram.log(`✨DCALong.length -> ${DCALong.length}`);
+                await telegram.log(`✨DCALongStringPrice -> ${DCALongStringPrice}`);
+                await telegram.log(`✨DCALongTotalPrice -> ${DCALongTotalPrice}`);
             }
         } catch (e) {
             console.log(e);
@@ -88,13 +92,12 @@ async function Main() {
             } else {
                 const DCALongLMax = DCALong.length;
                 const DCALongLMin = DCALongLMax - 10;
-                const DCATotal = 0;
+                DCALongStringPrice = '';
                 for (let index = DCALongLMax; index >= DCALongLMin; index--) {
-                    DCATotal = Number(DCATotal + (DCALong[index]/10)).toFixed(2);
-                    await telegram.log(`✨For DCALong[index] -> ${DCALong[index]}`);
-                    await telegram.log(`✨For DCATotal -> ${DCATotal}`);
+                    DCALongStringPrice = `${DCALong[index]};`;
+                    DCALongTotalPrice = Number(DCALongTotalPrice + (DCALong[index]/10)).toFixed(2);
                 }
-                await telegram.log(`✨DCATotal -> ${DCATotal}`);
+                DCALongTotalPrice = DCALongTotalPrice < 10 ? 10 : DCALongTotalPrice;
             }
         } catch (e) {
             console.log(e);

@@ -80,9 +80,9 @@ async function Main() {
     const UpdateDCALong = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     UpdateDCALong.on('message', async (event) => {
         try {
-            if (DCALong.length > 9) {
+            if (DCALong.length != 0) {
                 const DCALongLMax = DCALong.length;
-                const DCALongLMin = DCALongLMax - 10;
+                const DCALongLMin = DCALongLMax < 10 ? 0 : DCALongLMax - 10;
                 DCALongStringPrice = '';
                 for (let index = DCALongLMax; index >= DCALongLMin; index--) {
                     DCALongStringPrice = `${DCALong[index]};`;

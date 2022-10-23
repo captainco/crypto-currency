@@ -28,7 +28,7 @@ async function Main() {
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {
-            if (process.env.Webhook1m == '' || isTrade == 0) {
+            if (isTrade == 0) {
                 return;
             }
 
@@ -41,12 +41,11 @@ async function Main() {
             if (process.env.Webhook1m == isChangeDCA) {
                 const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                 const markPrice = Number(Ps.markPrice);
-                if (
-                    (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice < markPrice)) && isTrade == 1)
-                    || (((bestMarkPrice == 0) || (bestMarkPrice != 0 && bestMarkPrice > markPrice)) && isTrade == -1)
-                ){
+                if((bestMarkPrice < markPrice && isTrade == 1) || (bestMarkPrice > markPrice && isTrade == -1)) {
                     bestMarkPrice = markPrice;
                     DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
+                    const iconLongShortAlert = isTrade > 0 ? '🟢' : '🔴';
+                    await telegram.log(`${iconLongShortAlert} => DCAPrice new: ${DCAPrice}`);
                 }
             } else {
                 const NumberDCAPrice = Number(DCAPrice).toFixed(0);

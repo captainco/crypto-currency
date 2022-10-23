@@ -144,7 +144,7 @@ async function Main() {
                 }
                 DCAShortTotalPrice = Number(total / countDCA).toFixed(0);
             }
-            DCAShortTotalPrice = Number(DCAShortTotalPrice) < 5 ? 5 : Number(DCAShortTotalPrice);
+            DCAShortTotalPrice = Number(DCAShortTotalPrice) > -5 ? -5 : Number(DCAShortTotalPrice);
         } catch (e) {
             console.log(e);
         }

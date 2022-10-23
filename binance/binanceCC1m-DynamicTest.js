@@ -50,7 +50,7 @@ async function Main() {
             } else {
                 const NumberDCAPrice = Number(DCAPrice).toFixed(0);
                 //Push to array
-                if (NumberDCAPrice > 1 || NumberDCAPrice < -1) {
+                if (NumberDCAPrice >= 1 || NumberDCAPrice <= -1) {
                     if (NumberDCAPrice > 0) {
                         DCALong.push(NumberDCAPrice);
                         await telegram.log(`🟢 => DCAPrice push: ${NumberDCAPrice}`);

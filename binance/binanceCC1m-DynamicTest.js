@@ -49,13 +49,15 @@ async function Main() {
                 }
             } else {
                 const NumberDCAPrice = Number(DCAPrice).toFixed(0);
-                if (NumberDCAPrice > 5 || NumberDCAPrice < -5) {
-                    //Push to array
-                    if (NumberDCAPrice > 0) {
-                        DCALong.push(NumberDCAPrice);
-                    } else {
-                        DCAShort.push(NumberDCAPrice);
-                    }
+                //Push to array
+                if (NumberDCAPrice > 0) {
+                    DCALong.push(NumberDCAPrice);
+                    await telegram.log(`$🟢 => DCAPrice push: ${NumberDCAPrice}`);
+                    await telegram.log(`$🟢 => DCALong: ${DCALong.toString()}`);
+                } else {
+                    DCAShort.push(NumberDCAPrice);
+                    await telegram.log(`$🔴 => DCAPrice push: ${NumberDCAPrice}`);
+                    await telegram.log(`$🔴 => DCAShort: ${DCAShort.toString()}`);
                 }
                 isChangeDCA = process.env.Webhook1m;
             }
@@ -73,8 +75,7 @@ async function Main() {
                 var oc = ["_markPrice", "_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_DCATakeProfit", "_bestMarkPrice", "_DCALong", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice", "_DCAShort", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     markPrice,
-                    //isTrade,
-                    '-1',
+                    isTrade,
                     Number(markPricePre).toFixed(2),
                     Number(totalUSDT).toFixed(2),
                     longShortCond,

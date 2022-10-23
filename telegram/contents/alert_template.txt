@@ -10,7 +10,6 @@ isDCAPrice: _isDCAPrice
 DCAPrice: _DCAPrice
 DCATakeProfit: _DCATakeProfit
 bestMarkPrice: _bestMarkPrice
-bestMarkPrice: _bestMarkPrice
 
 DCALong: _DCALong
 DCALongStringPrice: _DCALongStringPrice

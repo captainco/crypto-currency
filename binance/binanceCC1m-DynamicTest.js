@@ -111,11 +111,15 @@ async function Main() {
                 const DCALongLMax = DCALong.length;
                 const DCALongLMin = DCALongLMax < 5 ? 0 : DCALongLMax - 5;
                 DCALongStringPrice = "";
+                const countDCA = 0;
+                const total = 0;
                 for (let index = DCALongLMax - 1; index >= DCALongLMin; index--) {
                     const DCANumber = Number(DCALong[index]);
                     DCALongStringPrice = DCALongStringPrice + `${DCANumber};`;
-                    DCALongTotalPrice = Number(Number(DCALongTotalPrice) + (DCANumber / 5)).toFixed(0);
+                    countDCA = countDCA + 1;
+                    total = total + DCANumber;
                 }
+                DCALongTotalPrice = Number(total / countDCA).toFixed(0);
             }
             DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
         } catch (e) {
@@ -130,12 +134,15 @@ async function Main() {
                 const DCAShortLMax = DCAShort.length;
                 const DCAShortLMin = DCAShortLMax < 5 ? 0 : DCAShortLMax - 5;
                 DCAShortStringPrice = "";
+                const countDCA = 0;
+                const total = 0;
                 for (let index = DCAShortLMax - 1; index >= DCAShortLMin; index--) {
                     const DCANumber = Number(DCAShort[index]);
                     DCAShortStringPrice = DCAShortStringPrice + `${DCANumber};`;
-                    const absDCAShort = Math.abs(Number(DCAShort[index]));
-                    DCAShortTotalPrice = Number(Number(DCAShortTotalPrice) + (Number(absDCAShort) / 5)).toFixed(0);
+                    countDCA = countDCA + 1;
+                    total = total + DCANumber;
                 }
+                DCAShortTotalPrice = Number(total / countDCA).toFixed(0);
             }
             DCAShortTotalPrice = Number(DCAShortTotalPrice) < 5 ? 5 : Number(DCAShortTotalPrice);
         } catch (e) {
@@ -184,7 +191,7 @@ async function Main() {
                     isTrade = -1;
                     await telegram.log(`🔴BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
-                    DCATakeProfit = Number(Math.abs(DCAShortTotalPrice)).toFixed(0);
+                    DCATakeProfit = Number(DCAShortTotalPrice).toFixed(0);
                 } else {
                     if (isTrade == 1) {
                         isTrade = -1;
@@ -194,7 +201,7 @@ async function Main() {
                         await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 1m. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         await telegram.log(`🔴BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         markPricePre = Number(Ps.markPrice);
-                        DCATakeProfit = Number(Math.abs(DCAShortTotalPrice)).toFixed(0);
+                        DCATakeProfit = Number(DCAShortTotalPrice).toFixed(0);
                     }
                 }
             }
@@ -222,7 +229,7 @@ async function Main() {
                     DCATakeProfit = Number(DCAShortTotalPrice).toFixed(0);
                 }
             } else {
-                if (Number(markPricePre) - Number(DCATakeProfit) > Number(Ps.markPrice)) {
+                if (Number(markPricePre) + Number(DCATakeProfit) > Number(Ps.markPrice)) {
                     isTrade = 0;
                     const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
                     const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';

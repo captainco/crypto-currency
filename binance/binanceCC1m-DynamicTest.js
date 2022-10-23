@@ -1,28 +1,28 @@
 require('dotenv').config({ path: '../env/live.env' });
-const telegram            = require("../telegram/telegram");
-const WebSocket           = require("ws");
-const binance             = require('./binance');
-const common              = require('../common');
+const telegram = require("../telegram/telegram");
+const WebSocket = require("ws");
+const binance = require('./binance');
+const common = require('../common');
 
-var isTrade               = 0;
-var markPricePre          = 0;
-var totalUSDT             = 0;
-var longShortCond         = '';
-var checkTrend            = '';
+var isTrade = 0;
+var markPricePre = 0;
+var totalUSDT = 0;
+var longShortCond = '';
+var checkTrend = '';
 
-var isChangeDCA           = '';
-var isDCAPrice            = 0;
-var DCAPrice              = 0;
-var DCATakeProfit         = 5;
-var bestMarkPrice         = 0;
+var isChangeDCA = '';
+var isDCAPrice = 0;
+var DCAPrice = 0;
+var DCATakeProfit = 5;
+var bestMarkPrice = 0;
 
-var DCALong               = [];
-var DCALongStringPrice    = "";
-var DCALongTotalPrice     = 0;
+var DCALong = [];
+var DCALongStringPrice = "";
+var DCALongTotalPrice = 0;
 
-var DCAShort              = [];
-var DCAShortStringPrice   = "";
-var DCAShortTotalPrice    = 0;
+var DCAShort = [];
+var DCAShortStringPrice = "";
+var DCAShortTotalPrice = 0;
 
 async function Main() {
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
@@ -41,7 +41,7 @@ async function Main() {
             if (process.env.Webhook1m == isChangeDCA) {
                 const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                 const markPrice = Number(Ps.markPrice);
-                if((bestMarkPrice < markPrice && isTrade == 1) || (bestMarkPrice > markPrice && isTrade == -1)) {
+                if ((bestMarkPrice < markPrice && isTrade == 1) || (bestMarkPrice > markPrice && isTrade == -1)) {
                     bestMarkPrice = markPrice;
                     DCAPrice = Number(Number(bestMarkPrice) - Number(markPricePre)).toFixed(2);
                     const iconLongShortAlert = isTrade > 0 ? '🟢' : '🔴';
@@ -111,10 +111,10 @@ async function Main() {
                 const DCALongLMax = DCALong.length;
                 const DCALongLMin = DCALongLMax < 5 ? 0 : DCALongLMax - 5;
                 DCALongStringPrice = "";
-                for (let index = DCALongLMax; index >= DCALongLMin; index--) {
+                for (let index = DCALongLMax - 1; index >= DCALongLMin; index--) {
                     const DCANumber = Number(DCALong[index]);
                     DCALongStringPrice = DCALongStringPrice + `${DCANumber};`;
-                    DCALongTotalPrice = Number(Number(DCALongTotalPrice) + (DCANumber/5)).toFixed(0);
+                    DCALongTotalPrice = Number(Number(DCALongTotalPrice) + (DCANumber / 5)).toFixed(0);
                 }
             }
             DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
@@ -130,11 +130,11 @@ async function Main() {
                 const DCAShortLMax = DCAShort.length;
                 const DCAShortLMin = DCAShortLMax < 5 ? 0 : DCAShortLMax - 5;
                 DCAShortStringPrice = "";
-                for (let index = DCAShortLMax; index >= DCAShortLMin; index--) {
+                for (let index = DCAShortLMax - 1; index >= DCAShortLMin; index--) {
                     const DCANumber = Number(DCAShort[index]);
                     DCAShortStringPrice = DCAShortStringPrice + `${DCANumber};`;
                     const absDCAShort = Math.abs(Number(DCAShort[index]));
-                    DCAShortTotalPrice = Number(Number(DCAShortTotalPrice) + (Number(absDCAShort)/5)).toFixed(0);
+                    DCAShortTotalPrice = Number(Number(DCAShortTotalPrice) + (Number(absDCAShort) / 5)).toFixed(0);
                 }
             }
             DCAShortTotalPrice = Number(DCAShortTotalPrice) < 5 ? 5 : Number(DCAShortTotalPrice);

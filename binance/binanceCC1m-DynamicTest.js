@@ -17,11 +17,11 @@ var DCATakeProfit = 5;
 var bestMarkPrice = 0;
 
 var DCALong = [];
-var DCALongStringPrice = "";
+var DCALongStringPrice = '';
 var DCALongTotalPrice = 0;
 
 var DCAShort = [];
-var DCAShortStringPrice = "";
+var DCAShortStringPrice = '';
 var DCAShortTotalPrice = 0;
 
 async function Main() {
@@ -110,7 +110,7 @@ async function Main() {
             if (DCALong.length != 0) {
                 const DCALongLMax = DCALong.length;
                 const DCALongLMin = DCALongLMax < 5 ? 0 : DCALongLMax - 5;
-                DCALongStringPrice = "";
+                DCALongStringPrice = '';
                 const countDCA = 0;
                 const total = 0;
                 for (let index = DCALongLMax - 1; index >= DCALongLMin; index--) {
@@ -133,7 +133,7 @@ async function Main() {
             if (DCAShort.length != 0) {
                 const DCAShortLMax = DCAShort.length;
                 const DCAShortLMin = DCAShortLMax < 5 ? 0 : DCAShortLMax - 5;
-                DCAShortStringPrice = "";
+                DCAShortStringPrice = '';
                 const countDCA = 0;
                 const total = 0;
                 for (let index = DCAShortLMax - 1; index >= DCAShortLMin; index--) {

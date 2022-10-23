@@ -1,4 +1,6 @@
 🤖 Bot cho biết:
+markPrice: _markPrice
+
 isTrade: _isTrade
 markPricePre: _markPricePre
 totalUSDT: _totalUSDT
@@ -12,10 +14,12 @@ DCATakeProfit: _DCATakeProfit
 bestMarkPrice: _bestMarkPrice
 
 DCALong: _DCALong
+DCALongLength: _DCALongLength
 DCALongStringPrice: _DCALongStringPrice
 DCALongTotalPrice: _DCALongTotalPrice
 
 DCAShort: _DCAShort
+DCAShortLength: _DCAShortLength
 DCAShortStringPrice: _DCAShortStringPrice
 DCAShortTotalPrice: _DCAShortTotalPrice
 --------------------

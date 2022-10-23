@@ -120,7 +120,7 @@ async function Main() {
             if (DCAShort.length != 0) {
                 const DCAShortLMax = DCAShort.length;
                 const DCAShortLMin = DCAShortLMax < 5 ? 0 : DCAShortLMax - 5;
-                DCALongStringPrice = '';
+                DCAShortStringPrice = '';
                 for (let index = DCAShortLMax; index >= DCAShortLMin; index--) {
                     DCAShortStringPrice = DCAShortStringPrice + `${DCAShort[index]};`;
                     DCAShortTotalPrice = Number(Number(DCAShortTotalPrice) + (Number(DCAShort[index])/5)).toFixed(0);

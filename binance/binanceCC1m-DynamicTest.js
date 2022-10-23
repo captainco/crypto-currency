@@ -202,7 +202,7 @@ async function Main() {
 
             const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
             if (isTrade = 1) {
-                if (Number(markPricePre) + DCATakeProfit < Number(Ps.markPrice)) {
+                if (Number(markPricePre) + Number(DCATakeProfit) < Number(Ps.markPrice)) {
                     isTrade = 0;
                     const tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
                     const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
@@ -212,7 +212,7 @@ async function Main() {
                     DCATakeProfit = Number(DCAShortTotalPrice).toFixed(0);
                 }
             } else {
-                if (Number(markPricePre) - DCATakeProfit > Number(Ps.markPrice)) {
+                if (Number(markPricePre) - Number(DCATakeProfit) > Number(Ps.markPrice)) {
                     isTrade = 0;
                     const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
                     const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';

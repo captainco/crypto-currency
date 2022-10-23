@@ -28,7 +28,7 @@ async function Main() {
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {
-            if (isTrade == 0) {
+            if (process.env.Webhook1m == "") {
                 return;
             }
 

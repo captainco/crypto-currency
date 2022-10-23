@@ -73,7 +73,8 @@ async function Main() {
                 var oc = ["_markPrice", "_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_DCATakeProfit", "_bestMarkPrice", "_DCALong", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice", "_DCAShort", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     markPrice,
-                    isTrade,
+                    //isTrade,
+                    '-1',
                     Number(markPricePre).toFixed(2),
                     Number(totalUSDT).toFixed(2),
                     longShortCond,

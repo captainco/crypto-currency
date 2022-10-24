@@ -115,7 +115,7 @@ async function Main() {
                 const total = 0;
                 for (let index = DCALongLMax - 1; index >= DCALongLMin; index--) {
                     const DCANumber = Number(DCALong[index]);
-                    DCALongStringPrice = DCALongStringPrice + `${DCANumber};`;
+                    DCALongStringPrice = `${DCALongStringPrice}${DCANumber};`;
                     countDCA = countDCA + 1;
                     total = total + DCANumber;
                 }
@@ -138,7 +138,7 @@ async function Main() {
                 const total = 0;
                 for (let index = DCAShortLMax - 1; index >= DCAShortLMin; index--) {
                     const DCANumber = Number(DCAShort[index]);
-                    DCAShortStringPrice = DCAShortStringPrice + `${DCANumber};`;
+                    DCAShortStringPrice = `${DCAShortStringPrice}${DCANumber};`;
                     countDCA = countDCA + 1;
                     total = total + DCANumber;
                 }

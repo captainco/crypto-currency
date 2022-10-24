@@ -71,7 +71,6 @@ async function Main() {
                             }
                             DCALongTotalPrice = Number(total / countDCA).toFixed(0);
                         }
-                        DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
                     } else {
                         DCAShort.push(NumberDCAPrice);
                         await telegram.log(`🔴 => DCAPrice push: ${NumberDCAPrice}`);
@@ -91,10 +90,11 @@ async function Main() {
                             }
                             DCAShortTotalPrice = Number(total / countDCA).toFixed(0);
                         }
-                        DCAShortTotalPrice = Number(DCAShortTotalPrice) > -5 ? -5 : Number(DCAShortTotalPrice);
                     }
                 }
             }
+            DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
+            DCAShortTotalPrice = Number(DCAShortTotalPrice) > -5 ? -5 : Number(DCAShortTotalPrice);
         } catch (e) {
             console.log(e);
         }

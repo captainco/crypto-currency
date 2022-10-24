@@ -13,7 +13,6 @@ var checkTrend          = '';
 var isChangeDCA         = '';
 var isDCAPrice          = 0;
 var DCAPrice            = 0;
-var DCATakeProfit       = 5;
 var bestMarkPrice       = 0;
 
 var DCALong             = [];
@@ -84,8 +83,8 @@ async function Main() {
                             DCAShortStringPrice = DCAShortStringPrice + `${DCANumber};`;
                             total = total + DCANumber;
                         }
-                        DCAShortStringPrice = Number(total / 5).toFixed(0);
-                        DCAShortStringPrice = Number(DCAShortStringPrice) > -5 ? -5 : Number(DCAShortStringPrice);
+                        DCAShortTotalPrice = Number(total / 5).toFixed(0);
+                        DCAShortTotalPrice = Number(DCAShortTotalPrice) > -5 ? -5 : Number(DCAShortTotalPrice);
                     }
                 }
             }
@@ -100,7 +99,7 @@ async function Main() {
             if (common.GetMomentSecond() == "59") {
                 const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                 const markPrice = Number(Ps.markPrice);
-                var oc = ["_markPrice", "_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_DCATakeProfit", "_bestMarkPrice", "_DCALong", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice", "_DCAShort", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice", "time_in"];
+                var oc = ["_markPrice", "_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_bestMarkPrice", "_DCALong", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice", "_DCAShort", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     markPrice,
                     isTrade,
@@ -111,7 +110,6 @@ async function Main() {
                     isChangeDCA,
                     isDCAPrice,
                     DCAPrice,
-                    DCATakeProfit,
                     bestMarkPrice,
                     DCALong.toString(),
                     DCALong.length,
@@ -143,24 +141,22 @@ async function Main() {
                 if (isTrade != 0) {
                     const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                     if (isTrade == 1) {
-                        if (Number(markPricePre) + Number(DCATakeProfit) < Number(Ps.markPrice)) {
+                        if (Number(markPricePre) + Number(DCALongTotalPrice) < Number(Ps.markPrice)) {
                             isTrade = 0;
                             const tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
                             const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
                             totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
-                            await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 1m Đóng lệnh sớm. DCAPrice: ${DCATakeProfit}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                            await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 1m Đóng lệnh sớm. DCALongTotalPrice: ${DCALongTotalPrice}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                             markPricePre = 0;
-                            DCATakeProfit = Number(DCAShortTotalPrice).toFixed(0);
                         }
                     } else {
-                        if (Number(markPricePre) + Number(DCATakeProfit) > Number(Ps.markPrice)) {
+                        if (Number(markPricePre) + Number(DCAShortTotalPrice) > Number(Ps.markPrice)) {
                             isTrade = 0;
                             const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
                             const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
                             totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
-                            await telegram.log(`${iconLongShortAlert}🔴BTCUSDT 1m Đóng lệnh sớm. DCAPrice: ${DCATakeProfit}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
+                            await telegram.log(`${iconLongShortAlert}🔴BTCUSDT 1m Đóng lệnh sớm. DCAShortTotalPrice: ${DCAShortTotalPrice}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                             markPricePre = 0;
-                            DCATakeProfit = Number(DCALongTotalPrice).toFixed(0);
                         }
                     }
                 }
@@ -176,7 +172,6 @@ async function Main() {
                     isTrade = 1;
                     await telegram.log(`🟢BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
-                    DCATakeProfit = Number(DCALongTotalPrice).toFixed(0);
                 } else {
                     if (isTrade == -1) {
                         isTrade = 1;
@@ -186,7 +181,6 @@ async function Main() {
                         await telegram.log(`${iconLongShortAlert}🔴BTCUSDT 1m. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         await telegram.log(`🟢BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         markPricePre = Number(Ps.markPrice);
-                        DCATakeProfit = Number(DCALongTotalPrice).toFixed(0);
                     }
                 }
             } else {
@@ -194,7 +188,6 @@ async function Main() {
                     isTrade = -1;
                     await telegram.log(`🔴BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                     markPricePre = Number(Ps.markPrice);
-                    DCATakeProfit = Number(DCAShortTotalPrice).toFixed(0);
                 } else {
                     if (isTrade == 1) {
                         isTrade = -1;
@@ -204,7 +197,6 @@ async function Main() {
                         await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 1m. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         await telegram.log(`🔴BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         markPricePre = Number(Ps.markPrice);
-                        DCATakeProfit = Number(DCAShortTotalPrice).toFixed(0);
                     }
                 }
             }

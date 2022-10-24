@@ -57,44 +57,40 @@ async function Main() {
                         await telegram.log(`🟢 => DCAPrice push: ${NumberDCAPrice}`);
                         await telegram.log(`🟢 => DCALong: ${DCALong.toString()}`);
 
-                        if (DCALong.length != 0) {
-                            const DCALongLMax = DCALong.length;
-                            const DCALongLMin = DCALongLMax < 5 ? 0 : DCALongLMax - 5;
-                            DCALongStringPrice = '';
-                            const countDCA = 0;
+                        if (DCALong.length < 6) {
+                            DCALongTotalPrice = 5;
+                        } else {
+                            DCALongStringPrice = "";
                             const total = 0;
-                            for (let index = DCALongLMax - 1; index >= DCALongLMin; index--) {
-                                const DCANumber = Number(DCALong[index]);
-                                DCALongStringPrice = `${DCALongStringPrice}${DCANumber};`;
-                                countDCA = countDCA + 1;
+                            for (let index = 1; index <= 5; index++) {
+                                const DCANumber = Number(DCALong[DCALong.length - i]);
+                                DCALongStringPrice = DCALongStringPrice + `${DCANumber};`;
                                 total = total + DCANumber;
                             }
-                            DCALongTotalPrice = Number(total / countDCA).toFixed(0);
+                            DCALongTotalPrice = Number(total / 5).toFixed(0);
+                            DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
                         }
                     } else {
                         DCAShort.push(NumberDCAPrice);
                         await telegram.log(`🔴 => DCAPrice push: ${NumberDCAPrice}`);
                         await telegram.log(`🔴 => DCAShort: ${DCAShort.toString()}`);
 
-                        if (DCAShort.length != 0) {
-                            const DCAShortLMax = DCAShort.length;
-                            const DCAShortLMin = DCAShortLMax < 5 ? 0 : DCAShortLMax - 5;
-                            DCAShortStringPrice = '';
-                            const countDCA = 0;
+                        if (DCAShort.length < 6) {
+                            DCAShortTotalPrice = -5;
+                        } else {
+                            DCAShortStringPrice = "";
                             const total = 0;
-                            for (let index = DCAShortLMax - 1; index >= DCAShortLMin; index--) {
-                                const DCANumber = Number(DCAShort[index]);
-                                DCAShortStringPrice = `${DCAShortStringPrice}${DCANumber};`;
-                                countDCA = countDCA + 1;
+                            for (let index = 1; index <= 5; index++) {
+                                const DCANumber = Number(DCAShort[DCAShort.length - i]);
+                                DCAShortStringPrice = DCAShortStringPrice + `${DCANumber};`;
                                 total = total + DCANumber;
                             }
-                            DCAShortTotalPrice = Number(total / countDCA).toFixed(0);
+                            DCAShortStringPrice = Number(total / 5).toFixed(0);
+                            DCAShortStringPrice = Number(DCAShortStringPrice) > -5 ? -5 : Number(DCAShortStringPrice);
                         }
                     }
                 }
             }
-            DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
-            DCAShortTotalPrice = Number(DCAShortTotalPrice) > -5 ? -5 : Number(DCAShortTotalPrice);
         } catch (e) {
             console.log(e);
         }
@@ -131,17 +127,9 @@ async function Main() {
                 ];
                 await telegram.logAlert(oc, nc);
             }
-        } catch (e) {
-            console.log(e);
-        }
-    });
-
-    const UpdateUSDT = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
-    UpdateUSDT.on('message', async (event) => {
-        try {
             process.env.Webhook1mud = Number(totalUSDT).toFixed(2);
         } catch (e) {
-            await telegram.log(`⚠ ${e}`);
+            console.log(e);
         }
     });
 

@@ -18,11 +18,11 @@ var bestMarkPrice       = 0;
 
 var DCALong             = [];
 var DCALongStringPrice  = '';
-var DCALongTotalPrice   = 0;
+var DCALongTotalPrice   = 5;
 
 var DCAShort            = [];
 var DCAShortStringPrice = '';
-var DCAShortTotalPrice  = 0;
+var DCAShortTotalPrice  = -5;
 
 async function Main() {
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');

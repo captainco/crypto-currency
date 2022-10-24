@@ -49,45 +49,43 @@ async function Main() {
                 }
             } else {
                 isChangeDCA = process.env.Webhook1m;
-                const NumberDCAPrice = Number(DCAPrice).toFixed(0);
+                const NumberDCAPrice = Number(DCAPrice).toFixed(2);
                 //Push to array
-                if (NumberDCAPrice >= 1 || NumberDCAPrice <= -1) {
-                    if (NumberDCAPrice > 0) {
-                        DCALong.push(NumberDCAPrice);
-                        await telegram.log(`🟢 => DCAPrice push: ${NumberDCAPrice}`);
-                        await telegram.log(`🟢 => DCALong: ${DCALong.toString()}`);
+                if (NumberDCAPrice > 0) {
+                    DCALong.push(NumberDCAPrice);
+                    await telegram.log(`🟢 => DCAPrice push: ${NumberDCAPrice}`);
+                    await telegram.log(`🟢 => DCALong: ${DCALong.toString()}`);
 
-                        if (DCALong.length < 6) {
-                            DCALongTotalPrice = 5;
-                        } else {
-                            DCALongStringPrice = "";
-                            const total = 0;
-                            for (let index = 1; index <= 5; index++) {
-                                const DCANumber = Number(DCALong[DCALong.length - i]);
-                                DCALongStringPrice = DCALongStringPrice + `${DCANumber};`;
-                                total = total + DCANumber;
-                            }
-                            DCALongTotalPrice = Number(total / 5).toFixed(0);
-                            DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
-                        }
+                    if (DCALong.length < 6) {
+                        DCALongTotalPrice = 5;
                     } else {
-                        DCAShort.push(NumberDCAPrice);
-                        await telegram.log(`🔴 => DCAPrice push: ${NumberDCAPrice}`);
-                        await telegram.log(`🔴 => DCAShort: ${DCAShort.toString()}`);
-
-                        if (DCAShort.length < 6) {
-                            DCAShortTotalPrice = -5;
-                        } else {
-                            DCAShortStringPrice = "";
-                            const total = 0;
-                            for (let index = 1; index <= 5; index++) {
-                                const DCANumber = Number(DCAShort[DCAShort.length - i]);
-                                DCAShortStringPrice = DCAShortStringPrice + `${DCANumber};`;
-                                total = total + DCANumber;
-                            }
-                            DCAShortStringPrice = Number(total / 5).toFixed(0);
-                            DCAShortStringPrice = Number(DCAShortStringPrice) > -5 ? -5 : Number(DCAShortStringPrice);
+                        DCALongStringPrice = "";
+                        const total = 0;
+                        for (let index = 1; index <= 5; index++) {
+                            const DCANumber = Number(DCALong[DCALong.length - i]);
+                            DCALongStringPrice = DCALongStringPrice + `${DCANumber};`;
+                            total = total + DCANumber;
                         }
+                        DCALongTotalPrice = Number(total / 5).toFixed(0);
+                        DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
+                    }
+                } else {
+                    DCAShort.push(NumberDCAPrice);
+                    await telegram.log(`🔴 => DCAPrice push: ${NumberDCAPrice}`);
+                    await telegram.log(`🔴 => DCAShort: ${DCAShort.toString()}`);
+
+                    if (DCAShort.length < 6) {
+                        DCAShortTotalPrice = -5;
+                    } else {
+                        DCAShortStringPrice = "";
+                        const total = 0;
+                        for (let index = 1; index <= 5; index++) {
+                            const DCANumber = Number(DCAShort[DCAShort.length - i]);
+                            DCAShortStringPrice = DCAShortStringPrice + `${DCANumber};`;
+                            total = total + DCANumber;
+                        }
+                        DCAShortStringPrice = Number(total / 5).toFixed(0);
+                        DCAShortStringPrice = Number(DCAShortStringPrice) > -5 ? -5 : Number(DCAShortStringPrice);
                     }
                 }
             }

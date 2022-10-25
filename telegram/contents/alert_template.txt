@@ -1,5 +1,7 @@
 🤖 Bot cho biết:
 markPrice: _markPrice
+TP|SL: _tp|_sl
+winrate: _winrate
 
 isTrade: _isTrade
 markPricePre: _markPricePre
@@ -15,11 +17,13 @@ bestMarkPrice: _bestMarkPrice
 DCALong: _DCALong
 DCALongLength: _DCALongLength
 DCALongStringPrice: _DCALongStringPrice
+DCALongTotalPriceReal: _DCALongTotalPrice_
 DCALongTotalPrice: _DCALongTotalPrice
 
 DCAShort: _DCAShort
 DCAShortLength: _DCAShortLength
 DCAShortStringPrice: _DCAShortStringPrice
+DCAShortTotalPriceReal: _DCAShortTotalPrice_
 DCAShortTotalPrice: _DCAShortTotalPrice
 --------------------
 time: time_in

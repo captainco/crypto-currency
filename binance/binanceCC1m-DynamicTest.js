@@ -4,6 +4,10 @@ const WebSocket         = require("ws");
 const binance           = require('./binance');
 const common            = require('../common');
 
+var countTP             = 0;
+var countSL             = 0;
+var winrate             = 0;
+
 var isTrade             = 0;
 var markPricePre        = 0;
 var totalUSDT           = 0;
@@ -17,10 +21,12 @@ var bestMarkPrice       = 0;
 
 var DCALong             = [];
 var DCALongStringPrice  = '';
+var DCALongTotalPrice_  = 5;
 var DCALongTotalPrice   = 5;
 
 var DCAShort            = [];
 var DCAShortStringPrice = '';
+var DCAShortTotalPrice_ = -5;
 var DCAShortTotalPrice  = -5;
 
 async function Main() {
@@ -58,14 +64,9 @@ async function Main() {
                     if (DCALong.length < 6) {
                         DCALongTotalPrice = 5;
                     } else {
-                        DCALongStringPrice = "";
-                        const total = 0;
-                        for (let index = 1; index <= 5; index++) {
-                            const DCANumber = Number(DCALong[DCALong.length - i]);
-                            DCALongStringPrice = DCALongStringPrice + `${DCANumber};`;
-                            total = total + DCANumber;
-                        }
-                        DCALongTotalPrice = Number(total / 5).toFixed(0);
+                        DCALongStringPrice = `${Number(DCALong[DCALong.length - 1])};${Number(DCALong[DCALong.length - 2])};${Number(DCALong[DCALong.length - 3])};${Number(DCALong[DCALong.length - 4])};${Number(DCALong[DCALong.length - 5])}`;
+                        DCALongTotalPrice = Number((Number(DCALong[DCALong.length - 1]) + Number(DCALong[DCALong.length - 2]) + Number(DCALong[DCALong.length - 3]) + Number(DCALong[DCALong.length - 4]) + Number(DCALong[DCALong.length - 5])) / 5).toFixed(0);
+                        DCALongTotalPrice_ = DCALongTotalPrice;
                         DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
                     }
                 } else {
@@ -76,14 +77,9 @@ async function Main() {
                     if (DCAShort.length < 6) {
                         DCAShortTotalPrice = -5;
                     } else {
-                        DCAShortStringPrice = "";
-                        const total = 0;
-                        for (let index = 1; index <= 5; index++) {
-                            const DCANumber = Number(DCAShort[DCAShort.length - i]);
-                            DCAShortStringPrice = DCAShortStringPrice + `${DCANumber};`;
-                            total = total + DCANumber;
-                        }
-                        DCAShortTotalPrice = Number(total / 5).toFixed(0);
+                        DCAShortStringPrice = `${Number(DCAShort[DCAShort.length - 1])};${Number(DCAShort[DCAShort.length - 2])};${Number(DCAShort[DCAShort.length - 3])};${Number(DCAShort[DCAShort.length - 4])};${Number(DCAShort[DCAShort.length - 5])}`;
+                        DCAShortTotalPrice = Number((Number(DCAShort[DCAShort.length - 1]) + Number(DCAShort[DCAShort.length - 2]) + Number(DCAShort[DCAShort.length - 3]) + Number(DCAShort[DCAShort.length - 4]) + Number(DCAShort[DCAShort.length - 5])) / 5).toFixed(0);
+                        DCAShortTotalPrice_ = DCAShortTotalPrice;
                         DCAShortTotalPrice = Number(DCAShortTotalPrice) > -5 ? -5 : Number(DCAShortTotalPrice);
                     }
                 }
@@ -97,11 +93,16 @@ async function Main() {
     reportDCALongShortPrice.on('message', async (event) => {
         try {
             if (common.GetMomentSecond() == "59") {
+                winrate = Number((countTP / (countTP + countSL)) * 100).toFixed(0);
+                const wirateString = `${winrate} %`;
                 const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                 const markPrice = Number(Ps.markPrice);
-                var oc = ["_markPrice", "_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_bestMarkPrice", "_DCALong", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice", "_DCAShort", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice", "time_in"];
+                var oc = ["_markPrice", "_tp", "_sl", "_winrate", "_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_bestMarkPrice", "_DCALong", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShort", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     markPrice,
+                    countTP,
+                    countSL,
+                    wirateString,
                     isTrade,
                     Number(markPricePre).toFixed(2),
                     Number(totalUSDT).toFixed(2),
@@ -114,10 +115,12 @@ async function Main() {
                     DCALong.toString(),
                     DCALong.length,
                     DCALongStringPrice,
+                    Number(DCALongTotalPrice_),
                     Number(DCALongTotalPrice),
                     DCAShort.toString(),
                     DCAShort.length,
                     DCAShortStringPrice,
+                    Number(DCAShortTotalPrice_),
                     Number(DCAShortTotalPrice),
                     common.GetMoment()
                 ];
@@ -144,7 +147,14 @@ async function Main() {
                         if (Number(markPricePre) + Number(DCALongTotalPrice) < Number(Ps.markPrice)) {
                             isTrade = 0;
                             const tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
-                            const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
+                            const iconLongShortAlert = '';
+                            if (tpslUSDT > 0) {
+                                iconLongShortAlert = '✅';
+                                countTP++;
+                            } else {
+                                iconLongShortAlert = '❌';
+                                countSL++;
+                            }
                             totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
                             await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 1m Đóng lệnh sớm. DCALongTotalPrice: ${DCALongTotalPrice}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                             markPricePre = 0;
@@ -153,7 +163,14 @@ async function Main() {
                         if (Number(markPricePre) + Number(DCAShortTotalPrice) > Number(Ps.markPrice)) {
                             isTrade = 0;
                             const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
-                            const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
+                            const iconLongShortAlert = '';
+                            if (tpslUSDT > 0) {
+                                iconLongShortAlert = '✅';
+                                countTP++;
+                            } else {
+                                iconLongShortAlert = '❌';
+                                countSL++;
+                            }
                             totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
                             await telegram.log(`${iconLongShortAlert}🔴BTCUSDT 1m Đóng lệnh sớm. DCAShortTotalPrice: ${DCAShortTotalPrice}. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                             markPricePre = 0;
@@ -176,7 +193,14 @@ async function Main() {
                     if (isTrade == -1) {
                         isTrade = 1;
                         const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
-                        const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
+                        const iconLongShortAlert = '';
+                        if (tpslUSDT > 0) {
+                            iconLongShortAlert = '✅';
+                            countTP++;
+                        } else {
+                            iconLongShortAlert = '❌';
+                            countSL++;
+                        }
                         totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
                         await telegram.log(`${iconLongShortAlert}🔴BTCUSDT 1m. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         await telegram.log(`🟢BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);
@@ -192,7 +216,14 @@ async function Main() {
                     if (isTrade == 1) {
                         isTrade = -1;
                         const tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
-                        const iconLongShortAlert = tpslUSDT > 0 ? '✅' : '❌';
+                        const iconLongShortAlert = '';
+                        if (tpslUSDT > 0) {
+                            iconLongShortAlert = '✅';
+                            countTP++;
+                        } else {
+                            iconLongShortAlert = '❌';
+                            countSL++;
+                        }
                         totalUSDT = Number(totalUSDT) + Number(tpslUSDT);
                         await telegram.log(`${iconLongShortAlert}🟢BTCUSDT 1m. E: ${Number(markPricePre).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; TPSL: ${tpslUSDT} USDT; T: ${Number(totalUSDT).toFixed(2)} USDT`);
                         await telegram.log(`🔴BTCUSDT 1m. E: ${Number(Ps.markPrice).toFixed(2)}; T: ${Number(totalUSDT).toFixed(2)} USDT`);

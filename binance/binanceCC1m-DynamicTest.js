@@ -94,7 +94,7 @@ async function Main() {
         try {
             if (common.GetMomentSecond() == "59") {
                 winrate = (Number((Number(countTP) / (Number(countTP) + Number(countSL))) * 100)).toFixed(0);
-                var wirateString = `${winrate} %`;
+                var wirateString = `${Number(winrate)} %`;
                 const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                 const markPrice = Number(Ps.markPrice).toFixed(2);
                 var oc = ["_markPrice", "_tp", "_sl", "_winrate", "_isTrade", "_markPricePre", "_totalUSDT", "_longShortCond", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_bestMarkPrice", "_DCALong", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShort", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];

@@ -93,7 +93,7 @@ async function Main() {
     reportDCALongShortPrice.on('message', async (event) => {
         try {
             if (common.GetMomentSecond() == "59") {
-                winrate = Number((Number(countTP) / (Number(countTP) + Number(countSL))) * 100).toFixed(0);
+                winrate = (Number((Number(countTP) / (Number(countTP) + Number(countSL))) * 100)).toFixed(0);
                 var wirateString = `${winrate} %`;
                 const Ps = (await binance.FuturesPositionRisk('BTCUSDT'))[0];
                 const markPrice = Number(Ps.markPrice).toFixed(2);

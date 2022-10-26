@@ -146,8 +146,8 @@ async function Main() {
                     if (isTrade == 1) {
                         if (Number(markPricePre) + Number(DCALongTotalPrice) < Number(Ps.markPrice)) {
                             isTrade = 0;
-                            const tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
-                            const iconLongShortAlert = '';
+                            var tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
+                            var iconLongShortAlert = '';
                             if (tpslUSDT > 0) {
                                 iconLongShortAlert = '✅';
                                 countTP = Number(countTP) + 1;
@@ -162,8 +162,8 @@ async function Main() {
                     } else {
                         if (Number(markPricePre) + Number(DCAShortTotalPrice) > Number(Ps.markPrice)) {
                             isTrade = 0;
-                            const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
-                            const iconLongShortAlert = '';
+                            var tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
+                            var iconLongShortAlert = '';
                             if (tpslUSDT > 0) {
                                 iconLongShortAlert = '✅';
                                 countTP = Number(countTP) + 1;
@@ -192,8 +192,8 @@ async function Main() {
                 } else {
                     if (isTrade == -1) {
                         isTrade = 1;
-                        const tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
-                        const iconLongShortAlert = '';
+                        var tpslUSDT = ((100 - (Number(Ps.markPrice) * 100 / markPricePre)) / 100 * 1000).toFixed(2);
+                        var iconLongShortAlert = '';
                         if (tpslUSDT > 0) {
                             iconLongShortAlert = '✅';
                             countTP = Number(countTP) + 1;
@@ -215,8 +215,8 @@ async function Main() {
                 } else {
                     if (isTrade == 1) {
                         isTrade = -1;
-                        const tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
-                        const iconLongShortAlert = '';
+                        var tpslUSDT = (((Number(Ps.markPrice) * 100 / markPricePre) - 100) / 100 * 1000).toFixed(2);
+                        var iconLongShortAlert = '';
                         if (tpslUSDT > 0) {
                             iconLongShortAlert = '✅';
                             countTP = Number(countTP) + 1;

@@ -6,7 +6,7 @@ const common            = require('../common');
 
 var binanceSymbol       = 'BTCUSDT';
 var binanceLeverage     = 125;
-var binanceQuantity     = 0.01;
+var binanceQuantity     = 0.001;
 
 var countTP             = 0;
 var countSL             = 0;

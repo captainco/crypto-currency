@@ -32,6 +32,7 @@ var DCAShortTotalPrice_ = -5;
 var DCAShortTotalPrice  = -5;
 
 async function Main() {
+    return;
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {

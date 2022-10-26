@@ -1,12 +1,11 @@
 🤖 Bot cho biết:
-markPrice: _markPrice
+Giá hiện tại: _markPrice
 TP|SL: _tp|_sl
-winrate: _winrate
+Tỷ lệ win: _winrate
 
-isTrade: _isTrade
-markPricePre: _markPricePre
-totalUSDT: _totalUSDT
-longShortCond: _longShortCond
+Số tiền trước trade: _totalUSDTBefore USDT
+Số tiền đang trade: _totalUSDTTrade USDT
+Lãi lỗ: _totalUSDT USDT
 checkTrend: _checkTrend
 
 isChangeDCA: _isChangeDCA
@@ -14,13 +13,11 @@ isDCAPrice: _isDCAPrice
 DCAPrice: _DCAPrice
 bestMarkPrice: _bestMarkPrice
 
-DCALong: _DCALong
 DCALongLength: _DCALongLength
 DCALongStringPrice: _DCALongStringPrice
 DCALongTotalPriceReal: _DCALongTotalPrice_
 DCALongTotalPrice: _DCALongTotalPrice
 
-DCAShort: _DCAShort
 DCAShortLength: _DCAShortLength
 DCAShortStringPrice: _DCAShortStringPrice
 DCAShortTotalPriceReal: _DCAShortTotalPrice_

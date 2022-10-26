@@ -1,6 +1,6 @@
 require('dotenv').config({ path: 'env/live.env' });
 
-const binanceCC1mDynamicTest         = require('./binance/binanceCC1m-DynamicTest');
+const binanceCC1m                    = require('./binance/binanceCC1m');
 const indexRouter                    = require('./index');
 const express                        = require("express");
 const http                           = require("http");
@@ -12,7 +12,7 @@ const server                         = http.createServer(app);
 server.listen(port);
 
 async function main() {
-    binanceCC1mDynamicTest.Main();
+    binanceCC1m.Main();
 }
 
 main();

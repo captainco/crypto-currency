@@ -33,6 +33,7 @@ var DCAShortTotalPrice  = -5;
 
 async function Main() {
     await binance.FuturesMarketBuySell('BTCUSDT', 0.001, 'SELL');
+    await telegram.log("SUCCESS");
     return;
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {

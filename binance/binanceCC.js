@@ -8,8 +8,8 @@ var binanceChart           = '5m';
 var binanceSymbol          = 'BTCUSDT';
 var binanceLeverage        = 125;
 var binanceQuantity        = 0.001;
-var DCALongTotalPriceMin   = 30;
-var DCAShortTotalPriceMin  = -30;
+var DCALongTotalPriceMin   = 20;
+var DCAShortTotalPriceMin  = -20;
 
 var countTP                = 0;
 var countSL                = 0;
@@ -35,6 +35,11 @@ var DCAShortTotalPrice_    = DCAShortTotalPriceMin;
 var DCAShortTotalPrice     = DCAShortTotalPriceMin;
 
 async function Main() {
+    telegram.log("TEST");
+    const a = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
+    telegram.log(JSON.stringify(a));
+    const b = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
+    telegram.log(JSON.stringify(b));
     return;
 
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');

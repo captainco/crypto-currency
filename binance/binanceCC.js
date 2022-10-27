@@ -153,7 +153,7 @@ async function Main() {
                         if (binanceIsLock == 0) {
                             binanceIsLock = 1;
                             const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
-                            await telegram.log(`Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+                            await telegram.log(`🌀Đóng lệnh: ${JSON.stringify(closeBinance)}`);
                             var iconLongShortAlert = '';
                             if (Ps.unRealizedProfit > 0) {
                                 iconLongShortAlert = '✅';
@@ -162,7 +162,7 @@ async function Main() {
                                 iconLongShortAlert = '❌';
                                 countSL = Number(countSL) + 1;
                             }
-                            await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart} Đóng lệnh sớm. DCALongTotalPrice: ${DCALongTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
+                            await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart} 🌀Đóng lệnh sớm. DCALongTotalPrice: ${DCALongTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
                             binanceIsLock = 0;
                         }
                     }
@@ -173,7 +173,7 @@ async function Main() {
                         if (binanceIsLock == 0) {
                             binanceIsLock = 1;
                             const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
-                            await telegram.log(`Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+                            await telegram.log(`🌀Đóng lệnh: ${JSON.stringify(closeBinance)}`);
                             var iconLongShortAlert = '';
                             if (Ps.unRealizedProfit > 0) {
                                 iconLongShortAlert = '✅';
@@ -182,7 +182,7 @@ async function Main() {
                                 iconLongShortAlert = '❌';
                                 countSL = Number(countSL) + 1;
                             }
-                            await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart} Đóng lệnh sớm. DCAShortTotalPrice: ${DCAShortTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
+                            await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart} 🌀Đóng lệnh sớm. DCAShortTotalPrice: ${DCAShortTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
                             binanceIsLock = 0;
                         }
                     }
@@ -208,7 +208,7 @@ async function Main() {
                         binanceIsLock = 1;
                         const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
                         const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
-                        await telegram.log(`Mở lệnh: ${JSON.stringify(openBinance)}`);
+                        await telegram.log(`✨Mở lệnh: ${JSON.stringify(openBinance)}`);
                         await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
                         entryPricePre = Number(PsAlert.entryPrice);
                         binanceIsLock = 0;
@@ -226,10 +226,10 @@ async function Main() {
                                 countSL = Number(countSL) + 1;
                             }
                             const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
-                            await telegram.log(`Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+                            await telegram.log(`🌀Đóng lệnh: ${JSON.stringify(closeBinance)}`);
                             
                             const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
-                            await telegram.log(`Mở lệnh: ${JSON.stringify(openBinance)}`);
+                            await telegram.log(`✨Mở lệnh: ${JSON.stringify(openBinance)}`);
 
                             const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
                             await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
@@ -245,7 +245,7 @@ async function Main() {
                         binanceIsLock = 1;
                         const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
                         const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
-                        await telegram.log(`Mở lệnh: ${JSON.stringify(openBinance)}`);
+                        await telegram.log(`✨Mở lệnh: ${JSON.stringify(openBinance)}`);
                         await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
                         entryPricePre = Number(PsAlert.entryPrice);
                         binanceIsLock = 0;
@@ -263,10 +263,10 @@ async function Main() {
                                 countSL = Number(countSL) + 1;
                             }
                             const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
-                            await telegram.log(`Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+                            await telegram.log(`🌀Đóng lệnh: ${JSON.stringify(closeBinance)}`);
 
                             const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
-                            await telegram.log(`Mở lệnh: ${JSON.stringify(openBinance)}`);
+                            await telegram.log(`✨Mở lệnh: ${JSON.stringify(openBinance)}`);
                             
                             const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
                             await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);

@@ -35,13 +35,6 @@ var DCAShortTotalPrice_    = DCAShortTotalPriceMin;
 var DCAShortTotalPrice     = DCAShortTotalPriceMin;
 
 async function Main() {
-    telegram.log("TEST");
-    const a = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
-    telegram.log(JSON.stringify(a));
-    const b = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
-    telegram.log(JSON.stringify(b));
-    return;
-
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {
@@ -122,9 +115,9 @@ async function Main() {
                     countTP,
                     countSL,
                     wirateString,
-                    totalUSDTBefore,
-                    priceTrade,
-                    totalUSDT,
+                    Number(totalUSDTBefore).toFixed(2),
+                    Number(priceTrade).toFixed(2),
+                    Number(totalUSDT).toFixed(2),
                     checkTrend,
                     isChangeDCA,
                     isDCAPrice,
@@ -161,7 +154,8 @@ async function Main() {
                     /*Kèo long*/
                     if (Ps.positionAmt > 0) {
                         if (Number(Ps.entryPrice) + Number(DCALongTotalPrice) < Number(Ps.markPrice)) {
-                            await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
+                            const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
+                            await telegram.log(`Đóng lệnh: ${JSON.stringify(closeBinance)}`);
                             var iconLongShortAlert = '';
                             if (Ps.unRealizedProfit > 0) {
                                 iconLongShortAlert = '✅';
@@ -170,13 +164,14 @@ async function Main() {
                                 iconLongShortAlert = '❌';
                                 countSL = Number(countSL) + 1;
                             }
-                            await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart} Đóng lệnh sớm. DCALongTotalPrice: ${DCALongTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}`);
+                            await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart} Đóng lệnh sớm. DCALongTotalPrice: ${DCALongTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
                         }
                     }
                     /*Kèo short*/
                     else {
                         if (Number(Ps.entryPrice) + Number(DCAShortTotalPrice) > Number(Ps.markPrice)) {
-                            await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
+                            const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
+                            await telegram.log(`Đóng lệnh: ${JSON.stringify(closeBinance)}`);
                             var iconLongShortAlert = '';
                             if (Ps.unRealizedProfit > 0) {
                                 iconLongShortAlert = '✅';
@@ -185,7 +180,7 @@ async function Main() {
                                 iconLongShortAlert = '❌';
                                 countSL = Number(countSL) + 1;
                             }
-                            await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart} Đóng lệnh sớm. DCAShortTotalPrice: ${DCAShortTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}`);
+                            await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart} Đóng lệnh sớm. DCAShortTotalPrice: ${DCAShortTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
                         }
                     }
                 }
@@ -199,11 +194,16 @@ async function Main() {
                 if (Ps.positionAmt == 0) {
                     await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
                     const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                    await telegram.log(`Mở lệnh: ${JSON.stringify(PsAlert)}`);
                     await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
                 } else {
                     if (Ps.positionAmt < 0) {
-                        await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
-                        await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
+                        const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
+                        await telegram.log(`Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+                        
+                        const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
+                        await telegram.log(`Mở lệnh: ${JSON.stringify(openBinance)}`);
+
                         const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
                         var iconLongShortAlert = '';
                         if (Ps.unRealizedProfit > 0) {
@@ -213,7 +213,7 @@ async function Main() {
                             iconLongShortAlert = '❌';
                             countSL = Number(countSL) + 1;
                         }
-                        await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}`);
+                        await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
                         await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
                     }
                 }
@@ -221,11 +221,16 @@ async function Main() {
                 if (Ps.positionAmt == 0) {
                     await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
                     const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                    await telegram.log(`Mở lệnh: ${JSON.stringify(PsAlert)}`);
                     await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
                 } else {
                     if (Ps.positionAmt > 0) {
-                        await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
-                        await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
+                        const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
+                        await telegram.log(`Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+
+                        const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
+                        await telegram.log(`Mở lệnh: ${JSON.stringify(openBinance)}`);
+                        
                         const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
                         var iconLongShortAlert = '';
                         if (Ps.unRealizedProfit > 0) {
@@ -235,7 +240,7 @@ async function Main() {
                             iconLongShortAlert = '❌';
                             countSL = Number(countSL) + 1;
                         }
-                        await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}`);
+                        await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
                         await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
                     }
                 }

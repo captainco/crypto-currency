@@ -21,6 +21,7 @@ var checkTrend             = '';
 						   
 var isChangeDCA            = '';
 var isDCAPrice             = 0;
+var entryPricePre          = 0;
 var DCAPrice               = 0;
 var bestMarkPrice          = 0;
 						   
@@ -35,6 +36,7 @@ var DCAShortTotalPrice_    = DCAShortTotalPriceMin;
 var DCAShortTotalPrice     = DCAShortTotalPriceMin;
 
 async function Main() {
+    return;
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {

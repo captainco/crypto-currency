@@ -23,16 +23,15 @@ var bestMarkPrice       = 0;
 
 var DCALong             = [];
 var DCALongStringPrice  = '';
-var DCALongTotalPrice_  = 5;
-var DCALongTotalPrice   = 5;
+var DCALongTotalPrice_  = 30;
+var DCALongTotalPrice   = 30;
 
 var DCAShort            = [];
 var DCAShortStringPrice = '';
-var DCAShortTotalPrice_ = -5;
-var DCAShortTotalPrice  = -5;
+var DCAShortTotalPrice_ = -30;
+var DCAShortTotalPrice  = -30;
 
 async function Main() {
-    return;
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {
@@ -69,12 +68,12 @@ async function Main() {
                     await telegram.log(`🟢 => DCALong: ${DCALong.toString()}`);
 
                     if (DCALong.length < 6) {
-                        DCALongTotalPrice = 5;
+                        DCALongTotalPrice = 30;
                     } else {
                         DCALongStringPrice = `${Number(DCALong[DCALong.length - 1])};${Number(DCALong[DCALong.length - 2])};${Number(DCALong[DCALong.length - 3])};${Number(DCALong[DCALong.length - 4])};${Number(DCALong[DCALong.length - 5])}`;
                         DCALongTotalPrice = Number((Number(DCALong[DCALong.length - 1]) + Number(DCALong[DCALong.length - 2]) + Number(DCALong[DCALong.length - 3]) + Number(DCALong[DCALong.length - 4]) + Number(DCALong[DCALong.length - 5])) / 5).toFixed(2);
                         DCALongTotalPrice_ = DCALongTotalPrice;
-                        DCALongTotalPrice = Number(DCALongTotalPrice) < 5 ? 5 : Number(DCALongTotalPrice);
+                        DCALongTotalPrice = Number(DCALongTotalPrice) < 30 ? 30 : Number(DCALongTotalPrice);
                     }
                 } else {
                     DCAShort.push(NumberDCAPrice);
@@ -82,12 +81,12 @@ async function Main() {
                     await telegram.log(`🔴 => DCAShort: ${DCAShort.toString()}`);
 
                     if (DCAShort.length < 6) {
-                        DCAShortTotalPrice = -5;
+                        DCAShortTotalPrice = -30;
                     } else {
                         DCAShortStringPrice = `${Number(DCAShort[DCAShort.length - 1])};${Number(DCAShort[DCAShort.length - 2])};${Number(DCAShort[DCAShort.length - 3])};${Number(DCAShort[DCAShort.length - 4])};${Number(DCAShort[DCAShort.length - 5])}`;
                         DCAShortTotalPrice = Number((Number(DCAShort[DCAShort.length - 1]) + Number(DCAShort[DCAShort.length - 2]) + Number(DCAShort[DCAShort.length - 3]) + Number(DCAShort[DCAShort.length - 4]) + Number(DCAShort[DCAShort.length - 5])) / 5).toFixed(2);
                         DCAShortTotalPrice_ = DCAShortTotalPrice;
-                        DCAShortTotalPrice = Number(DCAShortTotalPrice) > -5 ? -5 : Number(DCAShortTotalPrice);
+                        DCAShortTotalPrice = Number(DCAShortTotalPrice) > -30 ? -30 : Number(DCAShortTotalPrice);
                     }
                 }
             }

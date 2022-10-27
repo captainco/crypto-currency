@@ -36,9 +36,9 @@ var DCAShortTotalPrice     = DCAShortTotalPriceMin;
 
 async function Main() {
     telegram.log("TEST");
-    const a = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
+    const a = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
     telegram.log(JSON.stringify(a));
-    const b = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
+    const b = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
     telegram.log(JSON.stringify(b));
     return;
 

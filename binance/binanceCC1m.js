@@ -149,7 +149,7 @@ async function Main() {
                 const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
                 if (Ps.positionAmt != 0) {
                     /*Kèo long*/
-                    if (Ps.positionAmt > 1) {
+                    if (Ps.positionAmt > 0) {
                         if (Number(Ps.entryPrice) + Number(DCALongTotalPrice) < Number(Ps.markPrice)) {
                             await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
                             var iconLongShortAlert = '';

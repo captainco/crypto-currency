@@ -52,7 +52,7 @@ async function Main() {
             if (process.env.Webhook1m == isChangeDCA) {
                 const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
                 const markPrice = Number(Ps.markPrice);
-                if ((bestMarkPrice < markPrice && Ps.positionAmt > 0) || (bestMarkPrice > markPrice && Ps.positionAmt < 0)) {
+                if ((bestMarkPrice < markPrice && process.env.Webhook1m == 'buy') || (bestMarkPrice > markPrice && process.env.Webhook1m == 'sell')) {
                     bestMarkPrice = markPrice;
                     DCAPrice = Number(Number(bestMarkPrice) - Number(Ps.entryPrice)).toFixed(2);
                     const iconLongShortAlert = Ps.positionAmt > 0 ? '🟢' : '🔴';

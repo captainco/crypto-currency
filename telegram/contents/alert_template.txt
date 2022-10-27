@@ -6,7 +6,7 @@ Tỷ lệ win: _winrate
 Số tiền trước trade: _totalUSDTBefore USDT
 Số tiền đang trade: _totalUSDTTrade USDT
 Lãi lỗ: _totalUSDT USDT
-checkTrend: _checkTrend
+Lock: _binanceIsLock
 
 isChangeDCA: _isChangeDCA
 isDCAPrice: _isDCAPrice

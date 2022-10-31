@@ -102,6 +102,7 @@ async function FuturesOpenPositions(symbol, quantity, buySell) {
 
 async function FuturesOpenPositionsTPSL(symbol, quantity, priceDifference, numberOfTimesStopLossPrice, buySell) {
     quantity = Math.abs(quantity);
+    priceDifference = Math.abs(priceDifference);
 
     /*Đóng vị thế trước*/
     const Ps = (await FuturesPositionRisk(symbol))[0];

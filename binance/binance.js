@@ -59,6 +59,16 @@ async function FuturesMarketBuySellTPSL(symbol, quantity, takeProfit, stopLoss, 
     }
 }
 
+async function FuturesClearPositions(symbol) {
+    const Ps = (await FuturesPositionRisk(symbol))[0];
+    if (Ps.positionAmt == 0) {
+        const Od = await FuturesOpenOrders(symbol);
+        if (Od.length > 0) {
+            await FuturesCancelAll(symbol);
+        }
+    }
+}
+
 async function FuturesOpenPositions(symbol, quantity, buySell) {
     quantity = Math.abs(quantity);
 
@@ -98,11 +108,11 @@ async function FuturesOpenPositionsTPSL(symbol, quantity, priceDifference, numbe
     if (Ps.positionAmt != 0) {
         /*Long*/
         if (Ps.positionAmt > 0) {
-            await FuturesMarketBuySell(symbol, quantity, 'SELL');
+            await FuturesMarketBuySell(symbol, Number(Ps.positionAmt), 'SELL');
         }
         /*Short*/
         else {
-            await FuturesMarketBuySell(symbol, quantity, 'BUY');
+            await FuturesMarketBuySell(symbol, Number(Ps.positionAmt), 'BUY');
         }
     }
 
@@ -274,6 +284,7 @@ module.exports = {
     FuturesMarketBuySellTakeProfit,
     FuturesMarketBuySellStopLoss,
     FuturesMarketBuySellTPSL,
+    FuturesClearPositions,
     FuturesOpenPositions,
     FuturesOpenPositionsTPSL,
     FuturesClosePositions,

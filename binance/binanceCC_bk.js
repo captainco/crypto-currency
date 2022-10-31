@@ -11,6 +11,10 @@ var binanceQuantity        = 0.001;
 var binanceIsLock          = 0;
 var DCALongTotalPriceMin   = 20;
 var DCAShortTotalPriceMin  = -20;
+
+var countTP                = 0;
+var countSL                = 0;
+var winrate                = 0;
 						   
 var totalUSDTBefore        = 0;
 var totalUSDT              = 0;
@@ -35,8 +39,6 @@ async function Main() {
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {
-            await binance.FuturesClearPositions(binanceSymbol);
-
             if (process.env.Webhook == "") {
                 return;
             }
@@ -104,19 +106,20 @@ async function Main() {
             totalUSDT = Number(priceTrade) - Number(totalUSDTBefore);
             process.env.Webhookud = Number(totalUSDT).toFixed(2);
 
-            const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
-            process.env.Webhookud_ = Number(Ps.unRealizedProfit);
-            
-
             if (common.GetMomentSecond() == "59") {
+                winrate = (countTP + countSL) == 0 ? 0 : Number(countTP / (countTP + countSL) * 100).toFixed(0);
+                var wirateString = `${winrate} %`;
+                const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
                 const markPrice = Number(Ps.markPrice).toFixed(2);
-                var oc = ["_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_binanceIsLock", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
+                var oc = ["_markPrice", "_tp", "_sl", "_winrate", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_binanceIsLock", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     markPrice,
+                    countTP,
+                    countSL,
+                    wirateString,
                     Number(totalUSDTBefore).toFixed(2),
                     Number(priceTrade).toFixed(2),
                     Number(totalUSDT).toFixed(2),
-                    Ps.unRealizedProfit,
                     binanceIsLock,
                     isChangeDCA,
                     isDCAPrice,
@@ -153,19 +156,101 @@ async function Main() {
             }
 
             const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+            if (Ps.positionAmt != 0) {
+                /*Kèo long*/
+                if (Ps.positionAmt > 0) {
+                    if (Number(Ps.entryPrice) + Number(DCALongTotalPrice) < Number(Ps.markPrice)) {
+                        const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
+                        await telegram.log(`🌀Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+                        var iconLongShortAlert = '';
+                        if (Ps.unRealizedProfit > 0) {
+                            iconLongShortAlert = '✅';
+                            countTP = Number(countTP) + 1;
+                        } else {
+                            iconLongShortAlert = '❌';
+                            countSL = Number(countSL) + 1;
+                        }
+                        await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart} Đóng lệnh sớm. DCALongTotalPrice: ${DCALongTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
+                    }
+                }
+                /*Kèo short*/
+                else {
+                    if (Number(Ps.entryPrice) + Number(DCAShortTotalPrice) > Number(Ps.markPrice)) {
+                        const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
+                        await telegram.log(`🌀Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+                        var iconLongShortAlert = '';
+                        if (Ps.unRealizedProfit > 0) {
+                            iconLongShortAlert = '✅';
+                            countTP = Number(countTP) + 1;
+                        } else {
+                            iconLongShortAlert = '❌';
+                            countSL = Number(countSL) + 1;
+                        }
+                        await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart} Đóng lệnh sớm. DCAShortTotalPrice: ${DCAShortTotalPrice}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
+                    }
+                }
+                binanceIsLock = 0;
+                return;
+            }
 
             /*Trade chính*/
             if (process.env.Webhook == 'buy') {
-                if (Ps.positionAmt <= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCALongTotalPrice, 5, 'BUY');
-                    await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
-                    entryPricePre = Number(binanceOpen.entryPrice);
+                if (Ps.positionAmt == 0) {
+                    const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
+                    const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                    await telegram.log(`✨Mở lệnh: ${JSON.stringify(openBinance)}`);
+                    await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
+                    entryPricePre = Number(PsAlert.entryPrice);
+                } else {
+                    if (Ps.positionAmt < 0) {
+                        var iconLongShortAlert = '';
+                        if (Ps.unRealizedProfit > 0) {
+                            iconLongShortAlert = '✅';
+                            countTP = Number(countTP) + 1;
+                        } else {
+                            iconLongShortAlert = '❌';
+                            countSL = Number(countSL) + 1;
+                        }
+                        const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'BUY');
+                        await telegram.log(`🌀Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+                        
+                        const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
+                        await telegram.log(`✨Mở lệnh: ${JSON.stringify(openBinance)}`);
+
+                        const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                        await telegram.log(`${iconLongShortAlert}🔴${binanceSymbol} ${binanceChart}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
+                        await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
+                        entryPricePre = Number(PsAlert.entryPrice);
+                    }
                 }
             } else {
-                if (Ps.positionAmt >= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCAShortTotalPrice, 5, 'SELL');
-                    await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
-                    entryPricePre = Number(binanceOpen.entryPrice);
+                if (Ps.positionAmt == 0) {
+                    const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'SELL');
+                    const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                    await telegram.log(`✨Mở lệnh: ${JSON.stringify(openBinance)}`);
+                    await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
+                    entryPricePre = Number(PsAlert.entryPrice);
+                } else {
+                    if (Ps.positionAmt > 0) {
+                        var iconLongShortAlert = '';
+                        if (Ps.unRealizedProfit > 0) {
+                            iconLongShortAlert = '✅';
+                            countTP = Number(countTP) + 1;
+                        } else {
+                            iconLongShortAlert = '❌';
+                            countSL = Number(countSL) + 1;
+                        }
+                        const closeBinance = await binance.FuturesMarketBuySell(binanceSymbol, Math.abs(Ps.positionAmt), 'SELL');
+                        await telegram.log(`🌀Đóng lệnh: ${JSON.stringify(closeBinance)}`);
+
+                        const openBinance = await binance.FuturesMarketBuySell(binanceSymbol, binanceQuantity, 'BUY');
+                        await telegram.log(`✨Mở lệnh: ${JSON.stringify(openBinance)}`);
+                        
+                        const PsAlert = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                        await telegram.log(`${iconLongShortAlert}🟢${binanceSymbol} ${binanceChart}. E: ${Number(Ps.entryPrice).toFixed(2)}; M: ${Number(Ps.markPrice).toFixed(2)}; P: ${Number(Ps.unRealizedProfit).toFixed(2)} USDT`);
+                        await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(PsAlert.entryPrice).toFixed(2)}`);
+                        entryPricePre = Number(PsAlert.entryPrice);
+                    }
                 }
             }
             binanceIsLock = 0;

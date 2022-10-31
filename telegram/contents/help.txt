@@ -1,22 +1,7 @@
 🤖 Bot cho biết:
 Thông tin lệnh chung:
 --------------------
-/b {O|0/1}: Kiểm tra/set trạng thái bot
---> 0: Ngừng bot
---> 1: Chạy bot
---------------------
-/c {O|coin} {O|value} {O|valueLeverage}: Kiểm tra/set lệnh coin và min value đang trade
---> coin: Đồng coin đang trade
---> value: Giá trị min coin
---> valueLeverage: Đòn bẩy
---------------------
 /d: Kiểm tra webhook test
 --------------------
 /p {O|coin}: Xem vị thế coin của bạn
 --> coin: Xem vị thế coin chi tiết
-
-Lệnh RSI:
---------------------
-/r {coin} {interval}: RSI hiện tại
---> coin: Hợp đồng
---> interval: Chart (1m/1h/1d/...)

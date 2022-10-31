@@ -1,5 +1,6 @@
 🤖 Bot cho biết:
 Coin: BTCUSDT
-1m_icon DCA: 1m_u USDT
+_icontmp lãi lỗ hiện tại: _usdttmp USDT
+_icon lãi lỗ tổng: _usdt USDT
 --------------------
 time: time_in

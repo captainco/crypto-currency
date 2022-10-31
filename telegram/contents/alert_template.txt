@@ -1,11 +1,9 @@
 🤖 Bot cho biết:
-Giá hiện tại: _markPrice
-TP|SL: _tp|_sl
-Tỷ lệ win: _winrate
-
+Giá hiện tại: _markPrice USDT
 Số tiền trước trade: _totalUSDTBefore USDT
 Số tiền đang trade: _totalUSDTTrade USDT
-Lãi lỗ: _totalUSDT USDT
+Lãi lỗ tổng: _totalUSDT USDT
+Lãi lỗ lệnh hiện tại: _tmpTotalUSDT USDT
 Lock: _binanceIsLock
 
 isChangeDCA: _isChangeDCA

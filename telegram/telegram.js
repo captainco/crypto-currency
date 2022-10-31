@@ -47,58 +47,12 @@ bot.command('h', async (ctx) => {
     ctx.reply(logTelegram);
 });
 
-bot.command('b', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
-    const content = GetTelegramMessage(ctx, 'b');
-    try {
-        if (content == "") {
-            ctx.reply(`🤖 Trạng thái bot: ${process.env.envTelegramBotStatus == "0" ? "Đã dừng" : "Hoạt động"}`);
-        }
-        else {
-            if (content == "0") {
-                process.env.envTelegramBotStatus = "0";
-                ctx.reply(`✅ Thiết lập trạng thái bot: Đã dừng`);
-            } else {
-                process.env.envTelegramBotStatus = "1";
-                ctx.reply(`✅ Thiết lập trạng thái bot: Hoạt động`);
-            }
-        }
-    } catch (error) {
-        ctx.reply(error);
-    }
-});
-
-bot.command('c', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
-    const content = GetTelegramMessage(ctx, 'c');
-    const contents = content.split(' ');
-    try {
-        var oc = ["coin_in", "value_in", "leverage_in", "time_in"];
-        if (content == "") {
-            var nc = [process.env.envBinanceFunctionSymbol, process.env.envBinanceFunctionPrice, process.env.envBinanceFunctionLeverage, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/c_template.txt");
-        } else {
-            const coinName = `${contents[0].toUpperCase()}USDT`;
-            const value = Number(contents[1]);
-            const valueLeverage = Number(contents[2]);
-            process.env.envBinanceFunctionSymbol = coinName;
-            process.env.envBinanceFunctionPrice = value;
-            process.env.envBinanceFunctionLeverage = valueLeverage;
-            await binance.FuturesLeverage(process.env.envBinanceFunctionSymbol, Number(process.env.envBinanceFunctionLeverage));
-            var nc = [process.env.envBinanceFunctionSymbol, process.env.envBinanceFunctionPrice, process.env.envBinanceFunctionLeverage, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/cs_template.txt");
-        }
-        ctx.reply(temp);
-    } catch (error) {
-        ctx.reply(error);
-    }
-});
-
 bot.command('d', async (ctx) => {
     try {
-        var oc = ["1m_icon", "1m_u", "time_in"];
-        const _1m_icon =  Number(process.env.Webhookud) == 0 ? '⚪' : Number(process.env.Webhookud) > 0 ? '✅' : '❌';
-        var nc = [_1m_icon, process.env.Webhookud, GetMoment()];
+        var oc = ["_icontmp", "_usdttmp", "_icon", "_usdt", "time_in"];
+        const _icontmp =  Number(process.env.Webhookud_) == 0 ? '⚪' : Number(process.env.Webhookud_) > 0 ? '✅' : '❌';
+        const _icon =  Number(process.env.Webhookud) == 0 ? '⚪' : Number(process.env.Webhookud) > 0 ? '✅' : '❌';
+        var nc = [_icontmp, process.env.Webhookud_, _icon, process.env.Webhookud, GetMoment()];
         var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/whd_template.txt");
         ctx.reply(temp);
     } catch (error) {
@@ -111,7 +65,7 @@ bot.command('p', async (ctx) => {
     const content = GetTelegramMessage(ctx, 'p');
     try {
         if (content == "") {
-            var symbol = process.env.envBinanceFunctionSymbol;
+            var symbol = 'BTCUSDT';
             var result = (await binance.FuturesPositionRisk(symbol))[0];
             var iconLongShort = result.positionAmt == 0 ? "⚪" : (result.positionAmt > 0 ? "🟢" : "🔴");
             var oc = ["symbol_in", "longshort_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "time_in"];
@@ -125,19 +79,6 @@ bot.command('p', async (ctx) => {
             var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/pc_template.txt");
         }
         ctx.reply(temp);
-    } catch (error) {
-        ctx.reply(error);
-    }
-});
-
-bot.command('r', async (ctx) => {
-    if (!IsMyTelegramAccount(ctx)) return;
-    try {
-        const content = GetTelegramMessage(ctx, 'r').split(' ');
-        const symbol = `${content[0].toUpperCase()}USDT`;
-        const interval = content[1].toLowerCase();
-        const rsi = await binance.RSI(symbol, interval);
-        ctx.reply(`🤖 RSI ${symbol}|${interval}: ${rsi}`);
     } catch (error) {
         ctx.reply(error);
     }

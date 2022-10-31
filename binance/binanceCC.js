@@ -4,13 +4,13 @@ const WebSocket            = require("ws");
 const binance              = require('./binance');
 const common               = require('../common');
 
-var binanceChart           = '5m';
+var binanceChart           = '15m';
 var binanceSymbol          = 'BTCUSDT';
 var binanceLeverage        = 125;
 var binanceQuantity        = 0.001;
 var binanceIsLock          = 0;
-var DCALongTotalPriceMin   = 20;
-var DCAShortTotalPriceMin  = -20;
+var DCALongTotalPriceMin   = 40;
+var DCAShortTotalPriceMin  = -40;
 						   
 var totalUSDTBefore        = 0;
 var totalUSDT              = 0;

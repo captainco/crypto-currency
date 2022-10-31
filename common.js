@@ -1,6 +1,6 @@
 const moment = require('moment-timezone');
-const _ = require('lodash');
-const fs = require('fs');
+const _      = require('lodash');
+const fs     = require('fs');
 
 moment.tz.setDefault("Asia/Ho_Chi_Minh");
 
@@ -29,10 +29,6 @@ function ReplaceTextByTemplate(oldChar, newChar, templatePath) {
     return output;
 }
 
-function ConvertToPositiveNumber(number) {
-    return Math.abs(number);
-}
-
 function NumDigitsAfterDecimal(x) {
     var afterDecimalStr = x.toString().split('.')[1] || '';
     return afterDecimalStr.length;
@@ -59,7 +55,6 @@ module.exports = {
     GetMoment,
     GetMomentSecond,
     ReplaceTextByTemplate,
-    ConvertToPositiveNumber,
     NumDigitsAfterDecimal,
     FormatNumberToString
 }

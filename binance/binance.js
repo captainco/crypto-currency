@@ -1,12 +1,13 @@
 require('dotenv').config({ path: '../env/live.env' });
 
-var indicators             = require('technicalindicators');
-var EMA                    = require('technicalindicators').EMA;
-const Binance              = require('node-binance-api');
-const _                    = require("lodash");
-const common               = require("../common");
-const envBinanceAPIKEY     = process.env.envBinanceAPIKEY;
-const envBinanceAPISECRET  = process.env.envBinanceAPISECRET;
+var indicators = require('technicalindicators');
+var EMA = require('technicalindicators').EMA;
+const Binance = require('node-binance-api');
+const _ = require("lodash");
+const common = require("../common");
+const e = require('express');
+const envBinanceAPIKEY = process.env.envBinanceAPIKEY;
+const envBinanceAPISECRET = process.env.envBinanceAPISECRET;
 const envBinanceEnviroment = process.env.envBinanceEnviroment.toUpperCase();
 
 var binance;
@@ -22,6 +23,136 @@ else {
         APIKEY: envBinanceAPIKEY,
         APISECRET: envBinanceAPISECRET
     });
+}
+
+async function FuturesMarketBuySell(symbol, quantity, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity);
+    }
+    return await binance.futuresMarketSell(symbol, quantity);
+}
+
+async function FuturesMarketBuySellTakeProfit(symbol, quantity, stopPrice, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTC', workingType: 'MARK_PRICE' });
+    }
+    return await binance.futuresMarketSell(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTC', workingType: 'MARK_PRICE' });
+}
+
+async function FuturesMarketBuySellStopLoss(symbol, quantity, stopPrice, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTC', workingType: 'MARK_PRICE' });
+    }
+    return await binance.futuresMarketSell(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTC', workingType: 'MARK_PRICE' });
+}
+
+async function FuturesMarketBuySellTPSL(symbol, quantity, takeProfit, stopLoss, buySell) {
+    if (buySell.toUpperCase() == "BUY") {
+        await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'SELL');
+        await FuturesMarketBuySellStopLoss(symbol, quantity, stopLoss, 'SELL');
+    } else {
+        await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'BUY');
+        await FuturesMarketBuySellStopLoss(symbol, quantity, stopLoss, 'BUY');
+    }
+}
+
+async function FuturesOpenPositions(symbol, quantity, buySell) {
+    quantity = Math.abs(quantity);
+
+    /*Đóng vị thế trước*/
+    const Ps = (await FuturesPositionRisk(symbol))[0];
+    if (Ps.positionAmt != 0) {
+        /*Long*/
+        if (Ps.positionAmt > 0) {
+            await FuturesMarketBuySell(symbol, quantity, 'SELL');
+        }
+        /*Short*/
+        else {
+            await FuturesMarketBuySell(symbol, quantity, 'BUY');
+        }
+    }
+    const Od = await FuturesOpenOrders(symbol);
+    if (Od.length > 0) {
+        await FuturesCancelAll(symbol);
+    }
+
+    /*Tạo vị thế mới*/
+    if (buySell.toUpperCase() == "BUY") {
+        await FuturesMarketBuySell(symbol, quantity, 'BUY');
+    } else {
+        await FuturesMarketBuySell(symbol, quantity, 'SELL');
+    }
+
+    const PsAlert = (await FuturesPositionRisk(symbol))[0];
+    return PsAlert;
+}
+
+async function FuturesOpenPositionsTPSL(symbol, quantity, priceDifference, numberOfTimesStopLossPrice, buySell) {
+    quantity = Math.abs(quantity);
+
+    /*Đóng vị thế trước*/
+    const Ps = (await FuturesPositionRisk(symbol))[0];
+    if (Ps.positionAmt != 0) {
+        /*Long*/
+        if (Ps.positionAmt > 0) {
+            await FuturesMarketBuySell(symbol, quantity, 'SELL');
+        }
+        /*Short*/
+        else {
+            await FuturesMarketBuySell(symbol, quantity, 'BUY');
+        }
+    }
+
+    const Od = await FuturesOpenOrders(symbol);
+    if (Od.length > 0) {
+        await FuturesCancelAll(symbol);
+    }
+
+    /*Tạo vị thế mới và take profit*/
+    if (buySell.toUpperCase() == "BUY") {
+        await FuturesMarketBuySell(symbol, quantity, 'BUY');
+        const PsCheck = (await FuturesPositionRisk(symbol))[0];
+        const takeProfit = Number(PsCheck.entryPrice) + priceDifference;
+        const stopLoss = Number(PsCheck.entryPrice) - (priceDifference * numberOfTimesStopLossPrice);
+        await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'SELL');
+        await FuturesMarketBuySellStopLoss(symbol, quantity, stopLoss, 'SELL');
+    } else {
+        await FuturesMarketBuySell(symbol, quantity, 'SELL');
+        const PsCheck = (await FuturesPositionRisk(symbol))[0];
+        const takeProfit = Number(PsCheck.entryPrice) - priceDifference;
+        const stopLoss = Number(PsCheck.entryPrice) + (priceDifference * numberOfTimesStopLossPrice);
+        await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'BUY');
+        await FuturesMarketBuySellStopLoss(symbol, quantity, stopLoss, 'BUY');
+    }
+
+    const PsAlert = (await FuturesPositionRisk(symbol))[0];
+    return PsAlert;
+}
+
+async function FuturesClosePositions(symbol) {
+
+    /*Đóng vị thế trước*/
+    const Ps = (await FuturesPositionRisk(symbol))[0];
+    if (Ps.positionAmt != 0) {
+        /*Long*/
+        if (Ps.positionAmt > 0) {
+            await FuturesMarketBuySell(symbol, Ps.positionAmt, 'SELL');
+        }
+        /*Short*/
+        else {
+            await FuturesMarketBuySell(symbol, Ps.positionAmt, 'BUY');
+        }
+    }
+    const Od = await FuturesOpenOrders(symbol);
+    if (Od.length > 0) {
+        await FuturesCancelAll(symbol);
+    }
+
+    const PsAlert = (await FuturesPositionRisk(symbol))[0];
+    return PsAlert;
 }
 
 async function FuturesGetMinQuantity(symbol_) {
@@ -66,7 +197,7 @@ async function FuturesAccount(symbol) {
 
 async function FuturesBalance() {
     const balances = await binance.futuresBalance();
-    return (_.filter(balances, (p) => {return p.asset == "USDT"}))[0].balance;
+    return (_.filter(balances, (p) => { return p.asset == "USDT" }))[0].balance;
 }
 
 async function SpotPositionRisk() {
@@ -78,21 +209,20 @@ async function FuturesPositionRisk(symbol) {
 }
 
 async function FuturesCheckPositionRisk(symbol) {
-    const risk = await binance.futuresPositionRisk({symbol});
-    return _.nth(_.filter(risk, (p) => { return p.positionAmt != 0}), 0);
+    const risk = await binance.futuresPositionRisk({ symbol });
+    return _.nth(_.filter(risk, (p) => { return p.positionAmt != 0 }), 0);
 }
 
 async function FuturesLeverage(symbol, leverage) {
     return await binance.futuresLeverage(symbol, leverage);
 }
 
-async function FuturesMarketBuySell(symbol, quantity, buySell) {
-    quantity = common.ConvertToPositiveNumber(quantity);
-    if (buySell.toUpperCase() == "BUY") {
-        return await binance.futuresMarketBuy(symbol, quantity);
-    }
+async function FuturesOpenOrders(symbol) {
+    return await binance.futuresOpenOrders(symbol);
+}
 
-    return await binance.futuresMarketSell(symbol, quantity);
+async function FuturesCancelAll(symbol) {
+    return await binance.futuresCancelAll(symbol);
 }
 
 async function FuturesCandles(symbol, interval, limit) {
@@ -140,6 +270,13 @@ async function EMAClose(symbol, interval, limit) {
 }
 
 module.exports = {
+    FuturesMarketBuySell,
+    FuturesMarketBuySellTakeProfit,
+    FuturesMarketBuySellStopLoss,
+    FuturesMarketBuySellTPSL,
+    FuturesOpenPositions,
+    FuturesOpenPositionsTPSL,
+    FuturesClosePositions,
     FuturesGetMinQuantity,
     FetchPositions,
     FuturesPrices,
@@ -149,7 +286,8 @@ module.exports = {
     SpotPositionRisk,
     FuturesCheckPositionRisk,
     FuturesLeverage,
-    FuturesMarketBuySell,
+    FuturesOpenOrders,
+    FuturesCancelAll,
     FuturesCandles,
     RSI, EMA,
     EMAOpen, EMAClose

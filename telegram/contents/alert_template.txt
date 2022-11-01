@@ -4,12 +4,14 @@ Số tiền trước trade: _totalUSDTBefore USDT
 Số tiền đang trade: _totalUSDTTrade USDT
 Lãi lỗ tổng: _totalUSDT USDT
 Lãi lỗ lệnh hiện tại: _tmpTotalUSDT USDT
-Lock: _binanceIsLock
 
+Lock: _binanceIsLock
+LockAlert: _binanceIsLockAlert
 checkTrend: _checkTrend
 isChangeDCA: _isChangeDCA
 isDCAPrice: _isDCAPrice
 DCAPrice: _DCAPrice
+entryPricePre: _entryPricePre
 bestMarkPrice: _bestMarkPrice
 
 DCALongLength: _DCALongLength

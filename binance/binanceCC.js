@@ -9,8 +9,8 @@ var binanceSymbol          = 'BTCUSDT';
 var binanceLeverage        = 125;
 var binanceQuantity        = 0.005;
 var binanceIsLock          = 0;
-var DCALongTotalPriceMin   = 40;
-var DCAShortTotalPriceMin  = -40;
+var DCALongTotalPriceMin   = 20;
+var DCAShortTotalPriceMin  = -20;
 						   
 var totalUSDTBefore        = 0;
 var totalUSDT              = 0;

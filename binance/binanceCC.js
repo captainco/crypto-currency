@@ -7,7 +7,7 @@ const common               = require('../common');
 var binanceChart           = '30m';
 var binanceSymbol          = 'BTCUSDT';
 var binanceLeverage        = 125;
-var binanceQuantity        = 0.005;
+var binanceQuantity        = 0.002;
 var binanceIsLock          = 0;
 var binanceIsLockAlert     = 0;
 var DCALongTotalPriceMin   = 20;
@@ -22,7 +22,7 @@ var isChangeEntry          = '';
 var isDCAPrice             = 0;
 var entryPricePre          = 0;
 var DCAPrice               = 0;
-var bestMarkPrice          = 0;
+var bestMarkPrice          = 1;
 						   
 var DCALong                = [];
 var DCALongStringPrice     = '';
@@ -35,6 +35,7 @@ var DCAShortTotalPrice_    = DCAShortTotalPriceMin;
 var DCAShortTotalPrice     = DCAShortTotalPriceMin;
 
 async function Main() {
+    return;
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {
@@ -66,11 +67,11 @@ async function Main() {
             if (process.env.Webhook == isChangeDCA) {
                 if (process.env.Webhook != isChangeEntry) {
                     isChangeEntry = process.env.Webhook;
-                    entryPricePre = Number(Ps.markPrice);
+                    entryPricePre = Number(Ps.positionAmt) == 0 ? Number(Ps.markPrice) : Number(Ps.entryPrice);
                 }
 
-                if ((bestMarkPrice < markPrice && process.env.Webhook == 'buy') || (bestMarkPrice > markPrice && process.env.Webhook == 'sell')) {
-                    bestMarkPrice = markPrice;
+                if ((bestMarkPrice < Number(Ps.markPrice) && process.env.Webhook == 'buy') || (bestMarkPrice > Number(Ps.markPrice) && process.env.Webhook == 'sell')) {
+                    bestMarkPrice = Number(Ps.markPrice);
                     DCAPrice = Number(Number(bestMarkPrice) - Number(entryPricePre)).toFixed(2);
                     const iconLongShortAlert = process.env.Webhook == 'buy' ? '🟢' : '🔴';
                     await telegram.log(`${iconLongShortAlert} => DCAPrice new: ${DCAPrice}`);

@@ -77,6 +77,7 @@ async function Main() {
                         DCALongTotalPrice = Number((Number(DCALong[DCALong.length - 1]) + Number(DCALong[DCALong.length - 2]) + Number(DCALong[DCALong.length - 3]) + Number(DCALong[DCALong.length - 4]) + Number(DCALong[DCALong.length - 5])) / 5).toFixed(2);
                         DCALongTotalPrice_ = DCALongTotalPrice;
                         DCALongTotalPrice = Number(DCALongTotalPrice) < DCALongTotalPriceMin ? DCALongTotalPriceMin : Number(DCALongTotalPrice);
+                        DCALongTotalPrice = Number(DCALongTotalPrice) > 100 ? 100 : Number(DCALongTotalPrice);
                     }
                 } else {
                     DCAShort.push(NumberDCAPrice);
@@ -90,6 +91,7 @@ async function Main() {
                         DCAShortTotalPrice = Number((Number(DCAShort[DCAShort.length - 1]) + Number(DCAShort[DCAShort.length - 2]) + Number(DCAShort[DCAShort.length - 3]) + Number(DCAShort[DCAShort.length - 4]) + Number(DCAShort[DCAShort.length - 5])) / 5).toFixed(2);
                         DCAShortTotalPrice_ = DCAShortTotalPrice;
                         DCAShortTotalPrice = Number(DCAShortTotalPrice) > DCAShortTotalPriceMin ? DCAShortTotalPriceMin : Number(DCAShortTotalPrice);
+                        DCAShortTotalPrice = Number(DCAShortTotalPrice) < -100 ? -100 : Number(DCAShortTotalPrice);
                     }
                 }
             }

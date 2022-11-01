@@ -6,6 +6,7 @@ Lãi lỗ tổng: _totalUSDT USDT
 Lãi lỗ lệnh hiện tại: _tmpTotalUSDT USDT
 Lock: _binanceIsLock
 
+checkTrend: _checkTrend
 isChangeDCA: _isChangeDCA
 isDCAPrice: _isDCAPrice
 DCAPrice: _DCAPrice

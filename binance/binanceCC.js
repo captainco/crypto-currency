@@ -15,6 +15,7 @@ var DCAShortTotalPriceMin  = -40;
 var totalUSDTBefore        = 0;
 var totalUSDT              = 0;
 
+var checkTrend             = '';
 var isChangeDCA            = '';
 var isDCAPrice             = 0;
 var entryPricePre          = 0;
@@ -110,7 +111,7 @@ async function Main() {
 
             if (common.GetMomentSecond() == "59") {
                 const markPrice = Number(Ps.markPrice).toFixed(2);
-                var oc = ["_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_binanceIsLock", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
+                var oc = ["_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_binanceIsLock", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     markPrice,
                     Number(totalUSDTBefore).toFixed(2),
@@ -118,6 +119,7 @@ async function Main() {
                     Number(totalUSDT).toFixed(2),
                     Ps.unRealizedProfit,
                     binanceIsLock,
+                    checkTrend,
                     isChangeDCA,
                     isDCAPrice,
                     DCAPrice,
@@ -152,9 +154,14 @@ async function Main() {
                 return;
             }
 
+            if (process.env.Webhook == checkTrend) {
+                binanceIsLock = 0;
+                return;
+            }
+            checkTrend = process.env.Webhook;
+
             const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
 
-            /*Trade chính*/
             if (process.env.Webhook == 'buy') {
                 if (Ps.positionAmt <= 0) {
                     const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCALongTotalPrice, 5, 'BUY');

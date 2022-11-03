@@ -4,14 +4,14 @@ const WebSocket            = require("ws");
 const binance              = require('./binance');
 const common               = require('../common');
 
-var binanceChart           = '1h';
+var binanceChart           = '1m';
 var binanceSymbol          = 'BTCUSDT';
 var binanceLeverage        = 125;
 var binanceQuantity        = 0.005;
 var binanceIsLock          = 0;
 var binanceIsLockAlert     = 0;
-var DCALongTotalPriceMin   = 40;
-var DCAShortTotalPriceMin  = -40;
+var DCALongTotalPriceMin   = 20;
+var DCAShortTotalPriceMin  = -20;
 						   
 var totalUSDTBefore        = 0;
 var totalUSDT              = 0;
@@ -80,33 +80,47 @@ async function Main() {
                 const NumberDCAPrice = Number(DCAPrice).toFixed(2);
 
                 //Push to array
-                if (NumberDCAPrice > 0) {
-                    DCALong.push(NumberDCAPrice);
-                    await telegram.log(`🟢 => DCAPrice push: ${NumberDCAPrice}`);
-                    await telegram.log(`🟢 => DCALong: ${DCALong.toString()}`);
-
-                    if (DCALong.length < 6) {
-                        DCALongTotalPrice = DCALongTotalPriceMin;
+                if (NumberDCAPrice != 0) {
+                    if (NumberDCAPrice > 0) {
+                        DCALong.push(NumberDCAPrice);
+                        await telegram.log(`🟢 => DCAPrice push: ${NumberDCAPrice}`);
+                        await telegram.log(`🟢 => DCALong: ${DCALong.toString()}`);
+    
+                        if (DCALong.length < 5) {
+                            var tttmp = 0;
+                            for (let index = 0; index < DCALong.length; index++) {
+                                tttmp = Number(tttmp) + Number(DCALong[index]);
+                            }
+                            DCALongTotalPrice_ = Number(Number(tttmp) / Number(DCALong.length)).toFixed(2);
+                            DCALongTotalPrice = Number(DCALongTotalPrice_) < DCALongTotalPriceMin ? DCALongTotalPriceMin : Number(DCALongTotalPrice_);
+                            DCALongTotalPrice = Number(DCALongTotalPrice) > 100 ? 100 : Number(DCALongTotalPrice);
+                        } else {
+                            DCALongStringPrice = `${Number(DCALong[DCALong.length - 1])};${Number(DCALong[DCALong.length - 2])};${Number(DCALong[DCALong.length - 3])};${Number(DCALong[DCALong.length - 4])};${Number(DCALong[DCALong.length - 5])}`;
+                            DCALongTotalPrice = Number((Number(DCALong[DCALong.length - 1]) + Number(DCALong[DCALong.length - 2]) + Number(DCALong[DCALong.length - 3]) + Number(DCALong[DCALong.length - 4]) + Number(DCALong[DCALong.length - 5])) / 5).toFixed(2);
+                            DCALongTotalPrice_ = DCALongTotalPrice;
+                            DCALongTotalPrice = Number(DCALongTotalPrice) < DCALongTotalPriceMin ? DCALongTotalPriceMin : Number(DCALongTotalPrice);
+                            DCALongTotalPrice = Number(DCALongTotalPrice) > 100 ? 100 : Number(DCALongTotalPrice);
+                        }
                     } else {
-                        DCALongStringPrice = `${Number(DCALong[DCALong.length - 1])};${Number(DCALong[DCALong.length - 2])};${Number(DCALong[DCALong.length - 3])};${Number(DCALong[DCALong.length - 4])};${Number(DCALong[DCALong.length - 5])}`;
-                        DCALongTotalPrice = Number((Number(DCALong[DCALong.length - 1]) + Number(DCALong[DCALong.length - 2]) + Number(DCALong[DCALong.length - 3]) + Number(DCALong[DCALong.length - 4]) + Number(DCALong[DCALong.length - 5])) / 5).toFixed(2);
-                        DCALongTotalPrice_ = DCALongTotalPrice;
-                        DCALongTotalPrice = Number(DCALongTotalPrice) < DCALongTotalPriceMin ? DCALongTotalPriceMin : Number(DCALongTotalPrice);
-                        DCALongTotalPrice = Number(DCALongTotalPrice) > 100 ? 100 : Number(DCALongTotalPrice);
-                    }
-                } else {
-                    DCAShort.push(NumberDCAPrice);
-                    await telegram.log(`🔴 => DCAPrice push: ${NumberDCAPrice}`);
-                    await telegram.log(`🔴 => DCAShort: ${DCAShort.toString()}`);
-
-                    if (DCAShort.length < 6) {
-                        DCAShortTotalPrice = DCAShortTotalPriceMin;
-                    } else {
-                        DCAShortStringPrice = `${Number(DCAShort[DCAShort.length - 1])};${Number(DCAShort[DCAShort.length - 2])};${Number(DCAShort[DCAShort.length - 3])};${Number(DCAShort[DCAShort.length - 4])};${Number(DCAShort[DCAShort.length - 5])}`;
-                        DCAShortTotalPrice = Number((Number(DCAShort[DCAShort.length - 1]) + Number(DCAShort[DCAShort.length - 2]) + Number(DCAShort[DCAShort.length - 3]) + Number(DCAShort[DCAShort.length - 4]) + Number(DCAShort[DCAShort.length - 5])) / 5).toFixed(2);
-                        DCAShortTotalPrice_ = DCAShortTotalPrice;
-                        DCAShortTotalPrice = Number(DCAShortTotalPrice) > DCAShortTotalPriceMin ? DCAShortTotalPriceMin : Number(DCAShortTotalPrice);
-                        DCAShortTotalPrice = Number(DCAShortTotalPrice) < -100 ? -100 : Number(DCAShortTotalPrice);
+                        DCAShort.push(NumberDCAPrice);
+                        await telegram.log(`🔴 => DCAPrice push: ${NumberDCAPrice}`);
+                        await telegram.log(`🔴 => DCAShort: ${DCAShort.toString()}`);
+    
+                        if (DCAShort.length < 5) {
+                            var tttmp = 0;
+                            for (let index = 0; index < DCAShort.length; index++) {
+                                tttmp = Number(tttmp) + Number(DCAShort[index]);
+                            }
+                            DCAShortTotalPrice_ = Number(Number(tttmp) / Number(DCAShort.length)).toFixed(2);
+                            DCAShortTotalPrice = Number(DCAShortTotalPrice_) > DCAShortTotalPriceMin ? DCAShortTotalPriceMin : Number(DCAShortTotalPrice_);
+                            DCAShortTotalPrice = Number(DCAShortTotalPrice) < -100 ? -100 : Number(DCAShortTotalPrice);
+                        } else {
+                            DCAShortStringPrice = `${Number(DCAShort[DCAShort.length - 1])};${Number(DCAShort[DCAShort.length - 2])};${Number(DCAShort[DCAShort.length - 3])};${Number(DCAShort[DCAShort.length - 4])};${Number(DCAShort[DCAShort.length - 5])}`;
+                            DCAShortTotalPrice = Number((Number(DCAShort[DCAShort.length - 1]) + Number(DCAShort[DCAShort.length - 2]) + Number(DCAShort[DCAShort.length - 3]) + Number(DCAShort[DCAShort.length - 4]) + Number(DCAShort[DCAShort.length - 5])) / 5).toFixed(2);
+                            DCAShortTotalPrice_ = DCAShortTotalPrice;
+                            DCAShortTotalPrice = Number(DCAShortTotalPrice) > DCAShortTotalPriceMin ? DCAShortTotalPriceMin : Number(DCAShortTotalPrice);
+                            DCAShortTotalPrice = Number(DCAShortTotalPrice) < -100 ? -100 : Number(DCAShortTotalPrice);
+                        }
                     }
                 }
             }
@@ -130,6 +144,9 @@ async function Main() {
 
             if (common.GetMomentSecond() == "59") {
                 const markPrice = Number(Ps.markPrice).toFixed(2);
+                var DCALongStringPriceTmp = DCALong < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
+                var DCAShortStringPriceTmp = DCAShort < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;
+
                 var oc = ["_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_binanceIsLock", "_binanceIsLockAlert", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     markPrice,
@@ -146,11 +163,11 @@ async function Main() {
                     entryPricePre,
                     bestMarkPrice,
                     DCALong.length,
-                    DCALongStringPrice,
+                    DCALongStringPriceTmp,
                     Number(DCALongTotalPrice_),
                     Number(DCALongTotalPrice),
                     DCAShort.length,
-                    DCAShortStringPrice,
+                    DCAShortStringPriceTmp,
                     Number(DCAShortTotalPrice_),
                     Number(DCAShortTotalPrice),
                     common.GetMoment()
@@ -185,13 +202,17 @@ async function Main() {
 
             if (process.env.Webhook == 'buy') {
                 if (Ps.positionAmt <= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCALongTotalPrice, 20, 'BUY');
-                    await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
+                    if (DCALong.length >= 5) {
+                        const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCALongTotalPrice, 20, 'BUY');
+                        await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
+                    }
                 }
             } else {
                 if (Ps.positionAmt >= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCAShortTotalPrice, 20, 'SELL');
-                    await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
+                    if (DCAShort.length >= 5) {
+                        const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCAShortTotalPrice, 20, 'SELL');
+                        await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
+                    }
                 }
             }
             binanceIsLock = 0;

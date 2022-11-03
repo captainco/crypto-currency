@@ -203,14 +203,14 @@ async function Main() {
             if (process.env.Webhook == 'buy') {
                 if (Ps.positionAmt <= 0) {
                     if (DCALong.length >= 5) {
-                        const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCALongTotalPrice, 20, 'BUY');
+                        const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, binanceQuantity, DCALongTotalPrice, 'BUY');
                         await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
                     }
                 }
             } else {
                 if (Ps.positionAmt >= 0) {
                     if (DCAShort.length >= 5) {
-                        const binanceOpen = await binance.FuturesOpenPositionsTPSL(binanceSymbol, binanceQuantity, DCAShortTotalPrice, 20, 'SELL');
+                        const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, binanceQuantity, DCAShortTotalPrice, 'SELL');
                         await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
                     }
                 }

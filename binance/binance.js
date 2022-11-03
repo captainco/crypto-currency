@@ -100,6 +100,45 @@ async function FuturesOpenPositions(symbol, quantity, buySell) {
     return PsAlert;
 }
 
+async function FuturesOpenPositionsTP(symbol, quantity, priceDifference, buySell) {
+    quantity = Math.abs(quantity);
+    priceDifference = Math.abs(priceDifference);
+
+    /*Đóng vị thế trước*/
+    const Ps = (await FuturesPositionRisk(symbol))[0];
+    if (Ps.positionAmt != 0) {
+        /*Long*/
+        if (Ps.positionAmt > 0) {
+            await FuturesMarketBuySell(symbol, Number(Ps.positionAmt), 'SELL');
+        }
+        /*Short*/
+        else {
+            await FuturesMarketBuySell(symbol, Number(Ps.positionAmt), 'BUY');
+        }
+    }
+
+    const Od = await FuturesOpenOrders(symbol);
+    if (Od.length > 0) {
+        await FuturesCancelAll(symbol);
+    }
+
+    /*Tạo vị thế mới và take profit*/
+    if (buySell.toUpperCase() == "BUY") {
+        await FuturesMarketBuySell(symbol, quantity, 'BUY');
+        const PsCheck = (await FuturesPositionRisk(symbol))[0];
+        const takeProfit = Number(PsCheck.entryPrice) + priceDifference;
+        await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'SELL');
+    } else {
+        await FuturesMarketBuySell(symbol, quantity, 'SELL');
+        const PsCheck = (await FuturesPositionRisk(symbol))[0];
+        const takeProfit = Number(PsCheck.entryPrice) - priceDifference;
+        await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'BUY');
+    }
+
+    const PsAlert = (await FuturesPositionRisk(symbol))[0];
+    return PsAlert;
+}
+
 async function FuturesOpenPositionsTPSL(symbol, quantity, priceDifference, numberOfTimesStopLossPrice, buySell) {
     quantity = Math.abs(quantity);
     priceDifference = Math.abs(priceDifference);
@@ -287,6 +326,7 @@ module.exports = {
     FuturesMarketBuySellTPSL,
     FuturesClearPositions,
     FuturesOpenPositions,
+    FuturesOpenPositionsTP,
     FuturesOpenPositionsTPSL,
     FuturesClosePositions,
     FuturesGetMinQuantity,

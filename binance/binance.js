@@ -1,13 +1,11 @@
 require('dotenv').config({ path: '../env/live.env' });
 
-var indicators = require('technicalindicators');
-var EMA = require('technicalindicators').EMA;
-const Binance = require('node-binance-api');
-const _ = require("lodash");
-const common = require("../common");
-const e = require('express');
-const envBinanceAPIKEY = process.env.envBinanceAPIKEY;
-const envBinanceAPISECRET = process.env.envBinanceAPISECRET;
+var indicators             = require('technicalindicators');
+var EMA                    = require('technicalindicators').EMA;
+const Binance              = require('node-binance-api');
+const _                    = require("lodash");
+const envBinanceAPIKEY     = process.env.envBinanceAPIKEY;
+const envBinanceAPISECRET  = process.env.envBinanceAPISECRET;
 const envBinanceEnviroment = process.env.envBinanceEnviroment.toUpperCase();
 
 var binance;

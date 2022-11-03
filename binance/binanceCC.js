@@ -144,8 +144,8 @@ async function Main() {
 
             if (common.GetMomentSecond() == "59") {
                 const markPrice = Number(Ps.markPrice).toFixed(2);
-                var DCALongStringPriceTmp = DCALong < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
-                var DCAShortStringPriceTmp = DCAShort < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;
+                var DCALongStringPriceTmp = DCALong.length < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
+                var DCAShortStringPriceTmp = DCAShort.length < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;
 
                 var oc = ["_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_binanceIsLock", "_binanceIsLockAlert", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
                 var nc = [

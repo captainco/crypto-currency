@@ -7,11 +7,11 @@ const common               = require('../common');
 var binanceChart           = '1m';
 var binanceSymbol          = 'BTCUSDT';
 var binanceLeverage        = 125;
-var binanceQuantity        = 0.005;
+var binanceQuantity        = 0.001;
 var binanceIsLock          = 0;
 var binanceIsLockAlert     = 0;
-var DCALongTotalPriceMin   = 20;
-var DCAShortTotalPriceMin  = -20;
+var DCALongTotalPriceMin   = 5;
+var DCAShortTotalPriceMin  = -5;
 						   
 var totalUSDTBefore        = 0;
 var totalUSDT              = 0;

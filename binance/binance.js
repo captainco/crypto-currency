@@ -57,6 +57,35 @@ async function FuturesMarketBuySellTPSL(symbol, quantity, takeProfit, stopLoss, 
     }
 }
 
+async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenceShort) {
+    priceDifferenceLong = Math.abs(priceDifferenceLong);
+    priceDifferenceShort = Math.abs(priceDifferenceShort);
+    var stringCheckPos = "";
+    const Ps = (await FuturesPositionRisk(symbol))[0];
+    var quantity = Math.abs(Number(Ps.entryPrice));
+    if (Ps.positionAmt != 0) {
+        const Od = await FuturesOpenOrders(symbol);
+        if (Od.length == 0) {
+            stringCheckPos = "❗Chưa đặt lệnh TP. ";
+
+            /*Long*/
+            if (Ps.positionAmt > 0) {
+                const takeProfit = Number(Ps.entryPrice) + priceDifferenceLong;
+                await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'SELL');
+            }
+            /*Short*/
+            else {
+                const takeProfit = Number(Ps.entryPrice) - priceDifferenceShort;
+                await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'BUY');
+            }
+        }
+
+        const OdAlert = await FuturesOpenOrders(symbol);
+        stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công." : "❌Khởi tạo TP không thành công.");
+    }
+    return stringCheckPos;
+}
+
 async function FuturesClearPositions(symbol) {
     const Ps = (await FuturesPositionRisk(symbol))[0];
     if (Ps.positionAmt == 0) {
@@ -322,6 +351,7 @@ module.exports = {
     FuturesMarketBuySellTakeProfit,
     FuturesMarketBuySellStopLoss,
     FuturesMarketBuySellTPSL,
+    FuturesCheckPositions,
     FuturesClearPositions,
     FuturesOpenPositions,
     FuturesOpenPositionsTP,

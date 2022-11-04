@@ -1,18 +1,21 @@
 🤖 Bot cho biết:
-Giá hiện tại: _markPrice USDT
 Số tiền trước trade: _totalUSDTBefore USDT
 Số tiền đang trade: _totalUSDTTrade USDT
-Lãi lỗ tổng: _totalUSDT USDT
 Lãi lỗ lệnh hiện tại: _tmpTotalUSDT USDT
+Lãi lỗ tổng: _totalUSDT USDT
+
+Giá vào lệnh: _entryPricePre
+Giá hiện tại: _markPrice USDT
+Giá chênh lệch vào lệnh: _price USDT
+Giá chênh lệch hiện tại: _priceNow USDT
+Giá trung bình cao nhất: _DCAPrice
+Giá cao nhất: _bestMarkPrice
 
 Lock: _binanceIsLock
 LockAlert: _binanceIsLockAlert
 checkTrend: _checkTrend
 isChangeDCA: _isChangeDCA
 isDCAPrice: _isDCAPrice
-DCAPrice: _DCAPrice
-entryPricePre: _entryPricePre
-bestMarkPrice: _bestMarkPrice
 
 DCALongLength: _DCALongLength
 DCALongStringPrice: _DCALongStringPrice

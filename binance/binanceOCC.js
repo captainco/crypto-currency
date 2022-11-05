@@ -4,17 +4,17 @@ const WebSocket            = require("ws");
 const binance              = require('./binance');
 const common               = require('../common');
 
-var binanceChart           = '4h';
-var binanceSymbol          = 'BTCUSDT';
-var binanceLeverage        = 125;
-var binanceQuantity        = 0.01;
+var binanceChart           = process.env.binanceChart;
+var binanceSymbol          = process.env.binanceSymbol;
+var binanceLeverage        = Number(process.env.binanceLeverage);
+var binanceQuantity        = Number(process.env.binanceQuantity);
+var DCALongTotalPriceMin   = Number(process.env.DCALongTotalPriceMin);
+var DCAShortTotalPriceMin  = Number(process.env.DCAShortTotalPriceMin);
+var DCALongTotalPriceMax   = Number(process.env.DCALongTotalPriceMax);
+var DCAShortTotalPriceMax  = Number(process.env.DCAShortTotalPriceMax);
+
 var binanceIsLock          = 0;
 var binanceIsLockAlert     = 0;
-var DCALongTotalPriceMin   = 100;
-var DCAShortTotalPriceMin  = -100;
-var DCALongTotalPriceMax   = 300;
-var DCAShortTotalPriceMax  = -300;
-						   
 var totalUSDTBefore        = 0;
 var totalUSDT              = 0;
 

@@ -58,8 +58,8 @@ async function FuturesMarketBuySellTPSL(symbol, quantity, takeProfit, stopLoss, 
 }
 
 async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenceShort) {
-    priceDifferenceLong = Math.abs(priceDifferenceLong);
-    priceDifferenceShort = Math.abs(priceDifferenceShort);
+    priceDifferenceLong = Math.abs(Number(priceDifferenceLong));
+    priceDifferenceShort = Math.abs(Number(priceDifferenceShort));
     var stringCheckPos = "";
     const Ps = (await FuturesPositionRisk(symbol))[0];
     var quantity = Math.abs(Number(Ps.entryPrice));
@@ -67,19 +67,23 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
         const Od = await FuturesOpenOrders(symbol);
         if (Od.length == 0) {
             stringCheckPos = "❗Chưa đặt lệnh TP. ";
+            var priceDifference = 0;
+            var takeProfit = 0;
             /*Long*/
             if (Ps.positionAmt > 0) {
-                const takeProfit = Number(Ps.entryPrice) + priceDifferenceLong;
-                await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'SELL');
+                takeProfit = Number(Ps.entryPrice) + Number(priceDifferenceLong);
+                priceDifference = Number(priceDifferenceLong);
+                await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'SELL');
             }
             /*Short*/
             else {
-                const takeProfit = Number(Ps.entryPrice) - priceDifferenceShort;
-                await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'BUY');
+                takeProfit = Number(Ps.entryPrice) - Number(priceDifferenceShort);
+                priceDifference = Number(priceDifferenceShort);
+                await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'BUY');
             }
-
             const OdAlert = await FuturesOpenOrders(symbol);
-            stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công." : "❌Khởi tạo TP không thành công.");
+            stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công." : "❌Khởi tạo TP không thành công. ");
+            stringCheckPos = stringCheckPos + `priceDifference: ${priceDifference}; TP: ${takeProfit} USDT`;
         }
     }
     return stringCheckPos;

@@ -46,7 +46,7 @@ async function Main() {
             binanceIsLockAlert = 1;
 
             await binance.FuturesClearPositions(binanceSymbol);
-            const checkPs = await binance.FuturesCheckPositions(binanceSymbol, DCALongTotalPrice, DCAShortTotalPrice);
+            const checkPs = await binance.FuturesCheckPositions(binanceSymbol, Number(DCALongTotalPrice), Number(DCAShortTotalPrice));
             if (checkPs != "") {
                 await telegram.log(checkPs);
             }

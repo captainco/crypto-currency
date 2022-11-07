@@ -67,7 +67,6 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
         const Od = await FuturesOpenOrders(symbol);
         if (Od.length == 0) {
             stringCheckPos = "❗Chưa đặt lệnh TP. ";
-
             /*Long*/
             if (Ps.positionAmt > 0) {
                 const takeProfit = Number(Ps.entryPrice) + priceDifferenceLong;
@@ -78,10 +77,10 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
                 const takeProfit = Number(Ps.entryPrice) - priceDifferenceShort;
                 await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'BUY');
             }
-        }
 
-        const OdAlert = await FuturesOpenOrders(symbol);
-        stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công." : "❌Khởi tạo TP không thành công.");
+            const OdAlert = await FuturesOpenOrders(symbol);
+            stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công." : "❌Khởi tạo TP không thành công.");
+        }
     }
     return stringCheckPos;
 }

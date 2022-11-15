@@ -71,13 +71,13 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
             var takeProfit = 0;
             /*Long*/
             if (Ps.positionAmt > 0) {
-                takeProfit = Number(Ps.entryPrice) + Number(priceDifferenceLong);
+                takeProfit = Number(Number(Ps.entryPrice) + Number(priceDifferenceLong)).toFixed(0);
                 priceDifference = Number(priceDifferenceLong);
                 await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'SELL');
             }
             /*Short*/
             else {
-                takeProfit = Number(Ps.entryPrice) - Number(priceDifferenceShort);
+                takeProfit = Number(Number(Ps.entryPrice) - Number(priceDifferenceShort)).toFixed(0);
                 priceDifference = Number(priceDifferenceShort);
                 await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'BUY');
             }

@@ -4,12 +4,12 @@ Số tiền đang trade: _totalUSDTTrade USDT
 Lãi lỗ lệnh hiện tại: _tmpTotalUSDT USDT
 Lãi lỗ tổng: _totalUSDT USDT
 
-Giá vào lệnh: _entryPricePre
+Giá vào lệnh: _entryPricePre USDT
 Giá hiện tại: _markPrice USDT
 Giá chênh lệch vào lệnh: _price USDT
 Giá chênh lệch hiện tại: _priceNow USDT
-Giá trung bình cao nhất: _DCAPrice
-Giá cao nhất: _bestMarkPrice
+Giá trung bình cao nhất: _DCAPrice USDT
+Giá cao nhất: _bestMarkPrice USDT
 
 Lock: _binanceIsLock
 LockAlert: _binanceIsLockAlert

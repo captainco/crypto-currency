@@ -156,7 +156,7 @@ async function Main() {
     Refresh.on('message', async (event) => {
         try {
             const priceTrade = await binance.FuturesBalance();
-            totalUSDT = Number(priceTrade) - Number(totalUSDTBefore);
+            totalUSDT = process.env.Webhook == "" ? 0 : Number(priceTrade) - Number(totalUSDTBefore);
             process.env.Webhookud = Number(totalUSDT).toFixed(2);
 
             const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];

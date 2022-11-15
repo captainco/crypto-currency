@@ -13,6 +13,7 @@ Giá cao nhất: _bestMarkPrice
 
 Lock: _binanceIsLock
 LockAlert: _binanceIsLockAlert
+LockCheckPos: _binanceIsLockCheckPos
 checkTrend: _checkTrend
 isChangeDCA: _isChangeDCA
 isDCAPrice: _isDCAPrice

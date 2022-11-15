@@ -83,7 +83,7 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
             }
             const OdAlert = await FuturesOpenOrders(symbol);
             stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công." : "❌Khởi tạo TP không thành công. ");
-            stringCheckPos = stringCheckPos + `priceDifference: ${priceDifference}; TP: ${takeProfit} USDT`;
+            stringCheckPos = stringCheckPos + `priceDifference: ${priceDifference}; TP: ${takeProfit} USDT; M: ${Ps.markPrice} USDT`;
         }
     }
     return stringCheckPos;

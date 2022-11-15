@@ -15,6 +15,7 @@ var DCAShortTotalPriceMax  = Number(process.env.DCAShortTotalPriceMax);
 
 var binanceIsLock          = 0;
 var binanceIsLockAlert     = 0;
+var binanceIsLockCheckPos  = 0;
 var totalUSDTBefore        = 0;
 var totalUSDT              = 0;
 
@@ -37,6 +38,26 @@ var DCAShortTotalPrice_    = DCAShortTotalPriceMin;
 var DCAShortTotalPrice     = DCAShortTotalPriceMin;
 
 async function Main() {
+    const clearAndCheckPositions = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
+    clearAndCheckPositions.on('message', async (event) => {
+        try {
+            if (binanceIsLockCheckPos != 0) {
+                return;
+            }
+            binanceIsLockCheckPos = 1;
+
+            await binance.FuturesClearPositions(binanceSymbol);
+            const checkPs = await binance.FuturesCheckPositions(binanceSymbol, Number(DCALongTotalPrice), Number(DCAShortTotalPrice));
+            if (checkPs != "") {
+                await telegram.log(checkPs);
+            }
+            binanceIsLockCheckPos = 0;
+        } catch (e) {
+            binanceIsLockCheckPos = 0;
+            console.log(e);
+        }
+    });
+
     const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     updateBestMarkPrice.on('message', async (event) => {
         try {
@@ -44,12 +65,6 @@ async function Main() {
                 return;
             }
             binanceIsLockAlert = 1;
-
-            await binance.FuturesClearPositions(binanceSymbol);
-            const checkPs = await binance.FuturesCheckPositions(binanceSymbol, Number(DCALongTotalPrice), Number(DCAShortTotalPrice));
-            if (checkPs != "") {
-                await telegram.log(checkPs);
-            }
 
             if (process.env.Webhook == "") {
                 binanceIsLockAlert = 0;
@@ -154,7 +169,7 @@ async function Main() {
                 var price = Number(Ps.positionAmt) == 0 ? 0 : Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
                 var priceNow = Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
 
-                var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_binanceIsLock", "_binanceIsLockAlert", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
+                var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_binanceIsLock", "_binanceIsLockAlert", "_binanceIsLockCheckPos", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     price,
                     priceNow,
@@ -165,6 +180,7 @@ async function Main() {
                     Ps.unRealizedProfit,
                     binanceIsLock,
                     binanceIsLockAlert,
+                    binanceIsLockCheckPos,
                     checkTrend,
                     isChangeDCA,
                     isDCAPrice,

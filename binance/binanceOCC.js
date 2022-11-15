@@ -161,8 +161,9 @@ async function Main() {
 
             const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
             process.env.Webhookud_ = Number(Ps.unRealizedProfit);
-
-            if (common.GetMomentSecond() == "59") {
+            
+            var timeSetup = [0, 10, 20, 30, 40, 50];
+            if (timeSetup.indexOf(common.GetMomentSecond()) >= 0) {
                 const markPrice = Number(Ps.markPrice).toFixed(2);
                 var DCALongStringPriceTmp = DCALong.length < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
                 var DCAShortStringPriceTmp = DCAShort.length < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;

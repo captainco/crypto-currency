@@ -2,13 +2,12 @@ const {Telegraf}            = require("telegraf");
 const fs                    = require('fs');
 const binance               = require('../binance/binance');
 const common                = require('../common');
-const moment                = require('moment-timezone');
 const _                     = require('lodash');
-
-moment.tz.setDefault("Asia/Ho_Chi_Minh");
 const bot                   = new Telegraf(process.env.envTelegramBotToken);
 const groupId               = process.env.envTelegramGroupId;
 const envTelegramMyTelegram = process.env.envTelegramMyTelegram;
+const moment                = require('moment-timezone');
+moment.tz.setDefault("Asia/Ho_Chi_Minh");
 
 function ReplaceTextByTemplate(oldChar, newChar, templatePath) {
     if (oldChar.length == 0) return "";
@@ -56,7 +55,7 @@ bot.command('d', async (ctx) => {
         var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/whd_template.txt");
         ctx.reply(temp);
     } catch (error) {
-        ctx.reply(error);
+        await log(`⚠ Sai cú pháp`);
     }
 });
 
@@ -64,23 +63,148 @@ bot.command('p', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'p');
     try {
-        if (content == "") {
-            var symbol = 'BTCUSDT';
-            var result = (await binance.FuturesPositionRisk(symbol))[0];
-            var iconLongShort = result.positionAmt == 0 ? "⚪" : (result.positionAmt > 0 ? "🟢" : "🔴");
-            var oc = ["symbol_in", "longshort_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "time_in"];
-            var nc = [symbol, iconLongShort, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/p_template.txt");
-        } else {
-            var symbol = `${content.toUpperCase()}USDT`;
-            var result = (await binance.FuturesPositionRisk(symbol))[0];
-            var oc = ["symbol_in", "positionAmt_in", "entryPrice_in", "markPrice_in", "unRealizedProfit_in", "liquidationPrice_in", "leverage_in", "maxNotionalValue_in", "marginType_in", "isolatedMargin_in", "isAutoAddMargin_in", "positionSide_in", "notional_in", "isolatedWallet_in", "time_in"];
-            var nc = [symbol, result.positionAmt, result.entryPrice, result.markPrice, result.unRealizedProfit, result.liquidationPrice, result.leverage, result.maxNotionalValue, result.marginType, result.isolatedMargin, result.isAutoAddMargin, result.positionSide, result.notional, result.isolatedWallet, GetMoment()];
-            var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/pc_template.txt");
+        var symbol = content == "" ? process.env.binanceSymbol : `${content.toUpperCase()}USDT`;
+
+        var result = (await binance.FuturesPositionRisk(symbol))[0];
+        var iconLongShort = result.positionAmt == 0 ? "⚪" : (result.positionAmt > 0 ? "🟢" : "🔴");
+
+        var tp_longshort_in = "⚪";
+        var tp_positionAmt_in = 0;
+        var tp_entryPrice_in = 0;
+        var tp_markPrice_in = 0;
+        var tp_priceDifference_in = 0;
+        const _Od = await binance.FuturesOpenOrders(symbol);
+        if (_Od.length > 0) {
+            const Od = _Od[0];
+            tp_longshort_in = Od.side == "BUY" ? "🟢" : "🔴";
+            tp_positionAmt_in = Math.abs(Number(Od.origQty));
+            tp_entryPrice_in = Number(result.entryPrice).toFixed(2);
+            tp_markPrice_in = Number(Od.stopPrice).toFixed(2);
+            tp_priceDifference_in = Math.abs(Number(tp_markPrice_in - tp_entryPrice_in).toFixed(2));
         }
+
+        var oc = [
+                "symbol_in",
+                "longshort_in",
+                "positionAmt_in",
+                "entryPrice_in",
+                "markPrice_in",
+                "unRealizedProfit_in",
+                "liquidationPrice_in",
+                "leverage_in",
+                "tp_longshort_in",
+                "tp_positionAmt_in",
+                "tp_entryPrice_in",
+                "tp_markPrice_in",
+                "tp_priceDifference_in",
+                "time_in"
+            ];
+        var nc = [
+                symbol,
+                iconLongShort,
+                Math.abs(Number(result.positionAmt)),
+                Number(result.entryPrice).toFixed(2),
+                Number(result.markPrice).toFixed(2),
+                result.unRealizedProfit,
+                Number(result.liquidationPrice).toFixed(2),
+                result.leverage,
+                tp_longshort_in,
+                tp_positionAmt_in,
+                tp_entryPrice_in,
+                tp_markPrice_in,
+                tp_priceDifference_in,
+                GetMoment()
+            ];
+        var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/p_template.txt");
         ctx.reply(temp);
     } catch (error) {
-        ctx.reply(error);
+        await log(`⚠ Sai cú pháp`);
+    }
+});
+
+bot.command('op', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    const content = GetTelegramMessage(ctx, 'op');
+    try {
+        const contents = content.split(' ');
+        const symbol = `${contents[0].toUpperCase().replace('USDT','')}USDT`;
+        const leverage = Number(contents[1]);
+        const quantity = Number(contents[2]);
+        const longshort = contents[3].toLowerCase();
+
+        var checkLongShort = ["buy", "sell"];
+        if (checkLongShort.indexOf(longshort) < 0) {
+            await log(`⚠ Sai cú pháp`);
+            return;
+        }
+
+        const Ps = (await binance.FuturesPositionRisk(symbol))[0];
+        if (Ps.positionAmt != 0) {
+            await log(`✨Vị thế ${symbol} đã được khởi tạo. Bạn không tạo thêm vị thế!`);
+            return;
+        }
+
+        await binance.FuturesLeverage(symbol, Number(leverage));
+        await log(`✅${symbol} đã điều chỉnh đòn bẩy ${leverage}x`);
+
+        if (longshort == "buy") {
+            const binanceOpen = await binance.FuturesMarketBuySell(symbol, Number(quantity), 'BUY');
+            await log(`🟢${symbol}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
+        }
+        else {
+            const binanceOpen = await binance.FuturesMarketBuySell(symbol, Number(quantity), 'SELL');
+            await log(`🔴${symbol}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
+        }
+    } catch (error) {
+        await log(`⚠ Sai cú pháp`);
+    }
+});
+
+bot.command('cp', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    const content = GetTelegramMessage(ctx, 'cp');
+    try {
+        const symbol = `${content.toUpperCase().replace('USDT','')}USDT`;
+        const binanceClose = await binance.FuturesClosePositions(symbol);
+        const icon = binanceClose.positionAmt == 0 ? "✅" : "❌";
+        const alert = binanceClose.positionAmt == 0 ? "thành công" : "không thành công";
+        await log(`${icon}Đóng vị thế ${symbol} ${alert}!`);
+    } catch (error) {
+        await log(`⚠ Sai cú pháp`);
+    }
+});
+
+bot.command('otp', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    const content = GetTelegramMessage(ctx, 'otp');
+    try {
+        const contents = content.split(' ');
+        const symbol = `${contents[0].toUpperCase().replace('USDT','')}USDT`;
+        const priceDifference = Number(contents[1]);
+        const binanceOpenTakeProfit = await binance.FuturesOpenTP(symbol, priceDifference);
+        if (binanceOpenTakeProfit == "") {
+            await log(`❌Khởi tạo Take Profit ${symbol} không thành công!`);
+        } else {
+            await log(`✅Khởi tạo Take Profit ${symbol} thành công! LogJSON: ${binanceOpenTakeProfit}`);
+        }
+    } catch (error) {
+        await log(`⚠ Sai cú pháp`);
+    }
+});
+
+bot.command('ctp', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    const content = GetTelegramMessage(ctx, 'ctp');
+    try {
+        const symbol = `${content.toUpperCase().replace('USDT','')}USDT`;
+        const binanceCancelTakeProfit = await binance.FuturesCancelTP(symbol);
+        if (binanceCancelTakeProfit == "") {
+            await log(`✨Không có Take Profit ${symbol} để hủy!`);
+        } else {
+            await log(`✅Hủy Take Profit ${symbol} thành công! LogJSON: ${binanceCancelTakeProfit}`);
+        }
+    } catch (error) {
+        await log(`⚠ Sai cú pháp`);
     }
 });
 

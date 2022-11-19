@@ -14,6 +14,7 @@ var DCALongTotalPriceMax   = Number(process.env.DCALongTotalPriceMax);
 var DCAShortTotalPriceMax  = Number(process.env.DCAShortTotalPriceMax);
 
 var binanceIsLock          = 0;
+var binanceIsLockSoon      = 0;
 var binanceIsLockAlert     = 0;
 var binanceIsLockCheckPos  = 0;
 var totalUSDTBefore        = 0;
@@ -162,15 +163,16 @@ async function Main() {
             const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
             process.env.Webhookud_ = Number(Ps.unRealizedProfit);
             
-            var timeSetup = [0, 10, 20, 30, 40, 50];
+            var timeSetup = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
             if (timeSetup.indexOf(common.GetMomentSecond()) >= 0) {
                 const markPrice = Number(Ps.markPrice).toFixed(2);
                 var DCALongStringPriceTmp = DCALong.length < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
                 var DCAShortStringPriceTmp = DCAShort.length < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;
                 var price = Number(Ps.positionAmt) == 0 ? 0 : Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
                 var priceNow = Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
+                var checkTrendIcon = checkTrend == "" ? '⚪' : checkTrend == "buy" ? '🟢' : '🔴';
 
-                var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_binanceIsLock", "_binanceIsLockAlert", "_binanceIsLockCheckPos", "_checkTrend", "_isChangeDCA", "_isDCAPrice", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
+                var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_checkTrendIcon", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
                 var nc = [
                     price,
                     priceNow,
@@ -179,12 +181,7 @@ async function Main() {
                     Number(priceTrade).toFixed(2),
                     Number(totalUSDT).toFixed(2),
                     Ps.unRealizedProfit,
-                    binanceIsLock,
-                    binanceIsLockAlert,
-                    binanceIsLockCheckPos,
-                    checkTrend,
-                    isChangeDCA,
-                    isDCAPrice,
+                    checkTrendIcon,
                     DCAPrice,
                     entryPricePre,
                     bestMarkPrice,
@@ -223,23 +220,63 @@ async function Main() {
                 return;
             }
             checkTrend = process.env.Webhook;
-
+            
             const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
 
             if (process.env.Webhook == 'buy') {
                 if (Ps.positionAmt <= 0) {
                     const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, binanceQuantity, DCALongTotalPrice, 'BUY');
-                    await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
+                    await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
                 }
             } else {
                 if (Ps.positionAmt >= 0) {
                     const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, binanceQuantity, DCAShortTotalPrice, 'SELL');
-                    await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)}`);
+                    await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
                 }
             }
             binanceIsLock = 0;
         } catch (e) {
             binanceIsLock = 0;
+            await telegram.log(`⚠ ${e}`);
+        }
+    });
+
+    const CloseTradingSoon = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
+    CloseTradingSoon.on('message', async (event) => {
+        try {
+            if (binanceIsLockSoon != 0) {
+                return;
+            }
+            binanceIsLockSoon = 1;
+
+            const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+
+            /*Take Profit Soon*/
+            if (Ps.positionAmt != 0) {
+                const CheckTP = await binance.FuturesCheckTP(binanceSymbol);
+                if (CheckTP == 0) {
+                    /*Long*/
+                    if (Ps.positionAmt > 0) {
+                        if (Number(Ps.entryPrice) + Number(DCALongTotalPrice) < Number(Ps.markPrice)) {
+                            await binance.FuturesMarketBuySell(binanceSymbol, Number(Ps.positionAmt), 'SELL');
+                            const binanceClose = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                            await telegram.log(`✨🟢Đóng vị thế ${binanceSymbol} ${binanceChart} sớm tại giá ${Number(binanceClose.markPrice).toFixed(2)} USDT`);
+                        }
+                    }
+                    /*Short*/
+                    else {
+                        if (Number(Ps.entryPrice) + Number(DCAShortTotalPrice) > Number(Ps.markPrice)) {
+                            await binance.FuturesMarketBuySell(binanceSymbol, Number(Ps.positionAmt), 'BUY');
+                            const binanceClose = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                            await telegram.log(`✨🔴Đóng vị thế ${binanceSymbol} ${binanceChart} sớm tại giá ${Number(binanceClose.markPrice).toFixed(2)} USDT`);
+                        }
+                    }
+                }
+            }
+
+            binanceIsLockSoon = 0;
+        } catch (e) {
+            binanceIsLockSoon = 0;
             await telegram.log(`⚠ ${e}`);
         }
     });

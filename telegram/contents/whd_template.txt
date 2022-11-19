@@ -3,4 +3,4 @@ Coin: BTCUSDT
 _icontmp lãi lỗ hiện tại: _usdttmp USDT
 _icon lãi lỗ tổng: _usdt USDT
 --------------------
-time: time_in
+⏰ Thời gian: time_in

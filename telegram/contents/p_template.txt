@@ -1,11 +1,19 @@
 🤖 Bot cho biết:
+VỊ THẾ:
 Hợp đồng: symbol_in
 Vị thế: longshort_in
 Số lượng: positionAmt_in
-Giá vào lệnh: entryPrice_in
-Giá hiện tại: markPrice_in
-USDT chưa ghi nhận: unRealizedProfit_in
-USDT thanh lý: liquidationPrice_in
+Giá vào lệnh: entryPrice_in USDT
+Giá hiện tại: markPrice_in USDT
+Giá chưa ghi nhận: unRealizedProfit_in USDT
+Giá thanh lý: liquidationPrice_in USDT
 Đòn bẩy: leverage_inx
+
+GIAO DỊCH CHỜ KHỚP LỆNH:
+Vị thế: tp_longshort_in
+Số lượng: tp_positionAmt_in
+Giá vào lệnh: tp_entryPrice_in USDT
+Giá đóng lệnh: tp_markPrice_in USDT
+Giá chênh lệch: tp_priceDifference_in USDT
 --------------------
-time: time_in
+⏰ Thời gian: time_in

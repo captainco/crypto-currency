@@ -69,21 +69,25 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
             stringCheckPos = "❗Chưa đặt lệnh TP. ";
             var priceDifference = 0;
             var takeProfit = 0;
+            var logJSON = "";
             /*Long*/
             if (Ps.positionAmt > 0) {
                 takeProfit = Number(Number(Ps.entryPrice) + Number(priceDifferenceLong)).toFixed(0);
                 priceDifference = Number(priceDifferenceLong);
-                await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'SELL');
+                const binanceCreateTP = await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'SELL');
+                logJSON = JSON.stringify(binanceCreateTP);
             }
             /*Short*/
             else {
                 takeProfit = Number(Number(Ps.entryPrice) - Number(priceDifferenceShort)).toFixed(0);
                 priceDifference = Number(priceDifferenceShort);
-                await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'BUY');
+                const binanceCreateTP = await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'BUY');
+                logJSON = JSON.stringify(binanceCreateTP);
             }
             const OdAlert = await FuturesOpenOrders(symbol);
             stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công." : "❌Khởi tạo TP không thành công. ");
-            stringCheckPos = stringCheckPos + `priceDifference: ${priceDifference}; TP: ${takeProfit} USDT; M: ${Ps.markPrice} USDT`;
+            stringCheckPos = stringCheckPos + `priceDifference: ${priceDifference}; TP: ${takeProfit} USDT; M: ${Ps.markPrice} USDT. `;
+            stringCheckPos = stringCheckPos + `LogJSON: ${logJSON}`;
         }
     }
     return stringCheckPos;
@@ -169,6 +173,48 @@ async function FuturesOpenPositionsTP(symbol, quantity, priceDifference, buySell
     return PsAlert;
 }
 
+async function FuturesCheckTP(symbol) {
+    const Od = await FuturesOpenOrders(symbol);
+    return Od.length;
+}
+
+async function FuturesOpenTP(symbol, priceDifference) {
+    priceDifference = Math.abs(priceDifference);
+    var logJSON = "";
+    const Ps = (await FuturesPositionRisk(symbol))[0];
+    if (Ps.positionAmt != 0) {
+
+        const Od = await FuturesOpenOrders(symbol);
+        if (Od.length == 0) {
+            
+            /*Mở TP Long*/
+            if (Ps.positionAmt > 0) {
+                const takeProfit = Number(Ps.entryPrice) + priceDifference;
+                const binanceCreateTP = await FuturesMarketBuySellTakeProfit(symbol, Number(Ps.positionAmt), takeProfit, 'SELL');
+                logJSON = JSON.stringify(binanceCreateTP);
+            }
+            /*Mở TP Short*/
+            else {
+                const takeProfit = Number(Ps.entryPrice) - priceDifference;
+                const binanceCreateTP = await FuturesMarketBuySellTakeProfit(symbol, Number(Ps.positionAmt), takeProfit, 'BUY');
+                logJSON = JSON.stringify(binanceCreateTP);
+            }
+        }
+    }
+
+    return logJSON;
+}
+
+async function FuturesCancelTP(symbol) {
+    var logJSON = "";
+    const Od = await FuturesOpenOrders(symbol);
+    if (Od.length > 0) {
+        const binanceCancelTP = await FuturesCancelAll(symbol);
+        logJSON = JSON.stringify(binanceCancelTP);
+    }
+    return logJSON;
+}
+
 async function FuturesOpenPositionsTPSL(symbol, quantity, priceDifference, numberOfTimesStopLossPrice, buySell) {
     quantity = Math.abs(quantity);
     priceDifference = Math.abs(priceDifference);
@@ -214,7 +260,7 @@ async function FuturesOpenPositionsTPSL(symbol, quantity, priceDifference, numbe
 
 async function FuturesClosePositions(symbol) {
 
-    /*Đóng vị thế trước*/
+    /*Đóng vị thế*/
     const Ps = (await FuturesPositionRisk(symbol))[0];
     if (Ps.positionAmt != 0) {
         /*Long*/
@@ -358,6 +404,9 @@ module.exports = {
     FuturesClearPositions,
     FuturesOpenPositions,
     FuturesOpenPositionsTP,
+    FuturesCheckTP,
+    FuturesOpenTP,
+    FuturesCancelTP,
     FuturesOpenPositionsTPSL,
     FuturesClosePositions,
     FuturesGetMinQuantity,

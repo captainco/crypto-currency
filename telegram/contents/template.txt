@@ -1,4 +1,4 @@
 🤖 Bot cho biết:
 content_in
 --------------------
-time: time_in
+⏰ Thời gian: time_in

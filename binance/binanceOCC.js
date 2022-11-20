@@ -165,49 +165,41 @@ async function Main() {
             const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
             process.env.Webhookud_ = Number(Ps.unRealizedProfit);
 
-            var isActiveAlert = 0;
+            const markPrice = Number(Ps.markPrice).toFixed(2);
+            var DCALongStringPriceTmp = DCALong.length < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
+            var DCAShortStringPriceTmp = DCAShort.length < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;
+            var price = Number(Ps.positionAmt) == 0 ? 0 : Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
+            var priceNow = Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
+            var checkTrendIcon = checkTrend == "" ? '⚪' : checkTrend == "buy" ? '🟢' : '🔴';
+
+            var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_checkTrendIcon", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
+            var nc = [
+                price,
+                priceNow,
+                markPrice,
+                Number(totalUSDTBefore).toFixed(2),
+                Number(priceTrade).toFixed(2),
+                Number(totalUSDT).toFixed(2),
+                Ps.unRealizedProfit,
+                checkTrendIcon,
+                DCAPrice,
+                entryPricePre,
+                bestMarkPrice,
+                DCALong.length,
+                DCALongStringPriceTmp,
+                Number(DCALongTotalPrice_),
+                Number(DCALongTotalPrice),
+                DCAShort.length,
+                DCAShortStringPriceTmp,
+                Number(DCAShortTotalPrice_),
+                Number(DCAShortTotalPrice),
+                common.GetMoment()
+            ];
+
+            process.env.binanceAlertDetail = common.ReplaceTextByTemplate(oc, nc, '../telegram/telegram/contents/alert_template.txt');
+            
             var timeSetup = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
-            
             if (timeSetup.indexOf(common.GetMomentSecond()) >= 0) {
-                isActiveAlert = 1;
-            }
-
-            if (Number(process.env.binanceAlertDetail) == 1) {
-                process.env.binanceAlertDetail = "0";
-                isActiveAlert = 1;
-            }
-            
-            if (isActiveAlert == 1) {
-                const markPrice = Number(Ps.markPrice).toFixed(2);
-                var DCALongStringPriceTmp = DCALong.length < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
-                var DCAShortStringPriceTmp = DCAShort.length < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;
-                var price = Number(Ps.positionAmt) == 0 ? 0 : Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
-                var priceNow = Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
-                var checkTrendIcon = checkTrend == "" ? '⚪' : checkTrend == "buy" ? '🟢' : '🔴';
-
-                var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_checkTrendIcon", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
-                var nc = [
-                    price,
-                    priceNow,
-                    markPrice,
-                    Number(totalUSDTBefore).toFixed(2),
-                    Number(priceTrade).toFixed(2),
-                    Number(totalUSDT).toFixed(2),
-                    Ps.unRealizedProfit,
-                    checkTrendIcon,
-                    DCAPrice,
-                    entryPricePre,
-                    bestMarkPrice,
-                    DCALong.length,
-                    DCALongStringPriceTmp,
-                    Number(DCALongTotalPrice_),
-                    Number(DCALongTotalPrice),
-                    DCAShort.length,
-                    DCAShortStringPriceTmp,
-                    Number(DCAShortTotalPrice_),
-                    Number(DCAShortTotalPrice),
-                    common.GetMoment()
-                ];
                 await telegram.logAlert(oc, nc);
             }
         } catch (e) {

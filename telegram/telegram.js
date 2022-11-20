@@ -48,7 +48,7 @@ bot.command('h', async (ctx) => {
 
 bot.command('a', async (ctx) => {
     try {
-        process.env.binanceAlertDetail = "1";
+        ctx.reply(process.env.binanceAlertDetail);
     } catch (error) {
         await log(`⚠ Sai cú pháp`);
     }

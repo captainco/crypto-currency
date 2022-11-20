@@ -169,7 +169,7 @@ async function Main() {
             var DCALongStringPriceTmp = DCALong.length < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
             var DCAShortStringPriceTmp = DCAShort.length < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;
             var price = Number(Ps.positionAmt) == 0 ? 0 : Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
-            var priceNow = Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
+            var priceNow = checkTrend == "" ? 0 : Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
             var checkTrendIcon = checkTrend == "" ? '⚪' : checkTrend == "buy" ? '🟢' : '🔴';
 
             var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_checkTrendIcon", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];

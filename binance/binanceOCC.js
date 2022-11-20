@@ -39,8 +39,8 @@ var DCAShortTotalPrice_    = DCAShortTotalPriceMin;
 var DCAShortTotalPrice     = DCAShortTotalPriceMin;
 
 async function Main() {
-    const clearAndCheckPositions = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
-    clearAndCheckPositions.on('message', async (event) => {
+    const ClearAndCheckPositions = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
+    ClearAndCheckPositions.on('message', async (event) => {
         try {
             if (binanceIsLockCheckPos != 0) {
                 return;
@@ -59,8 +59,8 @@ async function Main() {
         }
     });
 
-    const updateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
-    updateBestMarkPrice.on('message', async (event) => {
+    const UpdateBestMarkPrice = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
+    UpdateBestMarkPrice.on('message', async (event) => {
         try {
             if (binanceIsLockAlert != 0) {
                 return;

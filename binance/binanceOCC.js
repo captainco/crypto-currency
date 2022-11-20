@@ -196,7 +196,7 @@ async function Main() {
                 common.GetMoment()
             ];
 
-            process.env.binanceAlertDetail = common.ReplaceTextByTemplate(oc, nc, './telegram/telegram/contents/alert_template.txt');
+            process.env.binanceAlertDetail = common.ReplaceTextByTemplate(oc, nc, './telegram/contents/alert_template.txt');
 
             var timeSetup = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
             if (timeSetup.indexOf(common.GetMomentSecond()) >= 0) {

@@ -1,25 +1,26 @@
 🤖 Bot cho biết:
 Số tiền trước trade: _totalUSDTBefore USDT
-Số tiền đang trade: _totalUSDTTrade USDT
-Lãi lỗ lệnh hiện tại: _tmpTotalUSDT USDT
+Số tiền hiện tại: _totalUSDTTrade USDT
+Lãi lỗ đang trade: _tmpTotalUSDT USDT
 Lãi lỗ tổng: _totalUSDT USDT
-
+___________________________________
 Xu hướng hiện tại: _checkTrendIcon
-Giá vào lệnh: _entryPricePre USDT
 Giá hiện tại: _markPrice USDT
+Giá vào lệnh: _entryPricePre USDT
+Giá cao nhất: _bestMarkPrice USDT
+___________________________________
 Giá chênh lệch vào lệnh: _price USDT
 Giá chênh lệch hiện tại: _priceNow USDT
-Giá trung bình cao nhất: _DCAPrice USDT
-Giá cao nhất: _bestMarkPrice USDT
-
-Số lượng trade long: _DCALongLength
-DS giá chênh lệch long: _DCALongStringPrice
-Bot tính giá chênh lệch long: _DCALongTotalPrice_ USDT
+Giá chênh lệch cao nhất: _DCAPrice USDT
+___________________________________
+Số lượt long: _DCALongLength
+DS chênh lệch long: _DCALongStringPrice
+Bot tính chênh lệch long: _DCALongTotalPrice_ USDT
 Giá chênh lệch long: _DCALongTotalPrice USDT
-
-Số lượng trade short: _DCAShortLength
-DS giá chênh lệch short: _DCAShortStringPrice
-Bot tính giá chênh lệch short: _DCAShortTotalPrice_ USDT
+___________________________________
+Số lượt short: _DCAShortLength
+DS chênh lệch short: _DCAShortStringPrice
+Bot tính chênh lệch short: _DCAShortTotalPrice_ USDT
 Giá chênh lệch short: _DCAShortTotalPrice USDT
---------------------
+___________________________________
 ⏰ Thời gian: time_in

@@ -69,6 +69,8 @@ async function Main() {
 
             if (process.env.Webhook == "") {
                 binanceIsLockAlert = 0;
+                const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                bestMarkPrice = Number(Ps.markPrice).toFixed(2);
                 return;
             }
 
@@ -164,7 +166,8 @@ async function Main() {
             process.env.Webhookud_ = Number(Ps.unRealizedProfit);
             
             var timeSetup = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
-            if (timeSetup.indexOf(common.GetMomentSecond()) >= 0) {
+            if (timeSetup.indexOf(common.GetMomentSecond()) >= 0 || Number(process.env.binanceAlertDetail) == 1) {
+                process.env.binanceAlertDetail = "0";
                 const markPrice = Number(Ps.markPrice).toFixed(2);
                 var DCALongStringPriceTmp = DCALong.length < 5 ? DCALong.toString().replace(',', ';') : DCALongStringPrice;
                 var DCAShortStringPriceTmp = DCAShort.length < 5 ? DCAShort.toString().replace(',', ';') : DCAShortStringPrice;

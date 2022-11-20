@@ -46,6 +46,14 @@ bot.command('h', async (ctx) => {
     ctx.reply(logTelegram);
 });
 
+bot.command('a', async (ctx) => {
+    try {
+        process.env.binanceAlertDetail = "1";
+    } catch (error) {
+        await log(`⚠ Sai cú pháp`);
+    }
+});
+
 bot.command('d', async (ctx) => {
     try {
         var oc = ["_icontmp", "_usdttmp", "_icon", "_usdt", "time_in"];

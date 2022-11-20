@@ -1,7 +1,8 @@
 🤖 Bot cho biết:
 
 SELECT:
-/d: Kiểm tra webhook
+/a: Chi tiết lệnh
+/d: Kiểm tra lãi lỗ
 /p {O|coin}: Xem vị thế coin của bạn
 
 TRADE:

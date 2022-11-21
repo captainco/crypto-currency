@@ -94,7 +94,7 @@ async function Main() {
                 }
 
                 if ((Number(bestMarkPrice) < Number(Ps.markPrice) && process.env.Webhook == 'buy') || (Number(bestMarkPrice) > Number(Ps.markPrice) && process.env.Webhook == 'sell')) {
-                    bestMarkPrice = Number(Ps.markPrice);
+                    bestMarkPrice = Number(Ps.markPrice).toFixed(2);
                     DCAPrice = Number(Number(bestMarkPrice) - Number(entryPricePre)).toFixed(2);
                     const iconLongShortAlert = process.env.Webhook == 'buy' ? '🟢' : '🔴';
                     await telegram.log(`${iconLongShortAlert} => DCAPrice new: ${DCAPrice}`);

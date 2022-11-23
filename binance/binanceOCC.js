@@ -116,8 +116,6 @@ async function Main() {
                                 tttmp = Number(tttmp) + Number(DCALong[index]);
                             }
                             DCALongTotalPrice_ = Number(Number(tttmp) / Number(DCALong.length)).toFixed(2);
-                            DCALongTotalPrice = Number(DCALongTotalPrice_) < DCALongTotalPriceMin ? DCALongTotalPriceMin : Number(DCALongTotalPrice_);
-                            DCALongTotalPrice = Number(DCALongTotalPrice) > DCALongTotalPriceMax ? DCALongTotalPriceMax : Number(DCALongTotalPrice);
                         } else {
                             DCALongStringPrice = `${Number(DCALong[DCALong.length - 1])};${Number(DCALong[DCALong.length - 2])};${Number(DCALong[DCALong.length - 3])};${Number(DCALong[DCALong.length - 4])};${Number(DCALong[DCALong.length - 5])}`;
                             DCALongTotalPrice = Number((Number(DCALong[DCALong.length - 1]) + Number(DCALong[DCALong.length - 2]) + Number(DCALong[DCALong.length - 3]) + Number(DCALong[DCALong.length - 4]) + Number(DCALong[DCALong.length - 5])) / 5).toFixed(2);
@@ -136,8 +134,6 @@ async function Main() {
                                 tttmp = Number(tttmp) + Number(DCAShort[index]);
                             }
                             DCAShortTotalPrice_ = Number(Number(tttmp) / Number(DCAShort.length)).toFixed(2);
-                            DCAShortTotalPrice = Number(DCAShortTotalPrice_) > DCAShortTotalPriceMin ? DCAShortTotalPriceMin : Number(DCAShortTotalPrice_);
-                            DCAShortTotalPrice = Number(DCAShortTotalPrice) < DCAShortTotalPriceMax ? DCAShortTotalPriceMax : Number(DCAShortTotalPrice);
                         } else {
                             DCAShortStringPrice = `${Number(DCAShort[DCAShort.length - 1])};${Number(DCAShort[DCAShort.length - 2])};${Number(DCAShort[DCAShort.length - 3])};${Number(DCAShort[DCAShort.length - 4])};${Number(DCAShort[DCAShort.length - 5])}`;
                             DCAShortTotalPrice = Number((Number(DCAShort[DCAShort.length - 1]) + Number(DCAShort[DCAShort.length - 2]) + Number(DCAShort[DCAShort.length - 3]) + Number(DCAShort[DCAShort.length - 4]) + Number(DCAShort[DCAShort.length - 5])) / 5).toFixed(2);

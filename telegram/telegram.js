@@ -130,6 +130,27 @@ bot.command('p', async (ctx) => {
     }
 });
 
+bot.command('q', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    try {
+        ctx.reply(`🤖 Quantity hiện tại: ${process.env.binanceQuantity}`);
+    } catch (error) {
+        await log(`⚠ Sai cú pháp`);
+    }
+});
+
+bot.command('qu', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    const content = GetTelegramMessage(ctx, 'qu');
+    try {
+        process.env.binanceQuantity = content;
+        ctx.reply(`✅ Quantity mới: ${process.env.binanceQuantity}`);
+    } catch (error) {
+        await log(`⚠ Sai cú pháp`);
+    }
+});
+
+
 bot.command('op', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
     const content = GetTelegramMessage(ctx, 'op');

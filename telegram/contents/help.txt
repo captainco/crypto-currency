@@ -4,6 +4,8 @@ SELECT:
 /a: Chi tiết lệnh
 /d: Kiểm tra lãi lỗ
 /p {O|coin}: Xem vị thế coin của bạn
+/q: Xem quantity
+/qu {quantity}: Update quantity mới
 
 TRADE:
 /op {coin} {leverage} {quantity} {buy|sell}: Vào vị thế

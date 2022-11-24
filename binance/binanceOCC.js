@@ -7,7 +7,6 @@ const common               = require('../common');
 var binanceChart           = process.env.binanceChart;
 var binanceSymbol          = process.env.binanceSymbol;
 var binanceLeverage        = Number(process.env.binanceLeverage);
-var binanceQuantity        = Number(process.env.binanceQuantity);
 var DCALongTotalPriceMin   = Number(process.env.DCALongTotalPriceMin);
 var DCAShortTotalPriceMin  = Number(process.env.DCAShortTotalPriceMin);
 var DCALongTotalPriceMax   = Number(process.env.DCALongTotalPriceMax);
@@ -226,12 +225,12 @@ async function Main() {
 
             if (process.env.Webhook == 'buy') {
                 if (Ps.positionAmt <= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, binanceQuantity, DCALongTotalPrice, 'BUY');
+                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), DCALongTotalPrice, 'BUY');
                     await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
                 }
             } else {
                 if (Ps.positionAmt >= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, binanceQuantity, DCAShortTotalPrice, 'SELL');
+                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), DCAShortTotalPrice, 'SELL');
                     await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
                 }
             }

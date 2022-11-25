@@ -72,14 +72,14 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
             var logJSON = "";
             /*Long*/
             if (Ps.positionAmt > 0) {
-                takeProfit = Number(Number(Ps.entryPrice) + Number(priceDifferenceLong)).toFixed(0);
+                takeProfit = Number(Number(Ps.entryPrice) + Number(priceDifferenceLong)).toFixed(2);
                 priceDifference = Number(priceDifferenceLong);
                 const binanceCreateTP = await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'SELL');
                 logJSON = JSON.stringify(binanceCreateTP);
             }
             /*Short*/
             else {
-                takeProfit = Number(Number(Ps.entryPrice) - Number(priceDifferenceShort)).toFixed(0);
+                takeProfit = Number(Number(Ps.entryPrice) - Number(priceDifferenceShort)).toFixed(2);
                 priceDifference = Number(priceDifferenceShort);
                 const binanceCreateTP = await FuturesMarketBuySellTakeProfit(symbol, Number(quantity), Number(takeProfit), 'BUY');
                 logJSON = JSON.stringify(binanceCreateTP);

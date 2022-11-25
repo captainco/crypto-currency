@@ -85,8 +85,8 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
                 logJSON = JSON.stringify(binanceCreateTP);
             }
             const OdAlert = await FuturesOpenOrders(symbol);
-            stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công." : "❌Khởi tạo TP không thành công. ");
-            stringCheckPos = stringCheckPos + `priceDifference: ${priceDifference}; TP: ${takeProfit} USDT; M: ${Ps.markPrice} USDT. `;
+            stringCheckPos = stringCheckPos + (OdAlert.length > 0 ? "✅Khởi tạo TP thành công. " : "❌Khởi tạo TP không thành công. ");
+            stringCheckPos = stringCheckPos + `priceDifference: ${priceDifference}; TP: ${takeProfit} USDT; M: ${Number(Ps.markPrice).toFixed(2)} USDT. `;
             stringCheckPos = stringCheckPos + `LogJSON: ${logJSON}`;
         }
     }

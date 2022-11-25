@@ -34,17 +34,17 @@ async function FuturesMarketBuySell(symbol, quantity, buySell) {
 async function FuturesMarketBuySellTakeProfit(symbol, quantity, stopPrice, buySell) {
     quantity = Math.abs(quantity);
     if (buySell.toUpperCase() == "BUY") {
-        return await binance.futuresMarketBuy(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTC', workingType: 'MARK_PRICE' });
+        return await binance.futuresMarketBuy(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
     }
-    return await binance.futuresMarketSell(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTC', workingType: 'MARK_PRICE' });
+    return await binance.futuresMarketSell(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
 }
 
 async function FuturesMarketBuySellStopLoss(symbol, quantity, stopPrice, buySell) {
     quantity = Math.abs(quantity);
     if (buySell.toUpperCase() == "BUY") {
-        return await binance.futuresMarketBuy(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTC', workingType: 'MARK_PRICE' });
+        return await binance.futuresMarketBuy(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
     }
-    return await binance.futuresMarketSell(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTC', workingType: 'MARK_PRICE' });
+    return await binance.futuresMarketSell(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
 }
 
 async function FuturesMarketBuySellTPSL(symbol, quantity, takeProfit, stopLoss, buySell) {

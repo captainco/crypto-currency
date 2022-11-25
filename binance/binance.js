@@ -189,13 +189,13 @@ async function FuturesOpenTP(symbol, priceDifference) {
             
             /*Mở TP Long*/
             if (Ps.positionAmt > 0) {
-                const takeProfit = Number(Ps.entryPrice) + priceDifference;
+                const takeProfit = Number(Number(Ps.entryPrice) + Number(priceDifference)).toFixed(2);
                 const binanceCreateTP = await FuturesMarketBuySellTakeProfit(symbol, Number(Ps.positionAmt), takeProfit, 'SELL');
                 logJSON = JSON.stringify(binanceCreateTP);
             }
             /*Mở TP Short*/
             else {
-                const takeProfit = Number(Ps.entryPrice) - priceDifference;
+                const takeProfit = Number(Number(Ps.entryPrice) - Number(priceDifference)).toFixed(2);
                 const binanceCreateTP = await FuturesMarketBuySellTakeProfit(symbol, Number(Ps.positionAmt), takeProfit, 'BUY');
                 logJSON = JSON.stringify(binanceCreateTP);
             }

@@ -62,7 +62,7 @@ async function FuturesCheckPositions(symbol, priceDifferenceLong, priceDifferenc
     priceDifferenceShort = Math.abs(Number(priceDifferenceShort));
     var stringCheckPos = "";
     const Ps = (await FuturesPositionRisk(symbol))[0];
-    var quantity = Math.abs(Number(Ps.entryPrice));
+    var quantity = Math.abs(Number(Ps.positionAmt));
     if (Ps.positionAmt != 0) {
         const Od = await FuturesOpenOrders(symbol);
         if (Od.length == 0) {

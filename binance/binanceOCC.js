@@ -25,6 +25,7 @@ var isChangeEntry          = '';
 var isDCAPrice             = 0;
 var entryPricePre          = 0;
 var DCAPrice               = 0;
+var minMarkPrice           = 1;
 var bestMarkPrice          = 1;
 						   
 var DCALong                = [];
@@ -47,10 +48,7 @@ async function Main() {
             binanceIsLockCheckPos = 1;
 
             await binance.FuturesClearPositions(binanceSymbol);
-            const checkPs = await binance.FuturesCheckPositions(binanceSymbol, Number(DCALongTotalPrice), Number(DCAShortTotalPrice));
-            if (checkPs != "") {
-                await telegram.log(checkPs);
-            }
+            
             binanceIsLockCheckPos = 0;
         } catch (e) {
             binanceIsLockCheckPos = 0;
@@ -69,6 +67,7 @@ async function Main() {
             if (process.env.Webhook == "") {
                 binanceIsLockAlert = 0;
                 const Ps = (await binance.FuturesPositionRisk(binanceSymbol))[0];
+                minMarkPrice = Number(Ps.markPrice).toFixed(2);
                 bestMarkPrice = Number(Ps.markPrice).toFixed(2);
                 return;
             }
@@ -91,12 +90,20 @@ async function Main() {
                     isChangeEntry = process.env.Webhook;
                     entryPricePre = Number(Ps.positionAmt) == 0 ? Number(Ps.markPrice) : Number(Ps.entryPrice);
                 }
-
+                
+                /*Get Max Price*/
                 if ((Number(bestMarkPrice) < Number(Ps.markPrice) && process.env.Webhook == 'buy') || (Number(bestMarkPrice) > Number(Ps.markPrice) && process.env.Webhook == 'sell')) {
                     bestMarkPrice = Number(Ps.markPrice).toFixed(2);
                     DCAPrice = Number(Number(bestMarkPrice) - Number(entryPricePre)).toFixed(2);
                     const iconLongShortAlert = process.env.Webhook == 'buy' ? '🟢' : '🔴';
-                    await telegram.log(`${iconLongShortAlert} => DCAPrice new: ${DCAPrice}`);
+                    await telegram.log(`${iconLongShortAlert} => Max new: ${DCAPrice}`);
+                }
+
+                /*Get Min Price*/
+                if ((Number(minMarkPrice) > Number(Ps.markPrice) && process.env.Webhook == 'buy') || (Number(minMarkPrice) < Number(Ps.markPrice) && process.env.Webhook == 'sell')) {
+                    minMarkPrice = Number(Ps.markPrice).toFixed(2);
+                    const iconLongShortAlert = process.env.Webhook == 'buy' ? '🟢' : '🔴';
+                    await telegram.log(`${iconLongShortAlert} => Min new: ${Number(minMarkPrice)} USDT`);
                 }
             } else {
                 isChangeDCA = process.env.Webhook;
@@ -167,7 +174,7 @@ async function Main() {
             var priceNow = checkTrend == "" ? 0 : Number(Number(markPrice) - Number(entryPricePre)).toFixed(2);
             var checkTrendIcon = checkTrend == "" ? '⚪' : checkTrend == "buy" ? '🟢' : '🔴';
 
-            var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_checkTrendIcon", "_DCAPrice", "_entryPricePre", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
+            var oc = ["_price", "_priceNow", "_markPrice", "_totalUSDTBefore", "_totalUSDTTrade", "_totalUSDT", "_tmpTotalUSDT", "_checkTrendIcon", "_DCAPrice", "_entryPricePre", "_minMarkPrice", "_bestMarkPrice", "_DCALongLength", "_DCALongStringPrice", "_DCALongTotalPrice_", "_DCALongTotalPrice", "_DCAShortLength", "_DCAShortStringPrice", "_DCAShortTotalPrice_", "_DCAShortTotalPrice", "time_in"];
             var nc = [
                 price,
                 priceNow,
@@ -179,6 +186,7 @@ async function Main() {
                 checkTrendIcon,
                 DCAPrice,
                 entryPricePre,
+                minMarkPrice,
                 bestMarkPrice,
                 DCALong.length,
                 DCALongStringPriceTmp,
@@ -225,15 +233,21 @@ async function Main() {
 
             if (process.env.Webhook == 'buy') {
                 if (Ps.positionAmt <= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), DCALongTotalPrice, 'BUY');
+                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), 'BUY');
                     await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
                 }
             } else {
                 if (Ps.positionAmt >= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), DCAShortTotalPrice, 'SELL');
+                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), 'SELL');
                     await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
                 }
             }
+
+            const checkPs = await binance.FuturesCheckPositions(binanceSymbol, Number(DCALongTotalPrice), Number(DCAShortTotalPrice));
+            if (checkPs != "") {
+                await telegram.log(checkPs);
+            }
+
             binanceIsLock = 0;
         } catch (e) {
             binanceIsLock = 0;

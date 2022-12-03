@@ -5,8 +5,9 @@ Lãi lỗ đang trade: _tmpTotalUSDT USDT
 Lãi lỗ tổng: _totalUSDT USDT
 ___________________________________
 Xu hướng hiện tại: _checkTrendIcon
-Giá hiện tại: _markPrice USDT
 Giá vào lệnh: _entryPricePre USDT
+Giá thấp nhất: _minMarkPrice USDT
+Giá hiện tại: _markPrice USDT
 Giá cao nhất: _bestMarkPrice USDT
 ___________________________________
 Giá chênh lệch vào lệnh: _price USDT

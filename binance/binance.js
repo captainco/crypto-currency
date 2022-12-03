@@ -134,9 +134,8 @@ async function FuturesOpenPositions(symbol, quantity, buySell) {
     return PsAlert;
 }
 
-async function FuturesOpenPositionsTP(symbol, quantity, priceDifference, buySell) {
+async function FuturesOpenPositionsTP(symbol, quantity, buySell) {
     quantity = Math.abs(quantity);
-    priceDifference = Math.abs(priceDifference);
 
     /*Đóng vị thế trước*/
     const Ps = (await FuturesPositionRisk(symbol))[0];
@@ -156,17 +155,11 @@ async function FuturesOpenPositionsTP(symbol, quantity, priceDifference, buySell
         await FuturesCancelAll(symbol);
     }
 
-    /*Tạo vị thế mới và take profit*/
+    /*Tạo vị thế mới*/
     if (buySell.toUpperCase() == "BUY") {
         await FuturesMarketBuySell(symbol, quantity, 'BUY');
-        const PsCheck = (await FuturesPositionRisk(symbol))[0];
-        const takeProfit = Number(PsCheck.entryPrice) + priceDifference;
-        await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'SELL');
     } else {
         await FuturesMarketBuySell(symbol, quantity, 'SELL');
-        const PsCheck = (await FuturesPositionRisk(symbol))[0];
-        const takeProfit = Number(PsCheck.entryPrice) - priceDifference;
-        await FuturesMarketBuySellTakeProfit(symbol, quantity, takeProfit, 'BUY');
     }
 
     const PsAlert = (await FuturesPositionRisk(symbol))[0];

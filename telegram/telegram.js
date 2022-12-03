@@ -50,7 +50,7 @@ bot.command('a', async (ctx) => {
     try {
         ctx.reply(process.env.binanceAlertDetail);
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 
@@ -63,7 +63,7 @@ bot.command('d', async (ctx) => {
         var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/whd_template.txt");
         ctx.reply(temp);
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 
@@ -126,7 +126,7 @@ bot.command('p', async (ctx) => {
         var temp = ReplaceTextByTemplate(oc, nc, "./telegram/contents/p_template.txt");
         ctx.reply(temp);
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 
@@ -135,7 +135,7 @@ bot.command('q', async (ctx) => {
     try {
         ctx.reply(`🤖 Quantity hiện tại: ${process.env.binanceQuantity}`);
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 
@@ -146,7 +146,7 @@ bot.command('qu', async (ctx) => {
         process.env.binanceQuantity = content;
         ctx.reply(`✅ Quantity mới: ${process.env.binanceQuantity}`);
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 
@@ -163,29 +163,29 @@ bot.command('op', async (ctx) => {
 
         var checkLongShort = ["buy", "sell"];
         if (checkLongShort.indexOf(longshort) < 0) {
-            await log(`⚠ Sai cú pháp`);
+            ctx.reply(`⚠ Sai cú pháp`);
             return;
         }
 
         const Ps = (await binance.FuturesPositionRisk(symbol))[0];
         if (Ps.positionAmt != 0) {
-            await log(`✨Vị thế ${symbol} đã được khởi tạo. Bạn không tạo thêm vị thế!`);
+            ctx.reply(`✨Vị thế ${symbol} đã được khởi tạo. Bạn không tạo thêm vị thế!`);
             return;
         }
 
         await binance.FuturesLeverage(symbol, Number(leverage));
-        await log(`✅${symbol} đã điều chỉnh đòn bẩy ${leverage}x`);
+        ctx.reply(`✅${symbol} đã điều chỉnh đòn bẩy ${leverage}x`);
 
         if (longshort == "buy") {
             const binanceOpen = await binance.FuturesMarketBuySell(symbol, Number(quantity), 'BUY');
-            await log(`🟢${symbol}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
+            ctx.reply(`🟢${symbol}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
         }
         else {
             const binanceOpen = await binance.FuturesMarketBuySell(symbol, Number(quantity), 'SELL');
-            await log(`🔴${symbol}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
+            ctx.reply(`🔴${symbol}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
         }
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 
@@ -197,9 +197,9 @@ bot.command('cp', async (ctx) => {
         const binanceClose = await binance.FuturesClosePositions(symbol);
         const icon = binanceClose.positionAmt == 0 ? "✅" : "❌";
         const alert = binanceClose.positionAmt == 0 ? "thành công" : "không thành công";
-        await log(`${icon}Đóng vị thế ${symbol} ${alert}!`);
+        ctx.reply(`${icon}Đóng vị thế ${symbol} ${alert}!`);
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 
@@ -212,12 +212,12 @@ bot.command('otp', async (ctx) => {
         const priceDifference = Number(contents[1]);
         const binanceOpenTakeProfit = await binance.FuturesOpenTP(symbol, priceDifference);
         if (binanceOpenTakeProfit == "") {
-            await log(`❌Khởi tạo Take Profit ${symbol} không thành công!`);
+            ctx.reply(`❌Khởi tạo Take Profit ${symbol} không thành công!`);
         } else {
-            await log(`✅Khởi tạo Take Profit ${symbol} thành công! LogJSON: ${binanceOpenTakeProfit}`);
+            ctx.reply(`✅Khởi tạo Take Profit ${symbol} thành công! LogJSON: ${binanceOpenTakeProfit}`);
         }
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 
@@ -228,12 +228,12 @@ bot.command('ctp', async (ctx) => {
         const symbol = `${content.toUpperCase().replace('USDT','')}USDT`;
         const binanceCancelTakeProfit = await binance.FuturesCancelTP(symbol);
         if (binanceCancelTakeProfit == "") {
-            await log(`✨Không có Take Profit ${symbol} để hủy!`);
+            ctx.reply(`✨Không có Take Profit ${symbol} để hủy!`);
         } else {
-            await log(`✅Hủy Take Profit ${symbol} thành công! LogJSON: ${binanceCancelTakeProfit}`);
+            ctx.reply(`✅Hủy Take Profit ${symbol} thành công! LogJSON: ${binanceCancelTakeProfit}`);
         }
     } catch (error) {
-        await log(`⚠ Sai cú pháp`);
+        ctx.reply(`⚠ Sai cú pháp`);
     }
 });
 

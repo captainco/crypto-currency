@@ -38,6 +38,8 @@ var DCAShortStringPrice    = '';
 var DCAShortTotalPrice_    = DCAShortTotalPriceMin;
 var DCAShortTotalPrice     = DCAShortTotalPriceMin;
 
+var DayNoTradeSetup        = [0, 1, 6];
+
 async function Main() {
     const ClearAndCheckPositions = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     ClearAndCheckPositions.on('message', async (event) => {
@@ -233,13 +235,23 @@ async function Main() {
 
             if (process.env.Webhook == 'buy') {
                 if (Ps.positionAmt <= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), 'BUY');
-                    await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
+                    if (DayNoTradeSetup.indexOf(common.GetDay()) >= 0) {
+                        await binance.FuturesClosePositions(binanceSymbol);
+                        await telegram.log(`⚪${binanceSymbol} ${binanceChart} đóng vị thế tạm ngừng trade!`);
+                    } else {
+                        const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), 'BUY');
+                        await telegram.log(`🟢${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
+                    }
                 }
             } else {
                 if (Ps.positionAmt >= 0) {
-                    const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), 'SELL');
-                    await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
+                    if (DayNoTradeSetup.indexOf(common.GetDay()) >= 0) {
+                        await binance.FuturesClosePositions(binanceSymbol);
+                        await telegram.log(`⚪${binanceSymbol} ${binanceChart} đóng vị thế tạm ngừng trade!`);
+                    } else {
+                        const binanceOpen = await binance.FuturesOpenPositionsTP(binanceSymbol, Number(process.env.binanceQuantity), 'SELL');
+                        await telegram.log(`🔴${binanceSymbol} ${binanceChart}. E: ${Number(binanceOpen.entryPrice).toFixed(2)} USDT`);
+                    }
                 }
             }
 

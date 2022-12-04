@@ -50,11 +50,24 @@ function FormatNumberToString(num) {
     return output;
 }
 
+function GetDay() {
+    // 0 => Chủ nhật
+    // 1 => Thứ 2
+    // 2 => Thú 3
+    // 3 => Thứ 4
+    // 4 => Thứ 5
+    // 5 => Thứ 6
+    // 6 => Thứ 7
+    var date = new Date();
+    return Number(date.getDay());
+}
+
 module.exports = {
     WriteConsoleLog,
     GetMoment,
     GetMomentSecond,
     ReplaceTextByTemplate,
     NumDigitsAfterDecimal,
-    FormatNumberToString
+    FormatNumberToString,
+    GetDay
 }

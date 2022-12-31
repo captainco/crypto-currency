@@ -6,9 +6,6 @@ async function Main() {
     // Trading.on('message', async (event) => {
         
     // });
-    
-    const result = await binance.FuturesHedgeModeMarketLongBuySell("BTCUSDT", 0.001, "BUY");
-    console.log(result);
 }
 
 module.exports = { Main }

@@ -55,12 +55,44 @@ async function FuturesMarketBuySellTakeProfit(symbol, quantity, stopPrice, buySe
     return await binance.futuresMarketSell(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
 }
 
+async function FuturesHedgeModeMarketLongBuySellTakeProfit(symbol, quantity, stopPrice, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity, { positionSide: "LONG", stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+    }
+    return await binance.futuresMarketSell(symbol, quantity, { positionSide: "LONG", stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+}
+
+async function FuturesHedgeModeMarketShortBuySellTakeProfit(symbol, quantity, stopPrice, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity, { positionSide: "SHORT", stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+    }
+    return await binance.futuresMarketSell(symbol, quantity, { positionSide: "SHORT", stopPrice: stopPrice, reduceOnly: true, type: 'TAKE_PROFIT_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+}
+
 async function FuturesMarketBuySellStopLoss(symbol, quantity, stopPrice, buySell) {
     quantity = Math.abs(quantity);
     if (buySell.toUpperCase() == "BUY") {
         return await binance.futuresMarketBuy(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
     }
     return await binance.futuresMarketSell(symbol, quantity, { stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+}
+
+async function FuturesHedgeModeMarketLongBuySellStopLoss(symbol, quantity, stopPrice, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity, {positionSide: "LONG", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+    }
+    return await binance.futuresMarketSell(symbol, quantity, {positionSide: "LONG", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+}
+
+async function FuturesHedgeModeMarketShortBuySellStopLoss(symbol, quantity, stopPrice, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity, {positionSide: "SHORT", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+    }
+    return await binance.futuresMarketSell(symbol, quantity, {positionSide: "SHORT", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
 }
 
 async function FuturesMarketBuySellTPSL(symbol, quantity, takeProfit, stopLoss, buySell) {
@@ -343,6 +375,16 @@ async function FuturesPositionRisk(symbol) {
     return await binance.futuresPositionRisk({ symbol: symbol });
 }
 
+async function FuturesHedgeModePositionRiskLong(symbol) {
+    const risk = await binance.futuresPositionRisk({ symbol: symbol });
+    return _.nth(_.filter(risk, (p) => { return p.positionSide == "LONG" }), 0);
+}
+
+async function FuturesHedgeModePositionRiskShort(symbol) {
+    const risk = await binance.futuresPositionRisk({ symbol: symbol });
+    return _.nth(_.filter(risk, (p) => { return p.positionSide == "SHORT" }), 0);
+}
+
 async function FuturesCheckPositionRisk(symbol) {
     const risk = await binance.futuresPositionRisk({ symbol });
     return _.nth(_.filter(risk, (p) => { return p.positionAmt != 0 }), 0);
@@ -408,9 +450,15 @@ module.exports = {
     FuturesMarketBuySell,
     FuturesHedgeModeMarketLongBuySell,
     FuturesHedgeModeMarketShortBuySell,
+
     FuturesMarketBuySellTakeProfit,
+    FuturesHedgeModeMarketLongBuySellTakeProfit,
+    FuturesHedgeModeMarketShortBuySellTakeProfit,
     FuturesMarketBuySellStopLoss,
+    FuturesHedgeModeMarketLongBuySellStopLoss,
+    FuturesHedgeModeMarketShortBuySellStopLoss,
     FuturesMarketBuySellTPSL,
+
     FuturesCheckPositions,
     FuturesClearPositions,
     FuturesOpenPositions,
@@ -425,7 +473,11 @@ module.exports = {
     FuturesPrices,
     FuturesAccount,
     FuturesBalance,
+
     FuturesPositionRisk,
+    FuturesHedgeModePositionRiskLong,
+    FuturesHedgeModePositionRiskShort,
+
     SpotPositionRisk,
     FuturesCheckPositionRisk,
     FuturesLeverage,

@@ -1,6 +1,6 @@
 require('dotenv').config({ path: 'env/live.env' });
 
-const binanceOCC                     = require('./binance/binanceOCC');
+const binanceTrade                   = require('./binance/binanceOCCHedgeMode');
 const indexRouter                    = require('./index');
 const express                        = require("express");
 const http                           = require("http");
@@ -12,7 +12,7 @@ const server                         = http.createServer(app);
 server.listen(port);
 
 async function main() {
-    binanceOCC.Main();
+    binanceTrade.Main();
 }
 
 main();

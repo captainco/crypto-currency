@@ -31,6 +31,22 @@ async function FuturesMarketBuySell(symbol, quantity, buySell) {
     return await binance.futuresMarketSell(symbol, quantity);
 }
 
+async function FuturesHedgeModeMarketLongBuySell(symbol, quantity, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity, { positionSide: "LONG" });
+    }
+    return await binance.futuresMarketSell(symbol, quantity, { positionSide: "LONG" });
+}
+
+async function FuturesHedgeModeMarketShortBuySell(symbol, quantity, buySell) {
+    quantity = Math.abs(quantity);
+    if (buySell.toUpperCase() == "BUY") {
+        return await binance.futuresMarketBuy(symbol, quantity, { positionSide: "SHORT" });
+    }
+    return await binance.futuresMarketSell(symbol, quantity, { positionSide: "SHORT" });
+}
+
 async function FuturesMarketBuySellTakeProfit(symbol, quantity, stopPrice, buySell) {
     quantity = Math.abs(quantity);
     if (buySell.toUpperCase() == "BUY") {
@@ -390,6 +406,8 @@ async function EMAClose(symbol, interval, limit) {
 
 module.exports = {
     FuturesMarketBuySell,
+    FuturesHedgeModeMarketLongBuySell,
+    FuturesHedgeModeMarketShortBuySell,
     FuturesMarketBuySellTakeProfit,
     FuturesMarketBuySellStopLoss,
     FuturesMarketBuySellTPSL,

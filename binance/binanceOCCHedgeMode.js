@@ -33,8 +33,7 @@ async function Main() {
 
         const PsLong = await binance.FuturesHedgeModePositionRiskLong(process.env.binanceSymbol);
         const PsShort = await binance.FuturesHedgeModePositionRiskShort(process.env.binanceSymbol);
-        const unRealizedProfit = Number(PsLong.unRealizedProfit) + Number(PsShort.unRealizedProfit);
-        process.env.Webhookud_ = Number(unRealizedProfit).toFixed(2);
+        process.env.Webhookud_ = Number(PsLong.unRealizedProfit) + Number(PsShort.unRealizedProfit);
     });
 
     const TradingLong = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
@@ -61,12 +60,12 @@ async function Main() {
                     case "buy":
                         if (Number(Ps.positionAmt) == 0) {
                             await binance.FuturesHedgeModeMarketLongBuySell(process.env.binanceSymbol, volConvert, "BUY");
-                            await telegram.log(`✅ Đã mở lệnh ${process.env.binanceSymbol} 🟢 tại giá ${Ps.markPrice} USDT.`);
+                            await telegram.log(`✅ Đã mở lệnh ${process.env.binanceSymbol} 🟢 tại giá ${Number(Ps.markPrice).toFixed(2)} USDT.`);
                         }
                         else {
                             if (Number(Ps.entryPrice) > Number(Ps.markPrice)) {
                                 await binance.FuturesHedgeModeMarketLongBuySell(process.env.binanceSymbol, volConvert, "BUY");
-                                await telegram.log(`✅ Đã DCA lệnh ${process.env.binanceSymbol} 🟢 tại giá ${Ps.markPrice} USDT.`);
+                                await telegram.log(`✅ Đã DCA lệnh ${process.env.binanceSymbol} 🟢 tại giá ${Number(Ps.markPrice).toFixed(2)} USDT.`);
                             }
                         }
                         break;
@@ -74,7 +73,7 @@ async function Main() {
                     case "sell":
                         if (Number(Ps.entryPrice) < Number(Ps.markPrice)) {
                             await binance.FuturesHedgeModeMarketLongBuySell(process.env.binanceSymbol, Ps.positionAmt, "SELL");
-                            await telegram.log(`✅ Đã đóng lệnh ${process.env.binanceSymbol} 🟢 tại giá ${Ps.markPrice} USDT.`);
+                            await telegram.log(`✅ Đã đóng lệnh ${process.env.binanceSymbol} 🟢 tại giá ${Number(Ps.markPrice).toFixed(2)} USDT.`);
                         }
                         break;
                 }
@@ -110,19 +109,19 @@ async function Main() {
                     case "buy":
                         if (Number(Ps.entryPrice) > Number(Ps.markPrice)) {
                             await binance.FuturesHedgeModeMarketShortBuySell(process.env.binanceSymbol, Ps.positionAmt, "BUY");
-                            await telegram.log(`✅ Đã đóng lệnh ${process.env.binanceSymbol} 🔴 tại giá ${Ps.markPrice} USDT.`);
+                            await telegram.log(`✅ Đã đóng lệnh ${process.env.binanceSymbol} 🔴 tại giá ${Number(Ps.markPrice).toFixed(2)} USDT.`);
                         }
                         break;
     
                     case "sell":
                         if (Number(Ps.positionAmt) == 0) {
                             await binance.FuturesHedgeModeMarketShortBuySell(process.env.binanceSymbol, volConvert, "SELL");
-                            await telegram.log(`✅ Đã mở lệnh ${process.env.binanceSymbol} 🔴 tại giá ${Ps.markPrice} USDT.`);
+                            await telegram.log(`✅ Đã mở lệnh ${process.env.binanceSymbol} 🔴 tại giá ${Number(Ps.markPrice).toFixed(2)} USDT.`);
                         }
                         else {
                             if (Number(Ps.entryPrice) < Number(Ps.markPrice)) {
                                 await binance.FuturesHedgeModeMarketShortBuySell(process.env.binanceSymbol, volConvert, "SELL");
-                                await telegram.log(`✅ Đã DCA lệnh ${process.env.binanceSymbol} 🔴 tại giá ${Ps.markPrice} USDT.`);
+                                await telegram.log(`✅ Đã DCA lệnh ${process.env.binanceSymbol} 🔴 tại giá ${Number(Ps.markPrice).toFixed(2)} USDT.`);
                             }
                         }
                         break;

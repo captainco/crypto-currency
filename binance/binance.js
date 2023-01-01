@@ -7,7 +7,7 @@ const _                        = require("lodash");
 const common                   = require("../common");
 const envBinanceAPIKEY         = process.env.envBinanceAPIKEY;
 const envBinanceAPISECRET      = process.env.envBinanceAPISECRET;
-const envBinanceEnviroment     = process.env.envBinanceEnviroment;
+const envBinanceEnviroment     = process.env.envBinanceEnviroment.toUpperCase();
 
 var binance;
 if (envBinanceEnviroment == "TEST") {

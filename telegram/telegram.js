@@ -96,6 +96,7 @@ bot.command('l', async (ctx) => {
 });
 
 bot.command('d', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
     try {
         var oc = ["_icontmp", "_usdttmp", "_icon", "_usdt", "time_in"];
         const _icontmp =  Number(process.env.Webhookud_) == 0 ? '⚪' : Number(process.env.Webhookud_) > 0 ? '✅' : '❌';
@@ -106,6 +107,11 @@ bot.command('d', async (ctx) => {
     } catch (error) {
         ctx.reply(`⚠ Sai cú pháp`);
     }
+});
+
+bot.command('wh', async (ctx) => {
+    if (!IsMyTelegramAccount(ctx)) return;
+    ctx.reply(`🤖 Webhook hiện tại: ${process.env.Webhookud_}`);
 });
 
 bot.on('sticker', (ctx) => {

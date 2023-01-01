@@ -5,3 +5,4 @@ SELECT:
 /v {O|USDT}: Kiểm tra/set USDT mới.
 /l {O|leverage}: Kiểm tra/set đòn bẩy mới.
 /d: Kiểm tra lãi lỗ
+/wh: Kiểm tra Webhook

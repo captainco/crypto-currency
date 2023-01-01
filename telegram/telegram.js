@@ -111,7 +111,7 @@ bot.command('d', async (ctx) => {
 
 bot.command('wh', async (ctx) => {
     if (!IsMyTelegramAccount(ctx)) return;
-    ctx.reply(`🤖 Webhook hiện tại: ${process.env.Webhookud_}`);
+    ctx.reply(`🤖 Webhook hiện tại: ${process.env.Webhookud}`);
 });
 
 bot.on('sticker', (ctx) => {

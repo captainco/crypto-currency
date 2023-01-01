@@ -7,7 +7,7 @@ const _                        = require("lodash");
 const common                   = require("../common");
 const envBinanceAPIKEY         = process.env.envBinanceAPIKEY;
 const envBinanceAPISECRET      = process.env.envBinanceAPISECRET;
-const envBinanceEnviroment     = process.env.envBinanceEnviroment.toUpperCase();
+const envBinanceEnviroment     = process.env.envBinanceEnviroment;
 
 var binance;
 if (envBinanceEnviroment == "TEST") {
@@ -344,8 +344,8 @@ async function FuturesGetMinQuantity(symbol_) {
 
 async function FuturesConvertToQuantity(symbol, volUSDT, leverage) {
     const minVol = await FuturesGetMinQuantity(symbol);
-    const Ps = await FuturesPositionRisk(symbol);
-    const num = common.NumDigitsAfterDecimal(Ps.positionAmt);
+    const num = common.NumDigitsAfterDecimal(minVol);
+    const Ps = (await FuturesPositionRisk(symbol))[0];
     const vol = Number(Number(volUSDT) * Number(leverage) / Number(Ps.markPrice)).toFixed(num);
     return vol < minVol ? minVol : vol;
 }

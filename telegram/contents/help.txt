@@ -1,15 +1,7 @@
 🤖 Bot cho biết:
 
 SELECT:
-/a: Chi tiết lệnh
+/b {0|1}: Kiểm tra/set lệnh bot.
+/v {O|USDT}: Kiểm tra/set USDT mới.
+/l {O|leverage}: Kiểm tra/set đòn bẩy mới.
 /d: Kiểm tra lãi lỗ
-/p {O|coin}: Xem vị thế coin của bạn
-/q: Xem quantity
-/qu {quantity}: Update quantity mới
-
-TRADE:
-/op {coin} {leverage} {quantity} {buy|sell}: Vào vị thế
-/cp {coin}: Đóng vị thế
-
-/otp {coin} {price difference}: Khởi tạo take profit
-/ctp {coin}: Hủy take profit

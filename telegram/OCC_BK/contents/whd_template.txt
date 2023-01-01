@@ -1,0 +1,6 @@
+🤖 Bot cho biết:
+Coin: BTCUSDT
+_icontmp Lãi lỗ đang trade: _usdttmp USDT
+_icon Lãi lỗ tổng: _usdt USDT
+___________________________________
+⏰ Thời gian: time_in

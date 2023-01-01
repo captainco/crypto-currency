@@ -1,12 +1,13 @@
 require('dotenv').config({ path: '../env/live.env' });
 
-var indicators             = require('technicalindicators');
-var EMA                    = require('technicalindicators').EMA;
-const Binance              = require('node-binance-api');
-const _                    = require("lodash");
-const envBinanceAPIKEY     = process.env.envBinanceAPIKEY;
-const envBinanceAPISECRET  = process.env.envBinanceAPISECRET;
-const envBinanceEnviroment = process.env.envBinanceEnviroment.toUpperCase();
+var indicators                 = require('technicalindicators');
+var EMA                        = require('technicalindicators').EMA;
+const Binance                  = require('node-binance-api');
+const _                        = require("lodash");
+const common                   = require("../common");
+const envBinanceAPIKEY         = process.env.envBinanceAPIKEY;
+const envBinanceAPISECRET      = process.env.envBinanceAPISECRET;
+const envBinanceEnviroment     = process.env.envBinanceEnviroment.toUpperCase();
 
 var binance;
 if (envBinanceEnviroment == "TEST") {
@@ -82,17 +83,17 @@ async function FuturesMarketBuySellStopLoss(symbol, quantity, stopPrice, buySell
 async function FuturesHedgeModeMarketLongBuySellStopLoss(symbol, quantity, stopPrice, buySell) {
     quantity = Math.abs(quantity);
     if (buySell.toUpperCase() == "BUY") {
-        return await binance.futuresMarketBuy(symbol, quantity, {positionSide: "LONG", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+        return await binance.futuresMarketBuy(symbol, quantity, { positionSide: "LONG", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
     }
-    return await binance.futuresMarketSell(symbol, quantity, {positionSide: "LONG", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+    return await binance.futuresMarketSell(symbol, quantity, { positionSide: "LONG", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
 }
 
 async function FuturesHedgeModeMarketShortBuySellStopLoss(symbol, quantity, stopPrice, buySell) {
     quantity = Math.abs(quantity);
     if (buySell.toUpperCase() == "BUY") {
-        return await binance.futuresMarketBuy(symbol, quantity, {positionSide: "SHORT", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+        return await binance.futuresMarketBuy(symbol, quantity, { positionSide: "SHORT", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
     }
-    return await binance.futuresMarketSell(symbol, quantity, {positionSide: "SHORT", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
+    return await binance.futuresMarketSell(symbol, quantity, { positionSide: "SHORT", stopPrice: stopPrice, reduceOnly: true, type: 'STOP_MARKET', timeInForce: 'GTE_GTC', workingType: 'MARK_PRICE' });
 }
 
 async function FuturesMarketBuySellTPSL(symbol, quantity, takeProfit, stopLoss, buySell) {
@@ -227,7 +228,7 @@ async function FuturesOpenTP(symbol, priceDifference) {
 
         const Od = await FuturesOpenOrders(symbol);
         if (Od.length == 0) {
-            
+
             /*Mở TP Long*/
             if (Ps.positionAmt > 0) {
                 const takeProfit = Number(Number(Ps.entryPrice) + Number(priceDifference)).toFixed(2);
@@ -339,6 +340,14 @@ async function FuturesGetMinQuantity(symbol_) {
         }
     });
     return Number(newSymbol.lotSize);
+}
+
+async function FuturesConvertToQuantity(symbol, volUSDT, leverage) {
+    const minVol = await FuturesGetMinQuantity(symbol);
+    const Ps = await FuturesPositionRisk(symbol);
+    const num = common.NumDigitsAfterDecimal(Ps.positionAmt);
+    const vol = Number(Number(volUSDT) * Number(leverage) / Number(Ps.markPrice)).toFixed(num);
+    return vol < minVol ? minVol : vol;
 }
 
 async function FetchPositions() {
@@ -468,7 +477,10 @@ module.exports = {
     FuturesCancelTP,
     FuturesOpenPositionsTPSL,
     FuturesClosePositions,
+
     FuturesGetMinQuantity,
+    FuturesConvertToQuantity,
+
     FetchPositions,
     FuturesPrices,
     FuturesAccount,

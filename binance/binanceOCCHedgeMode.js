@@ -4,6 +4,7 @@ const WebSocket            = require("ws");
 const binance              = require('./binance');
 
 var binanceStartApp        = 0;
+var binanceIsLockRefresh   = 0;
 var binanceIsLockLong      = 0;
 var binanceIsLockShort     = 0;
 
@@ -17,23 +18,34 @@ async function Main() {
 
     const Refresh = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
     Refresh.on('message', async (event) => {
-        if (binanceStartApp == 0) {
-            binanceStartApp = 1;
+        try {
+            if (binanceIsLockRefresh != 0) {
+                return;
+            }
+            binanceIsLockRefresh = 1;
 
-            await binance.FuturesLeverage(process.env.binanceSymbol, Number(process.env.binanceLeverage));
-            await telegram.log(`✅ Đòn bẩy ${process.env.binanceSymbol} hiện tại: ${process.env.binanceLeverage}x.`);
-
-            const priceBeforeTrade = await binance.FuturesBalance();
-            totalUSDTBefore = Number(priceBeforeTrade);
+            if (binanceStartApp == 0) {
+                binanceStartApp = 1;
+    
+                await binance.FuturesLeverage(process.env.binanceSymbol, Number(process.env.binanceLeverage));
+                await telegram.log(`✅ Đòn bẩy ${process.env.binanceSymbol} hiện tại: ${process.env.binanceLeverage}x.`);
+    
+                const priceBeforeTrade = await binance.FuturesBalance();
+                totalUSDTBefore = Number(priceBeforeTrade);
+            }
+    
+            const priceTrade = await binance.FuturesBalance();
+            totalUSDT = process.env.Webhook == "" ? 0 : Number(priceTrade) - Number(totalUSDTBefore);
+            process.env.Webhookud = Number(totalUSDT).toFixed(2);
+    
+            const PsLong = await binance.FuturesHedgeModePositionRiskLong(process.env.binanceSymbol);
+            const PsShort = await binance.FuturesHedgeModePositionRiskShort(process.env.binanceSymbol);
+            process.env.Webhookud_ = Number(PsLong.unRealizedProfit) + Number(PsShort.unRealizedProfit);
+            
+            binanceIsLockRefresh = 0;
+        } catch (e) {
+            binanceIsLockRefresh = 0;
         }
-
-        const priceTrade = await binance.FuturesBalance();
-        totalUSDT = process.env.Webhook == "" ? 0 : Number(priceTrade) - Number(totalUSDTBefore);
-        process.env.Webhookud = Number(totalUSDT).toFixed(2);
-
-        const PsLong = await binance.FuturesHedgeModePositionRiskLong(process.env.binanceSymbol);
-        const PsShort = await binance.FuturesHedgeModePositionRiskShort(process.env.binanceSymbol);
-        process.env.Webhookud_ = Number(PsLong.unRealizedProfit) + Number(PsShort.unRealizedProfit);
     });
 
     const TradingLong = new WebSocket('wss://fstream.binance.com/ws/btcusdt@markPrice@1s');
